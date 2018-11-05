@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources">
+
+    <string name="menu_achievements">ДОСТИЖЕНИЯ</string>
+    <string name="menu_play">ИГРАТЬ</string>
+    <string name="menu_options">НАСТРОЙКИ</string>
+    <string name="menu_share">ПОДЕЛИТЬСЯ</string>
+
+    <string name="prep_textures">Подготавливаются текстуры</string>
+
+    <string name="se_back">← Назад</string>
+    <string name="se_continue">Продолжить →</string>
+    <string name="se_info">Убийств: %1$d / Предметов: %2$d / Секретов: %3$d / Время: %4$s</string>
+
+    <string name="dlg_yes">Да</string>
+    <string name="dlg_no">Нет</string>
+    <string name="dlg_new_game">Текущая игра будет потеряна.\nВы уверены?</string>
+    <string name="dlg_quit_game">Тут ещё остались враги…\nВы действительно хотите выйти?</string>
+    <string name="dlg_ok">Да</string>
+    <string name="dlg_cancel">Отмена</string>
+    <string name="dlg_rate_title">Оцените эту игру</string>
+    <string name="dlg_rate_quit">Просто выйти из игры</string>
+    <string name="dlg_rate_dislike">Фигня</string>
+    <string name="dlg_rate_like">Отлично!</string>
+    <string name="dlg_select_controls">Выберите тип управления</string>
+    <string name="dlg_enter_code">Введите код</string>
+    <string name="dlg_menu">Меню</string>
+    <string name="dlg_change_weapon">Сменить оружие</string>
+    <string name="dlg_close">× Закрыть</string>
+    <string name="dlg_exit_to_menu">⇪ В меню</string>
+    <string name="dlg_game_code">Ввести код</string>
+    <string name="dlg_share">Поделиться</string>
+
+    <string name="msg_cant_save_state">Не могу сохранить состояние - вероятно закончилось место во внутренней памяти</string>
+    <string name="msg_cant_load_state">Не могу загрузить состояние</string>
+    <string name="msg_cant_save_profile">Не могу сохранить профиль - вероятно закончилось место во внутренней памяти</string>
+    <string name="msg_cant_load_profile">Не могу загрузить профиль</string>
+    <string name="msg_cheats_disabled">Сорян, но сейчас без читов :)</string>
+
+    <string name="pref_general">Общие</string>
+    <string name="pref_help">Помощь</string>
+    <string name="pref_about">Об игре и лицензиях</string>
+    <string name="pref_restart">Начать игру с самого начала</string>
+    <string name="pref_controls">Управление</string>
+    <string name="pref_controls_scheme">Тип управления</string>
+    <string name="pref_controls_settings">Настройка управления</string>
+    <string name="pref_controls_alpha">Прозрачность иконок управления</string>
+    <string name="pref_accelerometer_enabled">Использовать акселерометр</string>
+    <string name="pref_accelerometer_acceleration">Ускорение акселерометра</string>
+    <string name="pref_trackball_acceleration">Ускорение трекбола</string>
+    <string name="pref_invert_vertical_look">Инвертировать вращение по вертикали</string>
+    <string name="pref_invert_horizontal_look">Инвертировать вращение по горизонтали</string>
+    <string name="pref_left_hand_aim">Кнопка стрельбы слева</string>
+    <string name="pref_fire_button_at_top">Кнопка стрельбы сверху</string>
+    <string name="pref_move_speed">Скорость ходьбы</string>
+    <string name="pref_strafe_speed">Скорость стрейфа</string>
+    <string name="pref_rotate_speed">Скорость поворота</string>
+    <string name="pref_key_mappings">Переназначение кнопок</string>
+    <string name="pref_screen">Экран</string>
+    <string name="pref_gamma">Яркость</string>
+    <string name="pref_sound">Звук</string>
+    <string name="pref_enable_sound">Включить звук</string>
+    <string name="pref_music_volume">Громкость музыки</string>
+    <string name="pref_effects_volume">Громкость эффектов</string>
+    <string name="pref_key_forward">Вперёд</string>
+    <string name="pref_key_backward">Назад</string>
+    <string name="pref_key_strafe_left">Шаг влево</string>
+    <string name="pref_key_strafe_right">Шаг вправо</string>
+    <string name="pref_key_rotate_left">Повернуться влево</string>
+    <string name="pref_key_rotate_right">Повернуться вправо</string>
+    <string name="pref_key_fire">Огонь</string>
+    <string name="pref_key_next_weapon">Следующее оружие</string>
+    <string name="pref_key_toggle_map">Карта</string>
+    <string name="pref_key_strafe_mode">Включить режим шага</string>
+    <string name="pref_show_crosshair">Показывать прицел</string>
+    <string name="pref_rotate_screen">Повернуть игровой экран</string>
+
+    <!--
+    <string name="val_empty">Пусто</string>
+    -->
+
+    <string name="lib_press_key">Нажмите на аппаратную кнопку</string>
+    <string name="lib_none">&lt;нет&gt;</string>
+    <string name="lib_clear">Очистить</string>
+
+    <string name="lbl_fps">FPS: %s</string>
+    <string name="lbl_cant_open_door">Не могу открыть эту дверь</string>
+    <string name="lbl_need_blue_key">Нужен синий ключ</string>
+    <string name="lbl_need_red_key">Нужен красный ключ</string>
+    <string name="lbl_need_green_key">Нужен зелёный ключ</string>
+    <string name="lbl_secret_found">Найден секрет</string>
+    <string name="lbl_endl_kills">Убийств: %d%%</string>
+    <string name="lbl_endl_items">Предметов: %d%%</string>
+    <string name="lbl_endl_secrets">Секретов: %d%%</string>
+    <string name="lbl_endl_time">Время: %s</string>
+    <string name="lbl_gameover">Игра окончена</string>
+    <string name="lbl_gameover_load_autosave">Нажмите огонь для загрузки автосохранения</string>
+
+    <string name="lblh_move">Ходить</string>
+    <string name="lblh_rotate">Поворачиваться</string>
+    <string name="lblh_fire">Стрелять</string>
+    <string name="lblh_weapons">Сменить оружие / Меню</string>
+    <string name="lblh_quick_weapons">Последние оружия / Быстрая смена</string>
+    <string name="lblh_minimap">Миникарта</string>
+    <string name="lblh_stats_health">Здоровье</string>
+    <string name="lblh_stats_ammo">Патроня</string>
+    <string name="lblh_stats_armor">Броня</string>
+    <string name="lblh_stats_keys">Ключи</string>
+    <string name="lblh_do_not_rotate">Не поворачивайтесь! Просто ходите</string>
+
+    <string name="lblm_use_move_pad_to_follow_arrows">Идите по стрелкам используя кнопки ходьбы</string>
+    <string name="lblm_doing_well">Продолжайте в том же духе!</string>
+    <string name="lblm_slide_to_rotate_to_left">Проведите пальцем по экрану и повернитесь налево</string>
+    <string name="lblm_than_rotate_to_right">А теперь повернитесь направо</string>
+    <string name="lblm_move_and_rotate_to_follow_arrows">Идите по стрелкам используя ходьбу и повороты</string>
+    <string name="lblm_fine">Отлично сработано! Продолжайте!</string>
+    <string name="lblm_use_minimap_to_return_to_start">Вернитесь к началу используя миникарту</string>
+    <string name="lblm_well_done">Отлично! Идите дальше</string>
+    <string name="lblm_to_open_door_go_through_it">Чтобы открыть дверь, просто пройдите через неё</string>
+    <string name="lblm_next_door_is_closed_use_switch">Чтобы открыть следующую дверь нужно нажать на переключатель</string>
+    <string name="lblm_to_activate_switch_go_up_to_him">Для активации переключателя, подойдите к нему вплотную</string>
+    <string name="lblm_this_is_window">Это окно. Не надо через него ходить</string>
+    <string name="lblm_to_open_door_pickup_key">Чтобы открыть эту дверь, нужно поднять ключ</string>
+    <string name="lblm_use_fire_and_kill_enemy">Используйте кнопку удара и деактивируйте врага</string>
+    <string name="lblm_pickup_medi">Если вас поранили, поднимите аптечку</string>
+    <string name="lblm_open_weapon_menu_and_select_pistol">Откройте меню оружия и выберите пистолет</string>
+    <string name="lblm_pickup_ammo">Поднимите патроны чтобы пополнить их запас</string>
+    <string name="lblm_quick_change_weapon">Нажмите на иконку оружия сверху и смените его</string>
+    <string name="lblm_after_quick_change_weapon">Это быстрей, чем выбирать через меню</string>
+    <string name="lblm_pickup_armor">Поднимите броню</string>
+    <string name="lblm_after_pickup_armor">Когда вы в броне, враги меньше вас ранят</string>
+    <string name="lblm_press_end_level">Нажмите на переключатель и приготовьтесь к настоящей битве</string>
+
+    <!--
+    <string name="eod_info">Поздравляем! Вы прошли все эпизоды.\nПрямо сейчас мы трудимся не покладая рук создавая новые эпизоды. Ждите обновлений!</string>
+    -->
+
+    <string name="achievements_item_achieved">★ ДОСТИГНУТО ★</string>
+    <string name="achievements_exp">ОПЫТ: %d</string>
+
+    <string name="store_back">← Назад</string>
+
+    <string name="share_title">Fire Strike: олдскульный шутер с современными 3D эффектами</string>
+    <string name="send_email_using">Отправить email используя…</string>
+
+    <!-- store : levels -->
+    <string name="pt_tutorial">Обучение</string>
+    <string name="pt_episode_1">Эпизод I</string>
+    <string name="pt_episode_2">Эпизод II</string>
+    <string name="pt_episode_3">Эпизод III</string>
+
+    <!-- achievements -->
+    <string name="ac_unlocked">Новое достижение: %s</string>
+    <string name="at_monsters_killed_5">Руки в крови</string>
+    <string name="ad_monsters_killed_5">Убить 5 врагов</string>
+    <string name="at_monsters_killed_25">Начинающий мясник</string>
+    <string name="ad_monsters_killed_25">Убить 25 врагов</string>
+    <string name="at_monsters_killed_100">Это моя работа</string>
+    <string name="ad_monsters_killed_100">Убить 100 врагов</string>
+    <string name="at_monsters_killed_500">Рон Джэмбо</string>
+    <string name="ad_monsters_killed_500">Убить 500 врагов</string>
+    <string name="at_monsters_killed_1000">Я вижу мертвых врагов. Много</string>
+    <string name="ad_monsters_killed_1000">Убить 1000 врагов</string>
+    <string name="at_doors_opened_5">Освоил двери</string>
+    <string name="ad_doors_opened_5">Открыть 5 дверей</string>
+    <string name="at_doors_opened_25">Хранитель дверей</string>
+    <string name="ad_doors_opened_25">Открыть 25 дверей</string>
+    <string name="at_doors_opened_100">Отмычка – мой друг</string>
+    <string name="ad_doors_opened_100">Открыть 100 дверей</string>
+    <string name="at_doors_opened_500">Синий ключ, зеленый ключ, какая разница</string>
+    <string name="ad_doors_opened_500">Открыть 500 дверей</string>
+    <string name="at_doors_opened_1000">Твоя принцесса в другом замке</string>
+    <string name="ad_doors_opened_1000">Открыть 1000 дверей</string>
+    <string name="at_secrets_found_5">Освоил секреты</string>
+    <string name="ad_secrets_found_5">Найти 5 секретов</string>
+    <string name="at_secrets_found_10">Исследователь</string>
+    <string name="ad_secrets_found_10">Найти 10 секретов</string>
+    <string name="at_secrets_found_25">Следуй за белым кроликом</string>
+    <string name="ad_secrets_found_25">Найти 25 секретов</string>
+    <string name="at_secrets_found_50">Меня зовут Человек-рентген</string>
+    <string name="ad_secrets_found_50">Найти 50 секретов</string>
+    <string name="at_secrets_found_100">Индиана Форд</string>
+    <string name="ad_secrets_found_100">Найти 100 секретов</string>
+
+    <string formatted="false"
+        name="at_p100_kills_row_5">Всех убью, один останусь</string>
+
+    <string formatted="false"
+        name="ad_p100_kills_row_5">100% убийств 5 уровней подряд</string>
+
+    <string formatted="false"
+        name="at_p100_items_row_5">Коллекционер</string>
+
+    <string formatted="false"
+        name="ad_p100_items_row_5">100% вещей 5 уровней подряд</string>
+
+    <string formatted="false"
+        name="at_p100_secrets_row_5">Железная Воля</string>
+
+    <string formatted="false"
+        name="ad_p100_secrets_row_5">100% секретов 5 уровней подряд</string>
+
+    <string formatted="false"
+        name="at_p100_kills_row_10">Опустошитель</string>
+
+    <string formatted="false"
+        name="ad_p100_kills_row_10">100% убийств 10 уровней подряд</string>
+
+    <string formatted="false"
+        name="at_p100_items_row_10">Плюшкин</string>
+
+    <string formatted="false"
+        name="ad_p100_items_row_10">100% вещей 10 уровней подряд</string>
+
+    <string formatted="false"
+        name="at_p100_secrets_row_10"
+        tools:ignore="TypographyQuotes">Сверх-ниндзя</string>
+
+    <string formatted="false"
+        name="ad_p100_secrets_row_10"
+        tools:ignore="TypographyQuotes">100% секретов 10 уровней подряд</string>
+
+    <string name="pref_delete_profile">Debug: delete profile</string>
+    <string name="dlg_delete_profile">All progress and achievements will be lost.\nAre you sure?</string>
+</resources>

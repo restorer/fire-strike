@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gloomy_blue_light">#33b5e5</color>
+    <color name="gloomy_primary_text">#f3f3f3</color>
+    <color name="gloomy_background">#000000</color>
+
+    <color name="gloomy_store_locked">#696969</color>
+    <color name="gloomy_store_purchased">#ADFF2F</color>
+    <color name="gloomy_store_earn">#FFD700</color>
+
+    <color name="gloomy_achievements_locked">@color/gloomy_store_locked</color>
+    <color name="gloomy_achievements_achieved">@color/gloomy_store_purchased</color>
+</resources>

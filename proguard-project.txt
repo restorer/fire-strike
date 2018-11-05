@@ -1,0 +1,14 @@
+# Game
+
+-keepattributes EnclosingMethod
+-dontnote **SuppressLint
+-dontnote **TargetApi
+-keepclassmembers class zame.promo.PromoView$JsApi { public *; }
+
+# Support library
+
+-dontnote android.support.v4.**
+-dontwarn **CompatHoneycomb
+-dontwarn android.support.v4.**
+-keep class android.support.v4.** { *; }
+-keep interface android.support.v4.** { *; }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zame.game.libs.AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/back_common"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    tools:ignore="NestedWeights,Overdraw">
+
+    <zame.game.libs.AbsoluteLayout
+        android:id="@+id/play_wrapper"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <ImageView
+            android:background="@null"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/plate"
+            app:layout_cxWeight="0.5"
+            app:layout_heightWeight="0.66"
+            app:layout_widthWeight="0.35"
+            app:layout_y="0dp"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:background="@null"
+            android:contentDescription="@string/menu_play"
+            android:id="@+id/play"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_play"
+            app:layout_cxWeight="0.49"
+            app:layout_cyWeight="0.51"
+            app:layout_heightWeight="0.2"
+            app:layout_widthWeight="0.2" />
+
+    </zame.game.libs.AbsoluteLayout>
+
+    <!-- layout_byWeight = 1 - 0.01 -->
+    <ImageButton
+        android:background="@null"
+        android:contentDescription="@string/menu_options"
+        android:id="@+id/options"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_options"
+        app:layout_byWeight="0.99"
+        app:layout_heightWeight="0.33"
+        app:layout_widthWeight="0.19"
+        app:layout_xWeight="0.025" />
+
+    <!-- layout_byWeight = 1 - 0.01 -->
+    <ImageButton
+        android:background="@null"
+        android:contentDescription="@string/menu_share"
+        android:id="@+id/share"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_share"
+        app:layout_byWeight="0.99"
+        app:layout_cxWeight="0.5"
+        app:layout_heightWeight="0.33"
+        app:layout_widthWeight="0.19" />
+
+    <!-- layout_rxWeight = 1 - 0.025 ; layout_byWeight = 1 - 0.01 -->
+    <ImageButton
+        android:background="@null"
+        android:contentDescription="@string/menu_achievements"
+        android:id="@+id/achievements"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_achievements"
+        app:layout_byWeight="0.99"
+        app:layout_heightWeight="0.33"
+        app:layout_rxWeight="0.975"
+        app:layout_widthWeight="0.19" />
+
+    <!--
+    <zame.promo.PromoView
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        app:layout_heightWeight="0.25"
+        app:layout_x="0dp"
+        app:layout_y="0dp" />
+    -->
+
+    <include layout="@layout/inc_menu_gplay" />
+</zame.game.libs.AbsoluteLayout>

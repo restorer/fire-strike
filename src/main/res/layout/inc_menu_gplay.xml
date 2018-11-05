@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#080"
+    android:id="@+id/rate_game_wrap"
+    android:layout_height="0dp"
+    android:layout_width="match_parent"
+    android:visibility="gone"
+    app:layout_heightWeight="0.075"
+    app:layout_x="0dp"
+    app:layout_y="0dp">
+
+    <TextView
+        android:fontFamily="@font/ui"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:text="@string/menu_rate_game"
+        android:textColor="#FFF"
+        android:textSize="@dimen/gloomy_menu_textsize"
+        tools:ignore="SpUsage"
+        tools:targetApi="jelly_bean" />
+
+</FrameLayout>

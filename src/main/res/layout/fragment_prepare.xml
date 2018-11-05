@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/back_common"
+    android:gravity="center_vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    tools:ignore="NestedWeights,Overdraw">
+
+    <TextView
+        android:fontFamily="@font/ingame"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/app_name"
+        tools:targetApi="jelly_bean"
+        style="@style/Gloomy.Prep.Title" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:indeterminate="false"
+        android:indeterminateOnly="false"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:max="100"
+        style="?android:attr/progressBarStyleHorizontal" />
+
+    <TextView
+        android:fontFamily="@font/ingame"
+        android:id="@+id/info"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/prep_textures"
+        tools:targetApi="jelly_bean"
+        style="@style/Gloomy.Prep.Action" />
+
+</LinearLayout>

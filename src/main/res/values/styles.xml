@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Gloomy" />
+
+    <style name="Gloomy.WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="Gloomy.Theme" />
+
+    <style name="Gloomy.Theme.LauncherActivity"
+        parent="@style/Theme.AppCompat.NoActionBar">
+
+        <item name="android:windowBackground">@drawable/back_splash</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/Gloomy.WindowAnimationTransition</item>
+    </style>
+
+    <style name="Gloomy.Theme.MainActivity"
+        parent="@style/PreferenceFixTheme">
+
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/gloomy_background</item>
+        <item name="actionBarTabStyle">@style/Gloomy.Theme.ActionBar.TabView</item>
+        <item name="android:actionBarTabStyle">@style/Gloomy.Theme.ActionBar.TabView</item>
+        <item name="actionBarTabTextStyle">@style/Gloomy.Theme.ActionBar.TabText</item>
+        <item name="android:actionBarTabTextStyle">@style/Gloomy.Theme.ActionBar.TabText</item>
+        <item name="android:windowAnimationStyle">@style/Gloomy.WindowAnimationTransition</item>
+    </style>
+
+    <style name="Gloomy.Theme.ActionBar.TabView"
+        parent="@style/Widget.AppCompat.ActionBar.TabView">
+
+        <item name="android:paddingLeft">@dimen/gloomy_actionbar_tab_padding</item>
+        <item name="android:paddingRight">@dimen/gloomy_actionbar_tab_padding</item>
+    </style>
+
+    <style name="Gloomy.Theme.ActionBar.TabText"
+        parent="@style/Widget.AppCompat.ActionBar.TabText">
+
+        <item name="android:textSize">@dimen/gloomy_actionbar_tab_textsize</item>
+    </style>
+
+    <style name="Gloomy.Theme.WebActivity"
+        parent="@style/Theme.AppCompat.NoActionBar">
+
+        <item name="android:windowBackground">@color/gloomy_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/Gloomy.WindowAnimationTransition</item>
+    </style>
+
+    <style name="Gloomy.Common" />
+
+    <style name="Gloomy.Common.Button">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:textColor">@color/button</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/gloomy_common_button_textsize</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="Gloomy.GameMenu" />
+
+    <style name="Gloomy.GameMenu.Text">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/gloomy_gamemenu_textsize</item>
+    </style>
+
+    <style name="Gloomy.Endl" />
+
+    <style name="Gloomy.Endl.Text">
+        <item name="android:textColor">#EEE</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:textSize">@dimen/gloomy_endl_textsize</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Gloomy.Prep.Title"
+        parent="@style/Gloomy.Endl.Text">
+        <item name="android:textSize">@dimen/gloomy_prep_title_textsize</item>
+    </style>
+
+    <style name="Gloomy.Prep.Action"
+        parent="@style/Gloomy.Endl.Text">
+        <item name="android:textSize">@dimen/gloomy_prep_action_textsize</item>
+    </style>
+
+    <style name="Gloomy.SelectEpisode.Text"
+        parent="@style/Gloomy.Endl.Text">
+
+        <item name="android:textSize">@dimen/gloomy_selectepisode_textsize</item>
+    </style>
+
+    <style name="Gloomy.SelectEpisode.EpisodeText"
+        parent="@style/Gloomy.Endl.Text">
+
+        <item name="android:textSize">@dimen/gloomy_selectepisode_episode_textsize</item>
+    </style>
+
+    <style name="Gloomy.Store" />
+
+    <style name="Gloomy.Store.Item" />
+
+    <style name="Gloomy.Store.Item.Text">
+        <item name="android:textColor">@color/gloomy_primary_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/gloomy_store_item_textsize</item>
+    </style>
+
+    <style name="Gloomy.Store.Item.Title"
+        parent="@style/Gloomy.Store.Item.Text">
+
+        <item name="android:textSize">@dimen/gloomy_store_title_textsize</item>
+        <!-- Don't use textAllCaps, because it removes spans -->
+    </style>
+
+    <style name="Gloomy.Store.Item.Price"
+        parent="@style/Gloomy.Store.Item.Text">
+
+        <item name="android:textSize">@dimen/gloomy_store_price_textsize</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Gloomy.Store.Footer">
+        <item name="android:textColor">@color/gloomy_primary_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Gloomy.Store.Footer.Button"
+        parent="@style/Gloomy.Store.Footer">
+
+        <item name="android:textSize">@dimen/gloomy_store_footer_button_textsize</item>
+        <item name="android:paddingLeft">@dimen/gloomy_store_footer_button_padding</item>
+        <item name="android:paddingRight">@dimen/gloomy_store_footer_button_padding</item>
+    </style>
+
+    <style name="Gloomy.Store.Footer.Text"
+        parent="@style/Gloomy.Store.Footer">
+
+        <item name="android:textSize">@dimen/gloomy_store_footer_textsize</item>
+        <item name="android:textColor">@color/gloomy_store_earn</item>
+    </style>
+
+</resources>

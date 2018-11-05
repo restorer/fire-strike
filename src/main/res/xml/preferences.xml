@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/pref_general">
+
+        <Preference
+            android:key="Help"
+            android:title="@string/pref_help" />
+
+        <Preference
+            android:key="About"
+            android:title="@string/pref_about" />
+
+        <Preference
+            android:key="Restart"
+            android:title="@string/pref_restart" />
+
+        <Preference
+            android:key="DeleteProfile"
+            android:title="@string/pref_delete_profile" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_sound">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="EnableSound"
+            android:title="@string/pref_enable_sound" />
+
+        <zame.game.libs.SeekBarPreference
+            android:defaultValue="10"
+            android:dependency="EnableSound"
+            android:key="MusicVolume"
+            android:title="@string/pref_music_volume"
+            app:xmax="10" />
+
+        <zame.game.libs.SeekBarPreference
+            android:defaultValue="5"
+            android:dependency="EnableSound"
+            android:key="EffectsVolume"
+            android:title="@string/pref_effects_volume"
+            app:xmax="10" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_controls">
+
+        <ListPreference
+            android:defaultValue="StaticMovePad"
+            android:dialogTitle="@string/dlg_select_controls"
+            android:entries="@array/entries_controls"
+            android:entryValues="@array/values_controls"
+            android:key="ControlsScheme"
+            android:summary="%s"
+            android:title="@string/pref_controls_scheme" />
+
+        <PreferenceScreen
+            android:key="ControlsSettings"
+            android:persistent="false"
+            android:title="@string/pref_controls_settings">
+
+            <zame.game.libs.SeekBarPreference
+                android:defaultValue="8"
+                android:key="MoveSpeed"
+                android:title="@string/pref_move_speed"
+                app:xmax="15"
+                app:xmin="1" />
+
+            <zame.game.libs.SeekBarPreference
+                android:defaultValue="8"
+                android:key="StrafeSpeed"
+                android:title="@string/pref_strafe_speed"
+                app:xmax="15"
+                app:xmin="1" />
+
+            <zame.game.libs.SeekBarPreference
+                android:key="RotateSpeed"
+                android:title="@string/pref_rotate_speed"
+                app:xmax="15"
+                app:xmin="1" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="InvertVerticalLook"
+                android:title="@string/pref_invert_vertical_look" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="InvertHorizontalLook"
+                android:title="@string/pref_invert_horizontal_look" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="LeftHandAim"
+                android:title="@string/pref_left_hand_aim" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="FireButtonAtTop"
+                android:title="@string/pref_fire_button_at_top" />
+
+            <zame.game.libs.SeekBarPreference
+                android:defaultValue="5"
+                android:key="ControlsAlpha"
+                android:title="@string/pref_controls_alpha"
+                app:xmax="9"
+                app:xmin="1" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="AccelerometerEnabled"
+                android:title="@string/pref_accelerometer_enabled" />
+
+            <zame.game.libs.SeekBarPreference
+                android:defaultValue="5"
+                android:key="AccelerometerAcceleration"
+                android:title="@string/pref_accelerometer_acceleration"
+                app:xmax="9"
+                app:xmin="1" />
+
+            <zame.game.libs.SeekBarPreference
+                android:defaultValue="5"
+                android:key="TrackballAcceleration"
+                android:title="@string/pref_trackball_acceleration"
+                app:xmax="9"
+                app:xmin="1" />
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="KeyMappings"
+            android:persistent="false"
+            android:title="@string/pref_key_mappings">
+
+            <!-- KEYCODE_DPAD_UP -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="19"
+                android:key="KeyForward"
+                android:title="@string/pref_key_forward" />
+
+            <!-- KEYCODE_DPAD_DOWN -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="20"
+                android:key="KeyBackward"
+                android:title="@string/pref_key_backward" />
+
+            <!-- KEYCODE_DPAD_LEFT -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="21"
+                android:key="KeyRotateLeft"
+                android:title="@string/pref_key_rotate_left" />
+
+            <!-- KEYCODE_DPAD_RIGHT -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="22"
+                android:key="KeyRotateRight"
+                android:title="@string/pref_key_rotate_right" />
+
+            <!-- none -->
+            <zame.game.libs.KeyMapPreference
+                android:key="KeyStrafeLeft"
+                android:title="@string/pref_key_strafe_left" />
+
+            <!-- none -->
+            <zame.game.libs.KeyMapPreference
+                android:key="KeyStrafeRight"
+                android:title="@string/pref_key_strafe_right" />
+
+            <!-- KEYCODE_DPAD_CENTER -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="23"
+                android:key="KeyFire"
+                android:title="@string/pref_key_fire" />
+
+            <!-- KEYCODE_CAMERA -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="27"
+                android:key="KeyNextWeapon"
+                android:title="@string/pref_key_next_weapon" />
+
+            <!-- KEYCODE_SEARCH -->
+            <zame.game.libs.KeyMapPreference
+                android:defaultValue="84"
+                android:key="KeyToggleMap"
+                android:title="@string/pref_key_toggle_map" />
+
+            <!-- none -->
+            <zame.game.libs.KeyMapPreference
+                android:key="KeyStrafeMode"
+                android:title="@string/pref_key_strafe_mode" />
+
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_screen">
+
+        <zame.game.libs.SeekBarPreference
+            android:defaultValue="1"
+            android:key="Gamma"
+            android:title="@string/pref_gamma"
+            app:xmax="10" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="ShowCrosshair"
+            android:title="@string/pref_show_crosshair" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="RotateScreen"
+            android:title="@string/pref_rotate_screen" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
