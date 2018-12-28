@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/preferences"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:name="zame.game.feature.consent.ConsentPreferencesFragment" />
+
+    <View
+        android:background="@color/gloomy_achievements_divider"
+        android:layout_height="2dp"
+        android:layout_width="match_parent" />
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/gloomy_achievements_footer_padding_vert"
+        android:paddingLeft="@dimen/gloomy_achievements_item_padding_hor"
+        android:paddingRight="@dimen/gloomy_achievements_item_padding_hor"
+        android:paddingTop="@dimen/gloomy_achievements_footer_padding_vert">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/consent_back"
+            tools:ignore="RtlHardcoded"
+            style="@style/Gloomy.Alt.Button.Negative" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/consent_next"
+            tools:ignore="RelativeOverlap,RtlHardcoded"
+            style="@style/Gloomy.Alt.Button.Positive" />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flavour_rate_game_bar">Оцените эту игру!</string>
+    <string name="flavour_rate_game_title">Оцените эту игру</string>
+    <string name="flavour_rate_game_quit">Просто выйти из игры</string>
+    <string name="flavour_rate_game_dislike">Фигня</string>
+    <string name="flavour_rate_game_like">Отлично!</string>
+</resources>

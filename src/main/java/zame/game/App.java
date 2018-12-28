@@ -1,67 +1,103 @@
 package zame.game;
 
-import android.app.Application;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.Toast;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+import com.eightsines.esmediadtor.Mediadtor;
+import com.eightsines.estracker.Tracker;
+import com.eightsines.estracker.TrackerFactory;
+import com.jakewharton.processphoenix.ProcessPhoenix;
 import java.io.File;
 import java.io.IOException;
-import zame.game.managers.SoundManager;
-import zame.game.misc.Tracker;
-import zame.game.misc.TrackerDummy;
-import zame.game.providers.CachedTexturesProvider;
-import zame.game.store.Profile;
+import java.util.Locale;
+import zame.game.core.manager.PreferencesManager;
+import zame.game.core.util.Common;
+import zame.game.engine.state.Profile;
+import zame.game.feature.prepare.CachedTexturesProvider;
+import zame.game.feature.sound.SoundManager;
+import zame.game.flavour.config.AppConfig;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
+    public static final Locale LOCALE_RU = new Locale("ru", "RU");
+
     public static App self;
 
     public final Handler handler = new Handler();
-    public boolean isLargeDevice;
+    public final Locale systemDefaultLocale = Locale.getDefault();
+    public Tracker tracker;
     public String internalRoot;
-    public Tracker trackerInst;
-    public SoundManager soundManagerInst;
-    public Profile profile = new Profile();
-    public CachedTexturesProvider.Task cachedTexturesTask;
-    public Typeface cachedTypeface;
-    public volatile boolean cachedTexturesReady;
+    public Profile profile;
+    public PreferencesManager preferences;
+    public boolean isLargeDevice;
     public float controlsScale;
-
+    public Mediadtor mediadtor;
+    public Typeface cachedTypeface;
+    public SoundManager soundManagerInstance;
+    public CachedTexturesProvider.Task cachedTexturesTask;
+    public volatile boolean cachedTexturesReady;
     private String cachedVersionName;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(new Fabric.Builder(this).kits(new Crashlytics()).debuggable(BuildConfig.DEBUG).build());
+
+        if (ProcessPhoenix.isPhoenixProcess(this)) {
+            return;
+        }
 
         self = this;
-        isLargeDevice = getResources().getBoolean(R.bool.gloomy_device_large);
+
+        tracker = TrackerFactory.create(this, AppConfig.DEBUG_TRACKER ? null : AppConfig.APPCENTER_KEY);
         internalRoot = getInternalStoragePath() + File.separator;
+        profile = new Profile();
+        preferences = new PreferencesManager();
+        isLargeDevice = getResources().getBoolean(R.bool.gloomy_device_large);
 
-        initPreferences();
-        initTracker();
+        //noinspection MagicNumber
+        controlsScale = isLargeDevice ? 0.75f : 1.0f;
 
-        if (getSharedPreferences().getBoolean("FirstRun", true)) {
-            profile.load(false);
-            profile.save();
+        PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
-            getSharedPreferences().edit().putBoolean("FirstRun", false).apply();
-        } else {
-            profile.load();
+        if (preferences.getInt(R.string.key_rotate_speed) == 0) {
+            preferences.putInt(R.string.key_rotate_speed, isLargeDevice ? 8 : 4);
         }
+
+        applyConsent();
+        profile.loadInitial(this);
     }
 
-    public SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    }
-
-    public LocalBroadcastManager getLocalBroadcastManager() {
+    public LocalBroadcastManager getBroadcastManager() {
         return LocalBroadcastManager.getInstance(getApplicationContext());
+    }
+
+    public void applyConsent() {
+        boolean isConsentChosen = preferences.getBoolean(R.string.key_is_consent_chosen);
+
+        tracker.setCrashesConsent(isConsentChosen && preferences.getBoolean(R.string.key_consent_crashes));
+        tracker.setAnalyticsConsent(isConsentChosen && preferences.getBoolean(R.string.key_consent_analytics));
+
+        mediadtor = new Mediadtor(
+                AppConfig.APPODEAL_KEY,
+                isConsentChosen && preferences.getBoolean(R.string.key_consent_ad_personalization),
+                AppConfig.DEBUG_MEDIADTOR);
+    }
+
+    public String getVersionName() {
+        if (cachedVersionName == null) {
+            cachedVersionName = "xxxx.xx.xx.xxxx";
+
+            try {
+                cachedVersionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            } catch (Exception ex) {
+                Common.log(ex);
+            }
+        }
+
+        return cachedVersionName;
     }
 
     private String getInternalStoragePath() {
@@ -84,36 +120,5 @@ public class App extends Application {
         }
 
         return result;
-    }
-
-    private void initPreferences() {
-        SharedPreferences sp = getSharedPreferences();
-
-        //noinspection MagicNumber
-        controlsScale = isLargeDevice ? 0.75f : 1.0f;
-
-        if (sp.getInt("RotateSpeed", 0) == 0) {
-            sp.edit().putInt("RotateSpeed", isLargeDevice ? 8 : 4).apply();
-        }
-
-        PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
-    }
-
-    private void initTracker() {
-        trackerInst = new TrackerDummy();
-    }
-
-    public String getVersionName() {
-        if (cachedVersionName == null) {
-            cachedVersionName = "xxxx.xx.xx.xxxx";
-
-            try {
-                cachedVersionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            } catch (Exception ex) {
-                Common.log(ex);
-            }
-        }
-
-        return cachedVersionName;
     }
 }

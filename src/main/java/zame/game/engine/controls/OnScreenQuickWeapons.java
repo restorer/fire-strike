@@ -1,18 +1,18 @@
 package zame.game.engine.controls;
 
-import javax.microedition.khronos.opengles.GL10;
-import zame.game.engine.Labels;
-import zame.game.engine.TextureLoader;
+import zame.game.engine.graphics.Labels;
+import zame.game.engine.graphics.TextureLoader;
+import zame.game.engine.visual.Controls;
 
 public class OnScreenQuickWeapons extends OnScreenController {
-    float direction = 1.0f;
+    public float direction = 1.0f;
 
     private boolean[] active = { false, false, false };
     @SuppressWarnings("MismatchedReadAndWriteOfArray") private int[] mapping = new int[3];
     private float fromY;
     private float toY;
 
-    OnScreenQuickWeapons(int position) {
+    public OnScreenQuickWeapons(int position) {
         super();
 
         this.position = position;
@@ -68,7 +68,7 @@ public class OnScreenQuickWeapons extends OnScreenController {
             float fromX = baseX + btnOffsetX * 2.0f * (float)i * direction - btnClickArea;
             float toX = fromX + btnClickArea * 2.0f;
 
-            if (x >= fromX && x <= toX) {
+            if (x >= fromX && x <= toX && !engine.weapons.hasNoAmmo(state.lastWeapons[mapping[i]])) {
                 active[i] = true;
                 game.actionQuickWeapons[mapping[i]] = true;
                 return true;
@@ -93,7 +93,7 @@ public class OnScreenQuickWeapons extends OnScreenController {
 
     @SuppressWarnings("MagicNumber")
     @Override
-    public void render(GL10 gl, long elapsedTime, boolean canRenderHelp) {
+    public void render(long elapsedTime, boolean canRenderHelp) {
         float btnOffsetX = owner.iconSize * 0.55f;
         int count = 0;
 
@@ -111,16 +111,17 @@ public class OnScreenQuickWeapons extends OnScreenController {
         float baseX = startX - btnOffsetX * (float)(count - 1) * direction;
 
         for (int i = 0; i < count; i++) {
-            owner.drawIcon(baseX + btnOffsetX * 2.0f * (float)i * direction,
+            owner.batchIcon(baseX + btnOffsetX * 2.0f * (float)i * direction,
                     startY,
                     TextureLoader.BASE_WEAPONS + state.lastWeapons[mapping[i]],
-                    active[i]);
+                    active[i],
+                    engine.weapons.hasNoAmmo(state.lastWeapons[mapping[i]]) ? 0.25f : -1.0f);
         }
 
-        if (canRenderHelp && shouldDrawHelp()) {
+        if (canRenderHelp && shouldRenderHelp()) {
             float dt = (float)elapsedTime * 0.0025f;
 
-            owner.drawIcon(baseX + btnOffsetX * 2.0f * (float)((int)(dt / Math.PI) % count) * direction,
+            owner.batchIcon(baseX + btnOffsetX * 2.0f * (float)((int)(dt / Math.PI) % count) * direction,
                     startY,
                     TextureLoader.ICON_JOY,
                     false,

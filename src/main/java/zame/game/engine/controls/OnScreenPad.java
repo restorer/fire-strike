@@ -1,9 +1,8 @@
 package zame.game.engine.controls;
 
-import javax.microedition.khronos.opengles.GL10;
-import zame.game.engine.GameMath;
-import zame.game.engine.Labels;
-import zame.game.engine.TextureLoader;
+import zame.game.engine.graphics.Labels;
+import zame.game.engine.graphics.TextureLoader;
+import zame.game.engine.visual.Controls;
 
 public class OnScreenPad extends OnScreenController {
     private float fromX;
@@ -14,9 +13,9 @@ public class OnScreenPad extends OnScreenController {
     private float maxDist;
     private boolean active;
 
-    boolean dynamic;
+    public boolean dynamic;
 
-    OnScreenPad(int position, boolean dynamic) {
+    public OnScreenPad(int position, boolean dynamic) {
         super();
 
         this.position = position;
@@ -97,11 +96,14 @@ public class OnScreenPad extends OnScreenController {
 
     @SuppressWarnings("MagicNumber")
     @Override
-    public void render(GL10 gl, long elapsedTime, boolean canRenderHelp) {
-        owner.drawBack(startX, startY, TextureLoader.BASE_BACKS, active);
-        owner.drawIcon(startX + offsetX, startY + offsetY, TextureLoader.ICON_JOY, active);
+    public void render(long elapsedTime, boolean canRenderHelp) {
+        owner.batchBack(startX, startY, TextureLoader.BASE_BACKS, active);
+        owner.batchIcon(startX + offsetX, startY + offsetY, TextureLoader.ICON_JOY, active);
 
-        if (canRenderHelp && !active && shouldDrawHelp()) {
+        if (canRenderHelp
+                && !active && shouldRenderHelp()
+                && (state.controlsHelpMask & Controls.CONTROL_MOVE) == 0) {
+
             float dt = (float)elapsedTime * 0.0025f;
             float x = startX;
             float y = startY;
@@ -110,13 +112,15 @@ public class OnScreenPad extends OnScreenController {
                     ? (float)Math.cos(dt) * owner.iconSize
                     : (float)Math.cos(dt % Math.PI) * owner.iconSize;
 
-            if ((state.controlsHelpMask & Controls.CONTROL_MOVE) != 0) {
-                if (dt % (GameMath.PI_F * 4.0f) > GameMath.PI_F * 2.0f) {
-                    x -= off;
-                } else {
-                    y += off;
-                }
-            } else if ((state.controlsHelpMask & Controls.CONTROL_MOVE_UP) != 0) {
+            // if ((state.controlsHelpMask & Controls.CONTROL_MOVE) != 0) {
+            // if (dt % (GameMath.PI_F * 4.0f) > GameMath.PI_F * 2.0f) {
+            //     x -= off;
+            // } else {
+            //     y += off;
+            // }
+            // } else
+
+            if ((state.controlsHelpMask & Controls.CONTROL_MOVE_UP) != 0) {
                 y += off;
             } else if ((state.controlsHelpMask & Controls.CONTROL_MOVE_DOWN) != 0) {
                 y -= off;
@@ -126,7 +130,7 @@ public class OnScreenPad extends OnScreenController {
                 x -= off;
             }
 
-            owner.drawIcon(x, y, TextureLoader.ICON_JOY, false, 0.5f - (float)Math.cos(dt * 2.0f) * 0.5f);
+            owner.batchIcon(x, y, TextureLoader.ICON_JOY, false, 0.5f - (float)Math.cos(dt * 2.0f) * 0.5f);
         }
     }
 

@@ -1,10 +1,10 @@
 package zame.game.engine.controls;
 
-import javax.microedition.khronos.opengles.GL10;
 import zame.game.engine.Config;
 import zame.game.engine.Engine;
 import zame.game.engine.Game;
-import zame.game.engine.State;
+import zame.game.engine.state.State;
+import zame.game.engine.visual.Controls;
 
 public abstract class OnScreenController {
     Controls owner;
@@ -20,23 +20,25 @@ public abstract class OnScreenController {
     private float offsetYMinBound;
     private float offsetYMaxBound;
 
-    int pointerId = -1;
+    public int pointerId = -1;
     float startX;
     float startY;
     float offsetX;
     float offsetY;
-    int renderModeMask = Game.RENDER_MODE_GAME;
-    int position;
-    boolean renderAnyway;
-    int controlFlags;
+    public int renderModeMask = Game.RENDER_MODE_GAME;
+    public int position;
+    public boolean renderAnyway;
+    public int controlFlags;
     int helpLabelId = -1;
 
-    void setOwner(Controls owner, Engine engine) {
+    public void setOwner(Controls owner, Engine engine) {
         this.owner = owner;
         this.engine = engine;
         this.config = engine.config;
         this.game = engine.game;
         this.state = engine.state;
+
+        surfaceSizeChanged(); // refresh position for the great justice
     }
 
     @SuppressWarnings("MagicNumber")
@@ -73,7 +75,7 @@ public abstract class OnScreenController {
         prevOffsetY = 0.0f;
     }
 
-    public void render(GL10 gl, long elapsedTime, boolean canRenderHelp) {
+    public void render(long elapsedTime, boolean canRenderHelp) {
     }
 
     public void updateHero() {
@@ -84,20 +86,19 @@ public abstract class OnScreenController {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    boolean shouldDrawHelp() {
+    boolean shouldRenderHelp() {
         return ((renderAnyway || controlFlags == 0 || (state.disabledControlsMask & controlFlags) != controlFlags)
                 && (state.controlsHelpMask & controlFlags) != 0
                 && (renderModeMask & game.renderMode) != 0
                 && helpLabelId >= 0);
     }
 
-    protected void drawHelp(GL10 gl, long elapsedTime) {
-        if (!shouldDrawHelp()) {
+    public void renderHelp(long elapsedTime) {
+        if (!shouldRenderHelp()) {
             return;
         }
 
-        owner.drawHelpArrowWithText(gl,
-                startX,
+        owner.renderHelpArrowWithText(startX,
                 startY,
                 getHelpDiagSize(),
                 (position & Controls.POSITION_RIGHT) == 0,

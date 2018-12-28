@@ -4,9 +4,9 @@
 #include <jni.h>
 #include <GLES/gl.h>
 
-JNIEXPORT void JNICALL Java_zame_game_engine_Renderer_renderTriangles(
+JNIEXPORT void JNICALL Java_zame_game_engine_graphics_Renderer_renderTriangles(
         JNIEnv* env,
-        jobject obj,
+        jclass type,
         jfloatArray vertexBuffer,
         jfloatArray colorsBuffer,
         // jfloatArray textureBuffer,
@@ -41,9 +41,9 @@ JNIEXPORT void JNICALL Java_zame_game_engine_Renderer_renderTriangles(
     (*env)->ReleaseFloatArrayElements(env, vertexBuffer, nativeVertexBuffer, 0);
 }
 
-JNIEXPORT void JNICALL Java_zame_game_engine_Renderer_renderLines(
+JNIEXPORT void JNICALL Java_zame_game_engine_graphics_Renderer_renderLines(
         JNIEnv* env,
-        jobject obj,
+        jclass type,
         jfloatArray vertexBuffer,
         jfloatArray colorsBuffer,
         jint vertexCount) {

@@ -6,7 +6,8 @@ import zame.game.engine.Config;
 import zame.game.engine.Engine;
 import zame.game.engine.EngineObject;
 import zame.game.engine.Game;
-import zame.game.engine.State;
+import zame.game.engine.state.State;
+import zame.game.engine.visual.Controls;
 
 public class KeysController implements EngineObject {
     public static class ControlAcceleration {
@@ -62,7 +63,7 @@ public class KeysController implements EngineObject {
     // @formatter:on
 
     @Override
-    public void setEngine(Engine engine) {
+    public void onCreate(Engine engine) {
         this.engine = engine;
         this.config = engine.config;
         this.game = engine.game;
@@ -87,7 +88,6 @@ public class KeysController implements EngineObject {
         int maskUp;
         int maskDown;
 
-        // TODO: test it
         if (config.rotateScreen) {
             trackballX = -trackballX;
             trackballY = -trackballY;

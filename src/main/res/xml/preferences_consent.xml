@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/consent_title">
+
+        <zame.game.core.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_consent_ad_personalization"
+            android:summary="@string/options_consent_ads_summary"
+            android:title="@string/options_consent_ads" />
+
+        <zame.game.core.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_consent_analytics"
+            android:summary="@string/options_consent_analytics_summary"
+            android:title="@string/options_consent_analytics" />
+
+        <zame.game.core.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_consent_crashes"
+            android:summary="@string/options_consent_crashes_summary"
+            android:title="@string/options_consent_crashes" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

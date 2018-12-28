@@ -1,52 +1,69 @@
 @font-face {
-	font-family: webui;
-	src: url("file:///android_asset/fonts/bbrick.ttf");
+    font-family: webui;
+    src: url("file:///android_asset/fonts/bbrick.ttf");
 }
 
 body {
-	background: #000000;
-	color: #A89A90;
-	font-family: webui, sans-serif;
-	padding: 0;
-	margin: 0;
-	max-width: 100%;
-	font-size: 15px;
+    background: #000000;
+    color: #a89a90;
+    font-family: webui, sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+}
+
+hr {
+    background-color: #888888;
+    border: 0 none;
+    height: 1px;
+    margin: 24px 0;
+    overflow: hidden;
+    padding: 0;
 }
 
 a {
-	color: #CCCCCC;
-	font-size: 15px;
+    color: #cccccc;
 }
 
-b {
-	color: #CCCCCC;
-}
-
-.wrap {
-	padding: 15px;
+strong, b {
+    color: #cccccc;
+    font-weight: normal; /* to avoid fake bold */
 }
 
 h1 {
-	padding: 0 0 10px 0;
-	margin: 0;
-	font-size: 30px;
-	color: #CCCCCC;
-	font-weight: normal; /* to avoid fake bold */
-}
-
-h1.nopad {
-	padding: 0;
+    color: #cccccc;
+    font-size: 24px;
+    font-weight: normal; /* to avoid fake bold */
+    line-height: 28px;
+    margin: 16px 0;
+    padding: 0;
 }
 
 p {
-	margin: 0;
-	padding: 0 0 10px 0;
+    margin: 16px 0;
+    padding: 0;
 }
 
-p.botpad {
-	padding-bottom: 30px;
+ul, ol {
+    margin: 16px 0;
+    padding: 0 0 0 24px;
 }
 
-p.toppad {
-	padding-top: 20px;
+li {
+    margin: 8px 0;
+    padding: 0;
+}
+
+.container {
+    margin: 24px 16px;
+}
+
+.u-toff-none {
+    margin-top: 0 !important;
+}
+
+.u-boff-none {
+    margin-bottom: 0 !important;
 }

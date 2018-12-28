@@ -1,226 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="UnusedResources">
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="menu_achievements">ACHIEVEMENTS</string>
-    <string name="menu_play">PLAY</string>
-    <string name="menu_options">OPTIONS</string>
-    <string name="menu_share">SHARE</string>
+    <string name="core_ok">OK</string>
+    <string name="core_cancel">Cancel</string>
+    <string name="core_preference_press_key">Press a hardware key</string>
+    <string name="core_preference_none">&lt;none&gt;</string>
+    <string name="core_preference_clear">Clear</string>
+    <string name="core_send_email_using">Send email using…</string>
 
-    <string name="prep_textures">Preparing textures</string>
+    <string name="consent_title">Please choose privacy options (you can always change them later in the settings)</string>
+    <string name="consent_back">← Exit</string>
+    <string name="consent_next">Let’s go! →</string>
 
-    <string name="se_back">← Back</string>
-    <string name="se_continue">Continue →</string>
-    <string name="se_info">Kills: %1$d / Items: %2$d / Secrets: %3$d / Time: %4$s</string>
+    <string name="prepare_textures">Preparing textures</string>
 
-    <string name="dlg_yes">Yes</string>
-    <string name="dlg_no">No</string>
-    <string name="dlg_new_game">Current progress will be lost.\nAre you sure?</string>
-    <string name="dlg_quit_game">There are more enemies to kill.\nAre you sure to quit?</string>
-    <string name="dlg_ok">OK</string>
-    <string name="dlg_cancel">Cancel</string>
-    <string name="dlg_rate_title">Rate this game</string>
-    <string name="dlg_rate_quit">Just quit the game</string>
-    <string name="dlg_rate_dislike">Dislike</string>
-    <string name="dlg_rate_like">Like!</string>
-    <string name="dlg_select_controls">Select control scheme</string>
-    <string name="dlg_enter_code">Enter code</string>
-    <string name="dlg_menu">Menu</string>
-    <string name="dlg_change_weapon">Change weapon</string>
-    <string name="dlg_close">× Close</string>
-    <string name="dlg_exit_to_menu">⇪ Exit to menu</string>
-    <string name="dlg_game_code">Game code</string>
-    <string name="dlg_share">Share</string>
+    <string name="menu_btn_achievements">ACHIEVEMENTS</string>
+    <string name="menu_btn_play">PLAY</string>
+    <string name="menu_btn_options">OPTIONS</string>
 
-    <string name="msg_cant_save_state">Can’t save state - probably there is no free space in internal storage</string>
-    <string name="msg_cant_load_state">Can’t load state</string>
-    <string name="msg_cant_save_profile">Can’t save profile - probably there is no free space in internal storage</string>
-    <string name="msg_cant_load_profile">Can’t load profile</string>
-    <string name="msg_cheats_disabled">Sorry, but this time without cheats :)</string>
+    <string name="menu_btn_like_vk"
+        translatable="false">VK</string>
 
-    <string name="pref_general">General</string>
-    <string name="pref_help">Help</string>
-    <string name="pref_about">About and licenses</string>
-    <string name="pref_restart">Restart game from the very beginning</string>
-    <string name="pref_controls">Controls</string>
-    <string name="pref_controls_scheme">Control scheme</string>
-    <string name="pref_controls_settings">Controls settings</string>
-    <string name="pref_controls_alpha">Controls opacity</string>
-    <string name="pref_accelerometer_enabled">Enable accelerometer</string>
-    <string name="pref_accelerometer_acceleration">Accelerometer acceleration</string>
-    <string name="pref_trackball_acceleration">Trackball acceleration</string>
-    <string name="pref_invert_vertical_look">Invert vertical look</string>
-    <string name="pref_invert_horizontal_look">Invert horizontal look</string>
-    <string name="pref_left_hand_aim">Left hand aim</string>
-    <string name="pref_fire_button_at_top">Fire button at top</string>
-    <string name="pref_move_speed">Move speed</string>
-    <string name="pref_strafe_speed">Strafe speed</string>
-    <string name="pref_rotate_speed">Rotate speed</string>
-    <string name="pref_key_mappings">Key mappings</string>
-    <string name="pref_screen">Screen</string>
-    <string name="pref_gamma">Gamma</string>
-    <string name="pref_sound">Sound</string>
-    <string name="pref_enable_sound">Enable sound</string>
-    <string name="pref_music_volume">Music volume</string>
-    <string name="pref_effects_volume">Effects volume</string>
-    <string name="pref_key_forward">Forward</string>
-    <string name="pref_key_backward">Backward</string>
-    <string name="pref_key_strafe_left">Strafe left</string>
-    <string name="pref_key_strafe_right">Strafe right</string>
-    <string name="pref_key_rotate_left">Rotate left</string>
-    <string name="pref_key_rotate_right">Rotate right</string>
-    <string name="pref_key_fire">Fire</string>
-    <string name="pref_key_next_weapon">Next weapon</string>
-    <string name="pref_key_toggle_map">Toggle map</string>
-    <string name="pref_key_strafe_mode">Enable strafe mode</string>
-    <string name="pref_show_crosshair">Show crosshair</string>
-    <string name="pref_rotate_screen">Rotate in-game screen</string>
+    <string name="menu_btn_like_facebook"
+        translatable="false">Facebook</string>
 
-    <!--
-    <string name="val_empty">Empty</string>
-    -->
+    <string name="menu_btn_like_telegram"
+        translatable="false">Telegram</string>
 
-    <string name="lib_press_key">Press a hardware key</string>
-    <string name="lib_none">&lt;none&gt;</string>
-    <string name="lib_clear">Clear</string>
+    <string name="menu_quit_warn_yes">Yes</string>
+    <string name="menu_quit_warn_no">No</string>
+    <string name="menu_share_title">Share</string>
 
-    <string name="lbl_fps">FPS: %d</string>
-    <string name="lbl_cant_open_door">Can’t open this door</string>
-    <string name="lbl_need_blue_key">You need a blue key</string>
-    <string name="lbl_need_red_key">You need a red key</string>
-    <string name="lbl_need_green_key">You need a green key</string>
-    <string name="lbl_secret_found">Secret found</string>
-    <string name="lbl_endl_kills">Kills: %d%%</string>
-    <string name="lbl_endl_items">Items: %d%%</string>
-    <string name="lbl_endl_secrets">Secrets: %d%%</string>
-    <string name="lbl_endl_time">Time: %s</string>
-    <string name="lbl_gameover">Game Over</string>
-    <string name="lbl_gameover_load_autosave">Press fire to load autosave</string>
+    <string name="game_se_back">← Back</string>
+    <string name="game_se_continue">Continue →</string>
+    <string name="game_se_info">Enemies: %1$d / Secrets: %2$d / Time: %3$s\nFailures: %4$d / Resurrects: %5$d</string>
+    <string name="game_pt_tutorial">Training area</string>
+    <string name="game_pt_episode_1">Episode I</string>
+    <string name="game_pt_episode_2">Episode II</string>
+    <string name="game_pt_episode_3">Episode III</string>
+    <string name="game_quit_warn">There are more enemies to kill.\nAre you sure to quit?</string>
+    <string name="game_enter_code">Enter code</string>
+    <string name="game_menu_title_noweapon">Menu</string>
+    <string name="game_menu_title_weapon">Change weapon</string>
+    <string name="game_menu_close">× Close</string>
+    <string name="game_menu_exit">⇪ Exit to menu</string>
+    <string name="game_menu_code">Game code</string>
 
-    <string name="lblh_move">Move</string>
-    <string name="lblh_rotate">Rotate</string>
-    <string name="lblh_fire">Fire</string>
-    <string name="lblh_weapons">Change weapon / Menu</string>
-    <string name="lblh_quick_weapons">Last weapons / Quick change</string>
-    <string name="lblh_minimap">Minimap</string>
-    <string name="lblh_stats_health">Your health</string>
-    <string name="lblh_stats_ammo">Your ammo</string>
-    <string name="lblh_stats_armor">Your armor</string>
-    <string name="lblh_stats_keys">Your keys</string>
-    <string name="lblh_do_not_rotate">Do not rotate! Just move</string>
+    <string name="options_restart_warn">Current game, all progress and all achievements will be lost!\n\nAre you sure?</string>
+    <string name="options_consent_for_ads_changed">The consent to personalize your advertising experience has been changed, and the application must be restarted.\n\nPress OK to restart application.</string>
+    <string name="options_select_language">Select language</string>
+    <string name="options_select_controls">Select control scheme</string>
+    <string name="options_general">General</string>
+    <string name="options_language">Language</string>
+    <string name="options_language_system">System default</string>
+    <string name="options_help">Help</string>
+    <string name="options_about">About and licenses</string>
+    <string name="options_restart">Restart game from the very beginning</string>
+    <string name="options_controls">Controls</string>
+    <string name="options_controls_scheme">Control scheme</string>
+    <string name="options_controls_settings">Controls settings</string>
+    <string name="options_controls_alpha">Controls opacity</string>
+    <string name="options_accelerometer_enabled">Enable accelerometer</string>
+    <string name="options_accelerometer_acceleration">Accelerometer acceleration</string>
+    <string name="options_trackball_acceleration">Trackball acceleration</string>
+    <string name="options_invert_vertical_look">Invert vertical look</string>
+    <string name="options_invert_horizontal_look">Invert horizontal look</string>
+    <string name="options_left_hand_aim">Left hand aim</string>
+    <string name="options_fire_button_at_top">Fire button at top</string>
+    <string name="options_move_speed">Move speed</string>
+    <string name="options_strafe_speed">Strafe speed</string>
+    <string name="options_rotate_speed">Rotate speed</string>
+    <string name="options_key_mappings">Key mappings</string>
+    <string name="options_screen">Screen</string>
+    <string name="options_analytics">Analytics and ADs</string>
+    <string name="options_gamma">Gamma</string>
+    <string name="options_sound">Sound</string>
+    <string name="options_enable_sound">Enable sound</string>
+    <string name="options_music_volume">Music volume</string>
+    <string name="options_effects_volume">Effects volume</string>
+    <string name="options_key_forward">Forward</string>
+    <string name="options_key_backward">Backward</string>
+    <string name="options_key_strafe_left">Strafe left</string>
+    <string name="options_key_strafe_right">Strafe right</string>
+    <string name="options_key_rotate_left">Rotate left</string>
+    <string name="options_key_rotate_right">Rotate right</string>
+    <string name="options_key_fire">Fire</string>
+    <string name="options_key_next_weapon">Next weapon</string>
+    <string name="options_key_strafe_mode">Enable strafe mode</string>
+    <string name="options_show_crosshair">Show crosshair</string>
+    <string name="options_rotate_screen">Rotate in-game screen</string>
+    <string name="options_consent_crashes">Send anonymous crash reports</string>
+    <string name="options_consent_crashes_summary">We hope this does not happen, but if the game will crash, would you like to send an anonymous report so we can fix the problem?</string>
+    <string name="options_consent_analytics">Send in-game analytics</string>
+    <string name="options_consent_analytics_summary">We will use this anonymous data to improve this and other our games</string>
+    <string name="options_consent_ads">Personalize Your Ad Experience</string>
+    <string name="options_consent_ads_summary">Fire Strike personalizes your advertising experience using Appodeal.\n\nAppodeal and its partners may collect and process personal data such as device identifiers, location data, and other demographic and interest data to provide advertising experience tailored to you. By consenting to this improved ad experience, you`ll see ads that Appodeal and its partners believe are more relevant to you.\n\nBy agreeing, you confirm that you are over the age of 16 and would like a personalized ad experience. Learn more at <b>https://www.appodeal.com/privacy-policy</b>\n\nIf you disagree, Appodeal won`t collect your data for personalized advertising in this app. However you will still see ads, but they may not be as relevant to your interests.</string>
+    <string name="engine_state_cant_save">Can’t save state - probably there is no free space in internal storage</string>
+    <string name="engine_state_cant_load">Can’t load state</string>
+    <string name="engine_profile_cant_save">Can’t save profile - probably there is no free space in internal storage</string>
+    <string name="engine_profile_cant_load">Can’t load profile</string>
+    <string name="engine_cheats_disabled">Sorry, but this time without cheats :)</string>
 
-    <string name="lblm_use_move_pad_to_follow_arrows">Use movement pad to follow arrows</string>
-    <string name="lblm_doing_well">Doing well! Keep going!</string>
-    <string name="lblm_slide_to_rotate_to_left">Slide finger on the screen and rotate to the left</string>
-    <string name="lblm_than_rotate_to_right">Than rotate to the right</string>
-    <string name="lblm_move_and_rotate_to_follow_arrows">Move and rotate to follow the arrows</string>
-    <string name="lblm_fine">Fine! Keep going!</string>
-    <string name="lblm_use_minimap_to_return_to_start">Use the minimap to return to the starting point</string>
-    <string name="lblm_well_done">Well done! Go on!</string>
-    <string name="lblm_to_open_door_go_through_it">To open the door, just go through it</string>
-    <string name="lblm_next_door_is_closed_use_switch">Next door is closed, you should use switch to open it</string>
-    <string name="lblm_to_activate_switch_go_up_to_him">To activate the switch, go up to him as close as possible</string>
-    <string name="lblm_this_is_window">This is the window. You shouldn’t go through it</string>
-    <string name="lblm_to_open_door_pickup_key">To open next door you should pick up the key first</string>
-    <string name="lblm_use_fire_and_kill_enemy">Use fire button and deactivate next enemy</string>
-    <string name="lblm_pickup_medi">If you get hurt in a battle, pick up a first aid kit</string>
-    <string name="lblm_open_weapon_menu_and_select_pistol">Open weapon menu and select a pistol</string>
-    <string name="lblm_pickup_ammo">Pick up ammo to replenish them</string>
-    <string name="lblm_quick_change_weapon">Tap on the weapon icon above to change it</string>
-    <string name="lblm_after_quick_change_weapon">This is faster than selecting through the menu</string>
-    <string name="lblm_pickup_armor">Pick up the armor</string>
-    <string name="lblm_after_pickup_armor">When you wear an armor, you save more health in a battle</string>
-    <string name="lblm_press_end_level">Press switch and prepare for a real battle</string>
+    <string name="engine_dbg_loaded"
+        translatable="false">Loaded</string>
 
-    <!--
-    <string name="eod_info">Congratulations! You have completed all the episodes.\nRight now, we have been working hard creating new episodes. Wait for updates!</string>
-    -->
+    <string name="engine_dbg_saved"
+        translatable="false">Saved</string>
+
+    <string name="engine_lbl_fps">FPS: %d</string>
+    <string name="engine_lbl_cant_open_door">Can’t open this door</string>
+    <string name="engine_lbl_need_blue_key">You need a blue key</string>
+    <string name="engine_lbl_need_red_key">You need a red key</string>
+    <string name="engine_lbl_need_green_key">You need a green key</string>
+    <string name="engine_lbl_secret_found">Secret found</string>
+    <string name="engine_lbl_endl_kills">Enemies: %d%%</string>
+    <string name="engine_lbl_endl_secrets">Secrets: %d%%</string>
+    <string name="engine_lbl_endl_time">Time: %s</string>
+    <string name="engine_lbl_gameover">Game Over</string>
+    <string name="engine_lbl_gameover_restart">Restart level</string>
+    <string name="engine_lbl_gameover_continue">Watch AD + Continue</string>
+    <string name="engine_lbl_achievement_unlocked">Achievement unlocked: %s</string>
+    <string name="engine_lblh_move">Move</string>
+    <string name="engine_lblh_rotate">Rotate</string>
+    <string name="engine_lblh_fire">Fire</string>
+    <string name="engine_lblh_weapons">Change weapon / Menu</string>
+    <string name="engine_lblh_quick_weapons">Last weapons / Quick change</string>
+    <string name="engine_lblh_minimap">Minimap</string>
+    <string name="engine_lblh_stats_health">Your health</string>
+    <string name="engine_lblh_stats_ammo">Your ammo</string>
+    <string name="engine_lblh_stats_armor">Your armor</string>
+    <string name="engine_lblh_stats_keys">Your keys</string>
+    <string name="engine_lblh_do_not_rotate">Do not rotate! Just move</string>
+    <string name="engine_lblm_welcome_to_training_area">Welcome to the training area!</string>
+    <string name="engine_lblm_use_move_pad_to_follow_arrows">Use movement pad to follow the arrows</string>
+    <string name="engine_lblm_doing_well">Doing well! Keep going!</string>
+    <string name="engine_lblm_slide_to_rotate">Slide finger on the screen to rotate</string>
+    <string name="engine_lblm_move_and_rotate_to_follow_arrows">Move and rotate to follow the arrows</string>
+    <string name="engine_lblm_use_minimap_to_follow_path">Use the minimap to follow the path</string>
+    <string name="engine_lblm_to_open_door_go_through_it">To open the door, just go through it</string>
+    <string name="engine_lblm_next_door_is_closed_use_switch">Next door is closed, you should use switch to open it</string>
+    <string name="engine_lblm_to_activate_switch_go_up_to_him">To activate the switch, go up to him as close as possible</string>
+    <string name="engine_lblm_this_is_window">This is the window. You shouldn’t go through it</string>
+    <string name="engine_lblm_to_open_door_pickup_key">To open next door you should pick up the key first</string>
+    <string name="engine_lblm_press_end_level">Press the switch and prepare for a battle</string>
+    <string name="engine_lblm_use_fire_and_kill_enemy">Use fire button and defuse the next enemy</string>
+    <string name="engine_lblm_pickup_medi">If you get hurt in a battle, pick up a first aid kit</string>
+    <string name="engine_lblm_open_weapon_menu_and_select_pistol">Open weapon menu and select a pistol</string>
+    <string name="engine_lblm_pickup_ammo">Pick up ammo to replenish them</string>
+    <string name="engine_lblm_quick_change_weapon">Tap on the weapon icon above to change it</string>
+    <string name="engine_lblm_after_quick_change_weapon">This is faster than selecting through the menu</string>
+    <string name="engine_lblm_pickup_armor">Pick up the armor</string>
+    <string name="engine_lblm_after_pickup_armor">When you wear an armor, you save more health in a battle</string>
+
+    <string name="engine_lblm_3"
+        translatable="false">3</string>
+
+    <string name="engine_lblm_2"
+        translatable="false">2</string>
+
+    <string name="engine_lblm_1"
+        translatable="false">1</string>
 
     <string name="achievements_item_achieved">★ ACHIEVED ★</string>
     <string name="achievements_exp">EXP: %d</string>
-
-    <string name="store_back">← Back</string>
-
-    <string name="share_title">Fire Strike: a true old school 3D shooter for you</string>
-    <string name="send_email_using">Send email using…</string>
-
-    <!-- store : levels -->
-    <string name="pt_tutorial">Tutorial</string>
-    <string name="pt_episode_1">Episode I</string>
-    <string name="pt_episode_2">Episode II</string>
-    <string name="pt_episode_3">Episode III</string>
-
-    <!-- achievements -->
-    <string name="ac_unlocked">Achievement unlocked: %s</string>
-    <string name="at_monsters_killed_5">Hands in blood</string>
-    <string name="ad_monsters_killed_5">Kill 5 enemies</string>
-    <string name="at_monsters_killed_25">Apprentice butcher</string>
-    <string name="ad_monsters_killed_25">Kill 25 enemies</string>
-    <string name="at_monsters_killed_100">It’s my job</string>
-    <string name="ad_monsters_killed_100">Kill 100 enemies</string>
-    <string name="at_monsters_killed_500">Ron Jambo</string>
-    <string name="ad_monsters_killed_500">Kill 500 enemies</string>
-    <string name="at_monsters_killed_1000">I see dead enemies. A lot</string>
-    <string name="ad_monsters_killed_1000">Kill 1000 enemies</string>
-    <string name="at_doors_opened_5">Doors mastered</string>
-    <string name="ad_doors_opened_5">Open 5 doors</string>
-    <string name="at_doors_opened_25">Doorkeeper</string>
-    <string name="ad_doors_opened_25">Open 25 doors</string>
-    <string name="at_doors_opened_100">Picklock is my friend</string>
-    <string name="ad_doors_opened_100">Open 100 doors</string>
-    <string name="at_doors_opened_500">Blue key, green key, what’s the difference</string>
-    <string name="ad_doors_opened_500">Open 500 doors</string>
-    <string name="at_doors_opened_1000">Your princess is in another castle</string>
-    <string name="ad_doors_opened_1000">Open 1000 doors</string>
-    <string name="at_secrets_found_5">Secrets mastered</string>
-    <string name="ad_secrets_found_5">Find 5 secrets</string>
-    <string name="at_secrets_found_10">The Explorer</string>
-    <string name="ad_secrets_found_10">Find 10 secrets</string>
-    <string name="at_secrets_found_25">Follow the white rabbit</string>
-    <string name="ad_secrets_found_25">Find 25 secrets</string>
-    <string name="at_secrets_found_50">My name is RentgenMan</string>
-    <string name="ad_secrets_found_50">Find 50 secrets</string>
-    <string name="at_secrets_found_100">Indiana Ford</string>
-    <string name="ad_secrets_found_100">Find 100 secrets</string>
+    <string name="achievements_back">← Back</string>
+    <string name="achievements_t_monsters_killed_5">Hands in blood</string>
+    <string name="achievements_d_monsters_killed_5">Defuse 5 enemies</string>
+    <string name="achievements_t_monsters_killed_50">Apprentice butcher</string>
+    <string name="achievements_d_monsters_killed_50">Defuse 50 enemies</string>
+    <string name="achievements_t_monsters_killed_500">It’s my job</string>
+    <string name="achievements_d_monsters_killed_500">Defuse 500 enemies</string>
+    <string name="achievements_t_monsters_killed_2500">Ron Jambo</string>
+    <string name="achievements_d_monsters_killed_2500">Defuse 2500 enemies</string>
+    <string name="achievements_t_monsters_killed_5000">I see dead enemies. A lot</string>
+    <string name="achievements_d_monsters_killed_5000">Defuse 5000 enemies</string>
+    <string name="achievements_t_p100_kills_row_5">No country for old enemies</string>
 
     <string formatted="false"
-        name="at_p100_kills_row_5">No country for old enemies</string>
+        name="achievements_d_p100_kills_row_5">Defuse 100% enemies in 5 levels in a row</string>
+
+    <string name="achievements_t_p100_kills_row_10">Devastator</string>
 
     <string formatted="false"
-        name="ad_p100_kills_row_5">100% kills in 5 levels in a row</string>
+        name="achievements_d_p100_kills_row_10">Defuse 100% enemies in 10 levels in a row</string>
+
+    <string name="achievements_t_secrets_found_5">Secrets mastered</string>
+    <string name="achievements_d_secrets_found_5">Find 5 secrets</string>
+    <string name="achievements_t_secrets_found_10">The Explorer</string>
+    <string name="achievements_d_secrets_found_10">Find 10 secrets</string>
+    <string name="achievements_t_secrets_found_15">Follow the white rabbit</string>
+    <string name="achievements_d_secrets_found_15">Find 15 secrets</string>
+    <string name="achievements_t_secrets_found_20">My name is RentgenMan</string>
+    <string name="achievements_d_secrets_found_20">Find 20 secrets</string>
+    <string name="achievements_t_secrets_found_30">Indiana Ford</string>
+    <string name="achievements_d_secrets_found_30">Find 30 secrets</string>
+
+    <string name="achievements_t_p100_secrets_row_5">Iron Will</string>
 
     <string formatted="false"
-        name="at_p100_items_row_5">Collector</string>
+        name="achievements_d_p100_secrets_row_5">100% secrets in 5 levels in a row</string>
 
-    <string formatted="false"
-        name="ad_p100_items_row_5">100% items in 5 levels in a row</string>
+    <string tools:ignore="TypographyQuotes"
+        name="achievements_t_p100_secrets_row_10">Ultimate ninja</string>
 
-    <string formatted="false"
-        name="at_p100_secrets_row_5">Iron Will</string>
+    <string tools:ignore="TypographyQuotes"
+        formatted="false"
+        name="achievements_d_p100_secrets_row_10">100% secrets in 10 levels in a row</string>
 
-    <string formatted="false"
-        name="ad_p100_secrets_row_5">100% secrets in 5 levels in a row</string>
+    <string name="achievements_t_barrels_exploded_1">Wow! They explode!</string>
+    <string name="achievements_d_barrels_exploded_1">Explode 1 barrel</string>
+    <string name="achievements_t_barrels_exploded_5">Boom? Boom!</string>
+    <string name="achievements_d_barrels_exploded_5">Explode 5 barrels</string>
+    <string name="achievements_t_barrels_exploded_25">Demolition man</string>
+    <string name="achievements_d_barrels_exploded_25">Explode 25 barrels</string>
+    <string name="achievements_t_barrels_exploded_50">I hate these barrels!</string>
+    <string name="achievements_d_barrels_exploded_50">Explode 50 barrels</string>
+    <string name="achievements_t_barrels_exploded_100">The explosion is my middle name</string>
+    <string name="achievements_d_barrels_exploded_100">Explode 100 barrels</string>
 
-    <string formatted="false"
-        name="at_p100_kills_row_10">Devastator</string>
+    <string name="achievements_t_doors_opened_5">Doors mastered</string>
+    <string name="achievements_d_doors_opened_5">Open 5 doors</string>
+    <string name="achievements_t_doors_opened_10">Doorkeeper</string>
+    <string name="achievements_d_doors_opened_10">Open 10 doors</string>
+    <string name="achievements_t_doors_opened_25">Picklock is my friend</string>
+    <string name="achievements_d_doors_opened_25">Open 25 doors</string>
+    <string name="achievements_t_doors_opened_50">Blue key, green key, what’s the difference</string>
+    <string name="achievements_d_doors_opened_50">Open 50 doors</string>
+    <string name="achievements_t_doors_opened_75">Your princess is in another castle</string>
+    <string name="achievements_d_doors_opened_75">Open 75 doors</string>
 
-    <string formatted="false"
-        name="ad_p100_kills_row_10">100% kills in 10 levels in a row</string>
-
-    <string formatted="false"
-        name="at_p100_items_row_10">Loota</string>
-
-    <string formatted="false"
-        name="ad_p100_items_row_10">100% items in 10 levels in a row</string>
-
-    <string formatted="false"
-        name="at_p100_secrets_row_10"
-        tools:ignore="TypographyQuotes">Ultimate ninja</string>
-
-    <string formatted="false"
-        name="ad_p100_secrets_row_10"
-        tools:ignore="TypographyQuotes">100% secrets in 10 levels in a row</string>
-
-    <string name="pref_delete_profile">Debug: delete profile</string>
-    <string name="dlg_delete_profile">All progress and achievements will be lost.\nAre you sure?</string>
 </resources>

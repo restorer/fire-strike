@@ -1,11 +1,11 @@
 package zame.game.engine.controls;
 
-import javax.microedition.khronos.opengles.GL10;
 import zame.game.App;
 import zame.game.engine.Game;
-import zame.game.engine.GameMath;
-import zame.game.engine.Labels;
-import zame.game.engine.TextureLoader;
+import zame.game.engine.graphics.Labels;
+import zame.game.engine.graphics.Renderer;
+import zame.game.engine.graphics.TextureLoader;
+import zame.game.engine.visual.Controls;
 
 public class OnScreenFireAndRotate extends OnScreenController {
     private float fromX;
@@ -20,7 +20,7 @@ public class OnScreenFireAndRotate extends OnScreenController {
     private float heroVertA;
     private boolean fireActive;
 
-    OnScreenFireAndRotate(int position) {
+    public OnScreenFireAndRotate(int position) {
         super();
 
         this.position = position;
@@ -81,7 +81,8 @@ public class OnScreenFireAndRotate extends OnScreenController {
                 && x <= fireToX
                 && y >= fireFromY
                 && y <= fireToY
-                && (state.disabledControlsMask & Controls.CONTROL_FIRE) == 0) {
+                && (game.renderMode != Game.RENDER_MODE_GAME
+                || (state.disabledControlsMask & Controls.CONTROL_FIRE) == 0)) {
 
             game.actionFire |= Controls.ACTION_FIRE_ONSCREEN;
             fireActive = true;
@@ -101,20 +102,20 @@ public class OnScreenFireAndRotate extends OnScreenController {
 
     @SuppressWarnings("MagicNumber")
     @Override
-    public void render(GL10 gl, long elapsedTime, boolean canRenderHelp) {
-        if ((state.disabledControlsMask & Controls.CONTROL_FIRE) == 0) {
-            owner.drawIcon(fireBtnX, fireBtnY, TextureLoader.ICON_SHOOT, fireActive);
+    public void render(long elapsedTime, boolean canRenderHelp) {
+        if (game.renderMode != Game.RENDER_MODE_GAME || (state.disabledControlsMask & Controls.CONTROL_FIRE) == 0) {
+            owner.batchIcon(fireBtnX, fireBtnY, TextureLoader.ICON_SHOOT, fireActive);
         }
 
-        boolean isHelp = canRenderHelp && shouldDrawHelp();
+        boolean isHelp = canRenderHelp && shouldRenderHelp();
 
         if (game.renderMode != Game.RENDER_MODE_GAME || isHelp) {
             float dt = (float)elapsedTime * 0.0025f;
 
             if (isHelp
                     && (state.disabledControlsMask & Controls.CONTROL_ROTATE) == 0
-                    && (state.controlsHelpMask & (Controls.CONTROL_ROTATE
-                    | Controls.CONTROL_ROTATE_LEFT
+                    && (state.controlsHelpMask & (/* Controls.CONTROL_ROTATE
+                    | */ Controls.CONTROL_ROTATE_LEFT
                     | Controls.CONTROL_ROTATE_RIGHT)) != 0) {
 
                 boolean posLeft = (position & Controls.POSITION_RIGHT) == 0;
@@ -123,13 +124,15 @@ public class OnScreenFireAndRotate extends OnScreenController {
                 //noinspection IfStatementWithIdenticalBranches
                 if ((state.controlsHelpMask & Controls.CONTROL_ROTATE_RIGHT) != 0) {
                     off = -off;
-                } else if (((state.controlsHelpMask & Controls.CONTROL_ROTATE) != 0) && (dt % (GameMath.PI_F * 4.0f)
-                        > GameMath.PI_F * 2.0f)) {
-
-                    off = -off;
                 }
 
-                owner.drawIcon(((posLeft ? 0.25f : 0.75f) + off) * (float)engine.width,
+                // else if (((state.controlsHelpMask & Controls.CONTROL_ROTATE) != 0) && (dt % (GameMath.PI_F * 4.0f)
+                //        > GameMath.PI_F * 2.0f)) {
+                //
+                //     off = -off;
+                // }
+
+                owner.batchIcon(((posLeft ? 0.25f : 0.75f) + off) * (float)engine.width,
                         (float)engine.height * 0.5f,
                         TextureLoader.ICON_JOY,
                         false,
@@ -139,7 +142,7 @@ public class OnScreenFireAndRotate extends OnScreenController {
             if (game.renderMode != Game.RENDER_MODE_GAME || ((state.disabledControlsMask & Controls.CONTROL_FIRE) == 0
                     && (state.controlsHelpMask & Controls.CONTROL_FIRE) != 0)) {
 
-                owner.drawIcon(fireBtnX,
+                owner.batchIcon(fireBtnX,
                         fireBtnY,
                         TextureLoader.ICON_JOY,
                         false,
@@ -201,8 +204,8 @@ public class OnScreenFireAndRotate extends OnScreenController {
 
     @SuppressWarnings("MagicNumber")
     @Override
-    protected void drawHelp(GL10 gl, long elapsedTime) {
-        if (!shouldDrawHelp()) {
+    public void renderHelp(long elapsedTime) {
+        if (!shouldRenderHelp()) {
             return;
         }
 
@@ -211,8 +214,7 @@ public class OnScreenFireAndRotate extends OnScreenController {
         if ((state.disabledControlsMask & Controls.CONTROL_FIRE) == 0
                 && (state.controlsHelpMask & Controls.CONTROL_FIRE) != 0) {
 
-            owner.drawHelpArrowWithText(gl,
-                    fireBtnX,
+            owner.renderHelpArrowWithText(fireBtnX,
                     fireBtnY,
                     getHelpDiagSize(),
                     posLeft,
@@ -231,18 +233,16 @@ public class OnScreenFireAndRotate extends OnScreenController {
         float sx = ((posLeft ? 0.25f : 0.75f) - 0.2f) * engine.ratio;
         float ex = ((posLeft ? 0.25f : 0.75f) + 0.2f) * engine.ratio;
 
-        engine.renderer.init();
+        engine.renderer.startBatch();
+        owner.batchArrow(ex, 0.55f, sx, 0.55f, 0.0f, false);
+        owner.batchArrow(sx, 0.45f, ex, 0.45f, 0.0f, false);
+        engine.renderer.setColorQuadA(0.5f);
+        engine.renderer.renderBatch(Renderer.FLAG_BLEND);
 
-        engine.renderer.setQuadA(0.5f);
-        owner.drawArrow(gl, ex, 0.55f, sx, 0.55f, 0.0f, false);
-        owner.drawArrow(gl, sx, 0.45f, ex, 0.45f, 0.0f, false);
-        engine.renderer.flush(gl, false);
+        engine.labels.startBatch(true);
+        engine.renderer.setColorQuadA(1.0f);
 
-        engine.labels.beginDrawing(gl, true);
-        engine.renderer.setQuadA(1.0f);
-
-        engine.labels.draw(gl,
-                sx,
+        engine.labels.batch(sx,
                 0.45f,
                 ex,
                 0.55f,
@@ -250,6 +250,6 @@ public class OnScreenFireAndRotate extends OnScreenController {
                 0.04f,
                 Labels.ALIGN_CC);
 
-        engine.labels.endDrawing(gl, true);
+        engine.labels.renderBatch();
     }
 }

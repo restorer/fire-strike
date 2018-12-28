@@ -1,9 +1,10 @@
 package zame.game.engine;
 
-import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import zame.game.App;
-import zame.game.engine.controls.Controls;
+import zame.game.R;
+import zame.game.core.manager.PreferencesManager;
+import zame.game.engine.visual.Controls;
 
 public class Config implements EngineObject {
     protected Engine engine;
@@ -23,17 +24,17 @@ public class Config implements EngineObject {
     public int[] keyMappings;
     public boolean rotateScreen;
 
-    float gamma;
+    public float gamma;
     boolean showCrosshair;
     @SuppressWarnings("MagicNumber") float wpDim = 0.5f;
 
     @Override
-    public void setEngine(Engine engine) {
+    public void onCreate(Engine engine) {
         this.engine = engine;
     }
 
-    private void updateKeyMap(SharedPreferences sp, String key, int type) {
-        int keyCode = sp.getInt(key, 0);
+    private void updateKeyMap(int keyResId, int type) {
+        int keyCode = App.self.preferences.getInt(keyResId);
 
         if (keyCode > 0 && keyCode < keyMappings.length) {
             keyMappings[keyCode] = type;
@@ -63,26 +64,35 @@ public class Config implements EngineObject {
 
     @SuppressWarnings("MagicNumber")
     public void reload() {
-        SharedPreferences sp = App.self.getSharedPreferences();
-        String controlSchemeStr = sp.getString("ControlsScheme", "StaticMovePad");
+        PreferencesManager preferences = App.self.preferences;
 
-        if ("FreeMovePad".equals(controlSchemeStr)) {
+        String controlSchemeStr = preferences.getString(R.string.key_controls_scheme,
+                R.string.val_scheme_static_move_pad);
+
+        if (App.self.getString(R.string.val_scheme_free_move_pad).equals(controlSchemeStr)) {
             controlScheme = Controls.SCHEME_FREE_MOVE_PAD;
         } else {
             controlScheme = Controls.SCHEME_STATIC_MOVE_PAD;
         }
 
-        moveSpeed = getAccel(sp.getInt("MoveSpeed", 8), 1, 8, 15, 0.25f, 0.5f, 1.0f);
-        strafeSpeed = getAccel(sp.getInt("StrafeSpeed", 8), 1, 8, 15, 0.25f, 0.5f, 1.0f) * 0.5f;
-        rotateSpeed = getAccel(sp.getInt("RotateSpeed", 8), 1, 8, 15, 0.5f, 1.0f, 2.0f);
-        verticalLookMult = (sp.getBoolean("InvertVerticalLook", false) ? -1.0f : 1.0f);
-        horizontalLookMult = (sp.getBoolean("InvertHorizontalLook", false) ? -1.0f : 1.0f);
-        leftHandAim = sp.getBoolean("LeftHandAim", false);
-        fireButtonAtTop = sp.getBoolean("FireButtonAtTop", false);
-        controlsAlpha = 0.1f * (float)sp.getInt("ControlsAlpha", 5);
-        accelerometerEnabled = sp.getBoolean("AccelerometerEnabled", false);
-        accelerometerAcceleration = (float)sp.getInt("AccelerometerAcceleration", 5);
-        trackballAcceleration = getAccel(sp.getInt("TrackballAcceleration", 5), 1, 5, 9, 0.1f, 1.0f, 10.0f);
+        moveSpeed = getAccel(preferences.getInt(R.string.key_move_speed, 8), 1, 8, 15, 0.25f, 0.5f, 1.0f);
+        strafeSpeed = getAccel(preferences.getInt(R.string.key_strafe_speed, 8), 1, 8, 15, 0.25f, 0.5f, 1.0f) * 0.5f;
+        rotateSpeed = getAccel(preferences.getInt(R.string.key_rotate_speed, 8), 1, 8, 15, 0.5f, 1.0f, 2.0f);
+        verticalLookMult = preferences.getBoolean(R.string.key_invert_vertical_look) ? -1.0f : 1.0f;
+        horizontalLookMult = preferences.getBoolean(R.string.key_invert_horizontal_look) ? -1.0f : 1.0f;
+        leftHandAim = preferences.getBoolean(R.string.key_left_hand_aim);
+        fireButtonAtTop = preferences.getBoolean(R.string.key_fire_button_at_top);
+        controlsAlpha = 0.1f * (float)preferences.getInt(R.string.key_controls_alpha, 5);
+        accelerometerEnabled = preferences.getBoolean(R.string.key_accelerometer_enabled);
+        accelerometerAcceleration = (float)preferences.getInt(R.string.key_accelerometer_acceleration, 5);
+
+        trackballAcceleration = getAccel(preferences.getInt(R.string.key_trackball_acceleration, 5),
+                1,
+                5,
+                9,
+                0.1f,
+                1.0f,
+                10.0f);
 
         keyMappings = new int[KeyEvent.getMaxKeyCode()];
 
@@ -90,19 +100,18 @@ public class Config implements EngineObject {
             keyMappings[i] = 0;
         }
 
-        updateKeyMap(sp, "KeyForward", Controls.FORWARD);
-        updateKeyMap(sp, "KeyBackward", Controls.BACKWARD);
-        updateKeyMap(sp, "KeyRotateLeft", Controls.ROTATE_LEFT);
-        updateKeyMap(sp, "KeyRotateRight", Controls.ROTATE_RIGHT);
-        updateKeyMap(sp, "KeyStrafeLeft", Controls.STRAFE_LEFT);
-        updateKeyMap(sp, "KeyStrafeRight", Controls.STRAFE_RIGHT);
-        updateKeyMap(sp, "KeyFire", Controls.FIRE);
-        updateKeyMap(sp, "KeyNextWeapon", Controls.NEXT_WEAPON);
-        // updateKeyMap(sp, "KeyToggleMap", Controls.TOGGLE_MAP);
-        updateKeyMap(sp, "KeyStrafeMode", Controls.STRAFE_MODE);
+        updateKeyMap(R.string.key_hwkey_forward, Controls.FORWARD);
+        updateKeyMap(R.string.key_hwkey_backward, Controls.BACKWARD);
+        updateKeyMap(R.string.key_hwkey_rotate_left, Controls.ROTATE_LEFT);
+        updateKeyMap(R.string.key_hwkey_rotate_right, Controls.ROTATE_RIGHT);
+        updateKeyMap(R.string.key_hwkey_strafe_left, Controls.STRAFE_LEFT);
+        updateKeyMap(R.string.key_hwkey_strafe_right, Controls.STRAFE_RIGHT);
+        updateKeyMap(R.string.key_hwkey_fire, Controls.FIRE);
+        updateKeyMap(R.string.key_hwkey_next_weapon, Controls.NEXT_WEAPON);
+        updateKeyMap(R.string.key_hwkey_strafe_mode, Controls.STRAFE_MODE);
 
-        gamma = (float)sp.getInt("Gamma", 1) * 0.04f;
-        showCrosshair = sp.getBoolean("ShowCrosshair", true);
-        rotateScreen = sp.getBoolean("RotateScreen", false);
+        gamma = (float)preferences.getInt(R.string.key_gamma, 1) * 0.04f;
+        showCrosshair = preferences.getBoolean(R.string.key_show_crosshair, true);
+        rotateScreen = preferences.getBoolean(R.string.key_rotate_screen);
     }
 }

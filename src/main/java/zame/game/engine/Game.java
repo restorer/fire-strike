@@ -1,22 +1,42 @@
 package zame.game.engine;
 
 import android.text.TextUtils;
-import javax.microedition.khronos.opengles.GL10;
 import zame.game.App;
-import zame.game.Common;
 import zame.game.R;
-import zame.game.engine.hud.AutoMap;
-import zame.game.managers.SoundManager;
-import zame.game.store.Achievements;
-import zame.game.store.Profile;
+import zame.game.core.util.Common;
+import zame.game.engine.controller.HeroController;
+import zame.game.engine.entity.Bullet;
+import zame.game.engine.entity.Door;
+import zame.game.engine.entity.Explosion;
+import zame.game.engine.entity.LookPoint;
+import zame.game.engine.entity.Mark;
+import zame.game.engine.entity.Monster;
+import zame.game.engine.entity.ObjectContainer;
+import zame.game.engine.entity.Timeout;
+import zame.game.engine.graphics.Labels;
+import zame.game.engine.graphics.Renderer;
+import zame.game.engine.graphics.TextureLoader;
+import zame.game.engine.level.Level;
+import zame.game.engine.level.LevelRenderer;
+import zame.game.engine.state.Profile;
+import zame.game.engine.state.State;
+import zame.game.engine.util.GameMath;
+import zame.game.engine.visual.AutoMap;
+import zame.game.engine.visual.EndLevel;
+import zame.game.engine.visual.GameOver;
+import zame.game.engine.visual.Overlay;
+import zame.game.engine.visual.Weapons;
+import zame.game.feature.achievements.Achievements;
+import zame.game.feature.sound.SoundManager;
+import zame.game.flavour.config.GameConfig;
 
 public class Game implements EngineObject {
     public static final int RENDER_MODE_GAME = 1;
     public static final int RENDER_MODE_END_LEVEL = 2;
     public static final int RENDER_MODE_GAME_OVER = 4;
-    public static final int RENDER_MODE_ALL = RENDER_MODE_GAME | RENDER_MODE_END_LEVEL | RENDER_MODE_GAME_OVER;
+    public static final int RENDER_MODE_ALL = RENDER_MODE_GAME | RENDER_MODE_END_LEVEL;
 
-    static final float WALK_WALL_DIST = 0.2f;
+    public static final float WALK_WALL_DIST = 0.2f;
     private static final float USE_IGNORE_THRESHOLD = 0.5f;
     private static final int LOAD_LEVEL_JUST_NEXT_NAME = 4;
     private static final float CROSSHAIR_SIZE = 0.005f;
@@ -28,9 +48,9 @@ public class Game implements EngineObject {
     private static final String PGT = P + G + T; // Please Give The
     private static final String PD = P + D; // Please Debug
 
-    static final int LOAD_LEVEL_NORMAL = 1;
-    @SuppressWarnings("WeakerAccess") static final int LOAD_LEVEL_NEXT = 2;
-    static final int LOAD_LEVEL_RELOAD = 3;
+    public static final int LOAD_LEVEL_NORMAL = 1;
+    private static final int LOAD_LEVEL_NEXT = 2;
+    public static final int LOAD_LEVEL_RELOAD = 3;
 
     private Engine engine;
     private Config config;
@@ -64,23 +84,26 @@ public class Game implements EngineObject {
     private int maxAmmoClip;
     private int maxAmmoShell;
     private int maxAmmoGrenade;
+    public float healthHitMonsterMult;
+    public float healthHitHeroMult;
     private long firstTouchTime;
     private boolean hasMoved;
 
-    long killedTime;
+    public long killedTime;
 
     public int actionFire;
     public boolean actionGameMenu;
     public boolean actionNextWeapon;
     public boolean[] actionQuickWeapons = { false, false, false };
-    public boolean actionUpgradeButton;
+    public boolean actionRestartButton;
+    public boolean actionContinueButton;
     public String savedGameParam = "";
     public String unprocessedGameCode = "";
     public int renderMode;
-    public boolean isRewardedVideoWatched;
+    boolean isRewardedVideoWatched;
 
     @Override
-    public void setEngine(Engine engine) {
+    public void onCreate(Engine engine) {
         this.engine = engine;
         this.config = engine.config;
         this.state = engine.state;
@@ -98,7 +121,7 @@ public class Game implements EngineObject {
         this.gameOver = engine.gameOver;
     }
 
-    private void setStartValues() {
+    private void reload() {
         nextLevelTime = 0;
         killedTime = 0;
         isGameOverFlag = false;
@@ -107,23 +130,23 @@ public class Game implements EngineObject {
         firstTouchTime = -1;
     }
 
-    public void init() {
-        setStartValues();
+    void onActivated() {
         renderMode = RENDER_MODE_GAME;
         soundManager.setPlaylist(SoundManager.LIST_MAIN);
 
-        labels.init();
-        overlay.init();
-        state.init();
-        level.init();
-        weapons.init();
+        reload();
+        labels.reload();
+        overlay.reload();
+        state.reload();
+        level.reload();
+        weapons.reload();
 
         if (TextUtils.isEmpty(savedGameParam)) {
             loadLevel(LOAD_LEVEL_NORMAL);
             playStartLevelSound = true;
 
             if (State.LEVEL_INITIAL.equals(state.levelName)) {
-                App.self.trackerInst.send("JustStarted");
+                App.self.tracker.trackEvent("JustStarted");
             }
         } else {
             int result = state.load(savedGameParam);
@@ -145,11 +168,13 @@ public class Game implements EngineObject {
     }
 
     private void updatePurchases() {
-        maxHealth = GameParams.HEALTH_MAX;
-        maxArmor = GameParams.ARMOR_MAX;
-        maxAmmoClip = GameParams.AMMO_MAX_CLIP;
-        maxAmmoShell = GameParams.AMMO_MAX_SHELL;
-        maxAmmoGrenade = GameParams.AMMO_MAX_GRENADE;
+        maxHealth = GameConfig.HEALTH_MAX;
+        maxArmor = GameConfig.ARMOR_MAX;
+        maxAmmoClip = GameConfig.AMMO_MAX_CLIP;
+        maxAmmoShell = GameConfig.AMMO_MAX_SHELL;
+        maxAmmoGrenade = GameConfig.AMMO_MAX_GRENADE;
+        healthHitMonsterMult = 1.0f;
+        healthHitHeroMult = 1.0f;
     }
 
     private void processGameCode(String codes) {
@@ -181,7 +206,7 @@ public class Game implements EngineObject {
                     state.heroAmmo[Weapons.AMMO_SHELL] = maxAmmoShell;
                     state.heroAmmo[Weapons.AMMO_GRENADE] = maxAmmoGrenade;
                 } else {
-                    Common.showToast(R.string.msg_cheats_disabled);
+                    Common.showToast(engine.activity, R.string.engine_cheats_disabled);
                 }
             } else if ((PGT + "h").equals(code)) {
                 if (!state.cheatsDisabled) {
@@ -189,11 +214,12 @@ public class Game implements EngineObject {
                     state.heroHealth = maxHealth;
                     state.heroArmor = maxArmor;
                 } else {
-                    Common.showToast(R.string.msg_cheats_disabled);
+                    Common.showToast(engine.activity, R.string.engine_cheats_disabled);
                 }
             } else if ((PGT + "k").equals(code)) {
                 // Please Give The Keys
                 state.heroKeysMask = 7;
+                level.requestBuildPathToWave();
             } else if ((P + "lnl").equals(code)) {
                 // Please Load Next Level
                 loadLevel(LOAD_LEVEL_NEXT);
@@ -202,7 +228,7 @@ public class Game implements EngineObject {
                     // Please Give God Mode
                     state.godMode = !state.godMode;
                 } else {
-                    Common.showToast(R.string.msg_cheats_disabled);
+                    Common.showToast(engine.activity, R.string.engine_cheats_disabled);
                 }
             } else if ("iddqd".equals(code) || "iwgm".equals(code) || "gmgm".equals(code)) {
                 state.godMode = false;
@@ -217,6 +243,20 @@ public class Game implements EngineObject {
             } else if ((PD + "rl").equals(code)) {
                 // Please Debug Reload Level
                 loadLevel(LOAD_LEVEL_RELOAD);
+            } else if ((PD + "rli").equals(code)) {
+                // Please Debug Reload Level Initial
+                for (int i = 0; i < Weapons.WEAPON_LAST; i++) {
+                    state.heroHasWeapon[i] = false;
+                }
+
+                for (int i = 0; i < Weapons.AMMO_LAST; i++) {
+                    state.heroAmmo[i] = 0;
+                }
+
+                state.heroHasWeapon[Weapons.WEAPON_KNIFE] = true;
+                state.heroArmor = GameConfig.ARMOR_ADD_GREEN;
+
+                loadLevel(LOAD_LEVEL_RELOAD);
             } else if ((PD + "oa").equals(code)) {
                 // Please Debug On Automap
                 levelRenderer.debugOnAutomap = !levelRenderer.debugOnAutomap;
@@ -230,9 +270,9 @@ public class Game implements EngineObject {
                 if (engine.hasGameSave(Engine.DGB_SAVE_PREFIX + saveName)) {
                     if (state.load(Engine.DGB_SAVE_PREFIX + saveName) == State.LOAD_RESULT_SUCCESS) {
                         engine.updateAfterLevelLoadedOrCreated();
-                        Common.showToast(R.string.msg_dbg_loaded);
+                        Common.showToast(engine.activity, R.string.engine_dbg_loaded);
                     } else {
-                        Common.showToast(R.string.msg_cant_load_state);
+                        Common.showToast(engine.activity, R.string.engine_state_cant_load);
                     }
                 }
             } else if (code.startsWith(PD + "s")) {
@@ -241,7 +281,7 @@ public class Game implements EngineObject {
 
                 if (saveName.matches("^[0-9]+$")) {
                     state.save(Engine.DGB_SAVE_PREFIX + saveName);
-                    Common.showToast(R.string.msg_dbg_saved);
+                    Common.showToast(engine.activity, R.string.engine_dbg_saved);
                 }
             } else if (code.startsWith(P + "m")) {
                 // Please Map ...
@@ -259,7 +299,7 @@ public class Game implements EngineObject {
         }
     }
 
-    void loadLevel(int loadLevelType) {
+    public void loadLevel(int loadLevelType) {
         if (loadLevelType == LOAD_LEVEL_NEXT || loadLevelType == LOAD_LEVEL_JUST_NEXT_NAME) {
             String nextLevelName = profile.getLevel(state.levelName).getNextLevelName();
 
@@ -272,7 +312,7 @@ public class Game implements EngineObject {
         }
 
         if (loadLevelType != LOAD_LEVEL_JUST_NEXT_NAME) {
-            setStartValues();
+            reload();
             state.mustReload = false;
 
             if (state.mustLoadAutosave) {
@@ -281,14 +321,14 @@ public class Game implements EngineObject {
                     engine.updateAfterLevelLoadedOrCreated();
                 } else {
                     level.load(state.levelName);
-                    state.heroWeapon = weapons.getBestWeapon();
+                    weapons.setHeroWeaponImmediate(weapons.getBestWeapon(-1));
                 }
 
                 updatePurchases();
                 renderMode = RENDER_MODE_GAME;
             } else {
                 level.load(state.levelName);
-                state.heroWeapon = weapons.getBestWeapon();
+                weapons.setHeroWeaponImmediate(weapons.getBestWeapon(-1));
                 engine.createAutosave();
             }
         } else {
@@ -309,8 +349,12 @@ public class Game implements EngineObject {
         }
 
         state.mustLoadAutosave = true;
+        state.overallDeaths++;
+
         renderMode = RENDER_MODE_GAME_OVER;
-        App.self.trackerInst.send("GameOver", state.levelName);
+        engine.heroController.reload(); // To properly show / hide "resurrect" button
+
+        App.self.tracker.trackEvent("GameOver", state.levelName);
     }
 
     private void showEndLevelScreen() {
@@ -320,17 +364,11 @@ public class Game implements EngineObject {
             return;
         }
 
-        App.self.trackerInst.send("LevelCompleted", state.levelName);
+        App.self.tracker.trackEvent("LevelCompleted", state.levelName);
 
         loadLevel(LOAD_LEVEL_JUST_NEXT_NAME);
         renderMode = RENDER_MODE_END_LEVEL;
 
-        if (state.pickedItems > state.totalItems) {
-            state.pickedItems = state.totalItems;
-            Common.log("Game.showEndLevelScreen: state.pickedItems > state.totalItems");
-        }
-
-        state.overallItems += state.pickedItems;
         state.overallMonsters += state.killedMonsters;
         state.overallSecrets += state.foundSecrets;
         state.overallSeconds += state.timeInTicks / Engine.FRAMES_PER_SECOND;
@@ -339,23 +377,17 @@ public class Game implements EngineObject {
         profile.exp += state.levelExp;
 
         if (!profile.alreadyCompletedLevels.contains(state.levelName)) {
-            profile.exp += GameParams.EXP_END_LEVEL;
+            profile.exp += GameConfig.EXP_END_LEVEL;
             profile.alreadyCompletedLevels.add(state.levelName);
         }
 
-        profile.update();
+        profile.update(engine.activity);
         state.levelExp = 0;
 
         if (state.totalMonsters != 0 && state.killedMonsters == state.totalMonsters) {
             Achievements.updateStat(Achievements.STAT_P100_KILLS_ROW, profile, engine, state);
         } else {
             Achievements.resetStat(Achievements.STAT_P100_KILLS_ROW, profile, engine, state);
-        }
-
-        if (state.totalItems != 0 && state.pickedItems == state.totalItems) {
-            Achievements.updateStat(Achievements.STAT_P100_ITEMS_ROW, profile, engine, state);
-        } else {
-            Achievements.resetStat(Achievements.STAT_P100_ITEMS_ROW, profile, engine, state);
         }
 
         if (state.totalSecrets != 0 && state.foundSecrets == state.totalSecrets) {
@@ -365,16 +397,15 @@ public class Game implements EngineObject {
         }
 
         if (profile.isUnsavedUpdates) {
-            profile.save();
+            profile.save(engine.activity);
         }
 
         endLevel.init((state.totalMonsters == 0 ? -1 : (state.killedMonsters * 100 / state.totalMonsters)),
-                (state.totalItems == 0 ? -1 : (state.pickedItems * 100 / state.totalItems)),
                 (state.totalSecrets == 0 ? -1 : (state.foundSecrets * 100 / state.totalSecrets)),
                 (state.timeInTicks / Engine.FRAMES_PER_SECOND));
     }
 
-    void nextLevel(@SuppressWarnings("SameParameterValue") boolean isTutorial) {
+    public void nextLevel(@SuppressWarnings("SameParameterValue") boolean isTutorial) {
         skipEndLevelScreenOnce = isTutorial;
         nextLevelTime = engine.elapsedTime;
 
@@ -385,7 +416,7 @@ public class Game implements EngineObject {
         }
     }
 
-    void hitHero(int hits, Monster mon) {
+    public void hitHero(int hits, Monster mon) {
         if (killedTime > 0) {
             return;
         }
@@ -399,9 +430,9 @@ public class Game implements EngineObject {
         if (!state.godMode && nextLevelTime == 0) {
             if (state.heroArmor > 0) {
                 state.heroArmor = Math.max(0,
-                        state.heroArmor - Math.max(1, (int)((double)hits * GameParams.ARMOR_HIT_TAKER)));
+                        state.heroArmor - Math.max(1, (int)((double)hits * GameConfig.ARMOR_HIT_TAKER)));
 
-                state.heroHealth -= Math.max(1, (int)((double)hits * GameParams.ARMOR_HEALTH_SAVER));
+                state.heroHealth -= Math.max(1, (int)((double)hits * GameConfig.ARMOR_HEALTH_SAVER));
             } else {
                 state.heroHealth -= hits;
             }
@@ -440,11 +471,6 @@ public class Game implements EngineObject {
                 if (door.requiredKey == 0) {
                     overlay.showLabel(Labels.LABEL_CANT_OPEN);
                     soundManager.playSound(SoundManager.SOUND_NO_WAY);
-
-                    // if (door.mark != null) {
-                    //     processOneMarkById(100 + door.mark.id);
-                    // }
-
                     return true;
                 }
 
@@ -457,10 +483,6 @@ public class Game implements EngineObject {
                         overlay.showLabel(Labels.LABEL_NEED_BLUE_KEY);
                     }
 
-                    // if (door.mark != null) {
-                    //     processOneMarkById(100 + door.mark.id);
-                    // }
-
                     soundManager.playSound(SoundManager.SOUND_NO_WAY);
                     return true;
                 }
@@ -470,7 +492,7 @@ public class Game implements EngineObject {
 
             if (door.open()) {
                 if ((state.passableMap[door.y][door.x] & Level.PASSABLE_IS_DOOR_OPENED_BY_HERO) == 0) {
-                    state.levelExp += GameParams.EXP_OPEN_DOOR;
+                    state.levelExp += GameConfig.EXP_OPEN_DOOR;
                     Achievements.updateStat(Achievements.STAT_DOORS_OPENED, profile, engine, state);
                 }
 
@@ -483,6 +505,11 @@ public class Game implements EngineObject {
                 return true;
             }
 
+            return false;
+        }
+
+        // Если на месте метки лежит объект, не процессить метку (позволяет избежать некоторых странных багов)
+        if ((state.passableMap[y][x] & Level.PASSABLE_IS_OBJECT) != 0) {
             return false;
         }
 
@@ -517,43 +544,6 @@ public class Game implements EngineObject {
         prevUseX = -1.0f;
         prevUseY = -1.0f;
         return false;
-    }
-
-    private void processShoot() {
-        // just for case
-        if (weapons.hasNoAmmo(state.heroWeapon)) {
-            weapons.selectBestWeapon();
-        }
-
-        Weapons.WeaponParams localParams = weapons.currentParams;
-
-        //noinspection BooleanVariableAlwaysNegated
-        boolean hitOrShoot = Bullet.shootOrPunch(state,
-                state.heroX,
-                state.heroY,
-                engine.heroAr,
-                null,
-                localParams.ammoIdx,
-                localParams.hits,
-                localParams.hitTimeout);
-
-        if (weapons.currentCycle[weapons.shootCycle] > -1000) {
-            soundManager.playSound((localParams.noHitSoundIdx != 0 && !hitOrShoot)
-                    ? localParams.noHitSoundIdx
-                    : localParams.soundIdx);
-        }
-
-        if (localParams.ammoIdx >= 0) {
-            state.heroAmmo[localParams.ammoIdx] -= localParams.needAmmo;
-
-            if (state.heroAmmo[localParams.ammoIdx] < localParams.needAmmo) {
-                if (state.heroAmmo[localParams.ammoIdx] < 0) {
-                    state.heroAmmo[localParams.ammoIdx] = 0;
-                }
-
-                weapons.selectBestWeapon();
-            }
-        }
     }
 
     @SuppressWarnings({ "UnusedReturnValue", "MagicNumber" })
@@ -617,24 +607,29 @@ public class Game implements EngineObject {
         return positionUpdated;
     }
 
-    void resume() {
+    public void update() {
         if (isRewardedVideoWatched) {
             isRewardedVideoWatched = false;
             isGameOverFlag = false;
             killedTime = 0L;
 
-            state.heroHealth = GameParams.HEALTH_MAX;
-            state.heroArmor = Math.min(GameParams.ARMOR_MAX, state.heroArmor + GameParams.ARMOR_ADD_GREEN);
+            state.heroHealth = GameConfig.HEALTH_MAX;
+            state.heroArmor = Math.min(GameConfig.ARMOR_MAX, state.heroArmor + GameConfig.ARMOR_ADD_GREEN);
 
             if (state.heroHasWeapon[Weapons.WEAPON_PISTOL] || state.heroHasWeapon[Weapons.WEAPON_DBLPISTOL]) {
-                state.heroAmmo[Weapons.AMMO_CLIP] = Math.min(GameParams.AMMO_MAX_CLIP,
-                        state.heroAmmo[Weapons.AMMO_CLIP] + GameParams.AMMO_ADD_CBOX);
+                state.heroAmmo[Weapons.AMMO_CLIP] = Math.min(GameConfig.AMMO_MAX_CLIP,
+                        state.heroAmmo[Weapons.AMMO_CLIP] + GameConfig.AMMO_ADD_CBOX);
             }
 
-            if (state.heroHasWeapon[Weapons.WEAPON_AK47] || state.heroHasWeapon[Weapons.WEAPON_TMP] || state.heroHasWeapon[Weapons.WEAPON_WINCHESTER]) {
-                state.heroAmmo[Weapons.AMMO_SHELL] = Math.min(GameParams.AMMO_MAX_SHELL,
-                        state.heroAmmo[Weapons.AMMO_SHELL] + GameParams.AMMO_ADD_SBOX);
+            if (state.heroHasWeapon[Weapons.WEAPON_AK47]
+                    || state.heroHasWeapon[Weapons.WEAPON_TMP]
+                    || state.heroHasWeapon[Weapons.WEAPON_WINCHESTER]) {
+
+                state.heroAmmo[Weapons.AMMO_SHELL] = Math.min(GameConfig.AMMO_MAX_SHELL,
+                        state.heroAmmo[Weapons.AMMO_SHELL] + GameConfig.AMMO_ADD_SBOX);
             }
+
+            state.overallResurrects++;
         }
 
         if (engine.gameViewActive && !TextUtils.isEmpty(unprocessedGameCode)) {
@@ -645,21 +640,21 @@ public class Game implements EngineObject {
         if (engine.gameViewActive) {
             state.showEpisodeSelector = false;
         }
-    }
 
-    public void update() {
         if (level.buildPathToWavePending) {
             level.buildPathToWavePending = false;
             level.buildPathToWaveMap();
             autoMap.updatePathTo();
         }
 
-        if (renderMode == RENDER_MODE_END_LEVEL) {
-            endLevel.update();
-            return;
-        } else if (renderMode == RENDER_MODE_GAME_OVER) {
-            gameOver.update();
-            return;
+        switch (renderMode) {
+            case RENDER_MODE_END_LEVEL:
+                endLevel.update();
+                return;
+
+            case RENDER_MODE_GAME_OVER:
+                gameOver.update();
+                return;
         }
 
         state.timeInTicks++;
@@ -675,16 +670,16 @@ public class Game implements EngineObject {
 
         hasMoved = false;
 
-        for (Door door = state.doors.first(); door != null; door = (Door)door.next) {
+        for (Door door = state.doors.first(); door != null; door = door.next) {
             door.tryClose();
         }
 
-        for (Monster mon = state.monsters.first(); mon != null; mon = (Monster)mon.next) {
+        for (Monster mon = state.monsters.first(); mon != null; mon = mon.next) {
             mon.update();
         }
 
         for (Bullet bullet = state.bullets.first(); bullet != null; ) {
-            Bullet nextBullet = (Bullet)bullet.next;
+            Bullet nextBullet = bullet.next;
             bullet.update();
 
             if (bullet.bulletState == Bullet.STATE_RELEASE) {
@@ -696,7 +691,7 @@ public class Game implements EngineObject {
         }
 
         for (Explosion explosion = state.explosions.first(); explosion != null; ) {
-            Explosion nextExplosion = (Explosion)explosion.next;
+            Explosion nextExplosion = explosion.next;
 
             if (!explosion.update()) {
                 state.explosions.release(explosion);
@@ -707,7 +702,7 @@ public class Game implements EngineObject {
         }
 
         for (Timeout timeout = state.timeouts.first(); timeout != null; ) {
-            Timeout nextTimeout = (Timeout)timeout.next;
+            Timeout nextTimeout = timeout.next;
 
             if (timeout.delay <= 0) {
                 level.executeActions(timeout.markId);
@@ -721,7 +716,7 @@ public class Game implements EngineObject {
         }
 
         for (LookPoint lookPoint = state.lookPoints.first(); lookPoint != null; ) {
-            LookPoint nextLookPoint = (LookPoint)lookPoint.next;
+            LookPoint nextLookPoint = lookPoint.next;
 
             if (levelRenderer.awTouchedCellsMap[lookPoint.y][lookPoint.x]) {
                 processOneMarkById(lookPoint.markId);
@@ -732,39 +727,21 @@ public class Game implements EngineObject {
             lookPoint = nextLookPoint;
         }
 
-        if ((nextLevelTime > 0) || (killedTime > 0)) {
-            if (weapons.shootCycle > 0) {
-                weapons.shootCycle = (weapons.shootCycle + 1) % weapons.currentCycle.length;
-            }
+        weapons.update(nextLevelTime <= 0 && killedTime <= 0);
 
-            return;
-        }
-
-        if (weapons.currentCycle[weapons.shootCycle] < 0) {
-            processShoot();
-        }
-
-        if (weapons.shootCycle > 0) {
-            weapons.shootCycle = (weapons.shootCycle + 1) % weapons.currentCycle.length;
-        }
-
-        if (actionNextWeapon && weapons.shootCycle == 0 && weapons.changeWeaponDir == 0) {
-            weapons.nextWeapon();
+        if (actionNextWeapon && weapons.switchToNextWeapon()) {
             actionNextWeapon = false;
         }
 
         for (int i = 0, len = actionQuickWeapons.length; i < len; i++) {
             if (actionQuickWeapons[i]) {
-                if (state.heroWeapon != state.lastWeapons[i]) {
-                    weapons.switchWeapon(state.lastWeapons[i]);
-                }
-
+                weapons.switchWeapon(state.lastWeapons[i]);
                 actionQuickWeapons[i] = false;
             }
         }
 
-        if (actionFire != 0 && weapons.shootCycle == 0 && weapons.changeWeaponDir == 0) {
-            weapons.shootCycle++;
+        if (actionFire != 0) {
+            weapons.fire();
         }
 
         if (actionGameMenu) {
@@ -789,21 +766,21 @@ public class Game implements EngineObject {
             heroCellX = (int)state.heroX;
             heroCellY = (int)state.heroY;
 
-            processMarks();
-            pickObjects();
+            pickObjects(); // сначала - взять объект
+            processMarks(); // потом - запроцессить скрипты (это лечит PathTo после ключа)
             autoMap.updatePathTo();
         }
     }
 
     private boolean processOneMark(Mark mark) {
-        return (mark.enabled && processOneMarkById(mark.id));
+        return (!mark.unmarked && mark.enabled && processOneMarkById(mark.id));
     }
 
     private boolean processOneMarkById(int markId) {
         int soundIdx = level.executeActions(markId);
 
         if (soundIdx >= 0) {
-            // if this is *not* end level switch, play sound
+            // if this is *not* pop level switch, play sound
             if (nextLevelTime == 0) {
                 soundManager.playSound(soundIdx);
                 overlay.showOverlay(Overlay.MARK);
@@ -831,88 +808,81 @@ public class Game implements EngineObject {
             return;
         }
 
-        if ((state.passableMap[cy][cx] & Level.PASSABLE_IS_OBJECT_DONT_COUNT) == 0) {
-            // count every object (even if user didn't pick it) to allow 100% items at the end of level
-            state.pickedItems++;
+        ObjectContainer container = state.objectsMap.get(cy).get(cx);
+        boolean soundWasNotPlayed = true;
+
+        for (int i = 0; i < container.count; ) {
+            int tex = container.get(i);
+
+            if (!shouldPickOneObject(tex)) {
+                //noinspection AssignmentToForLoopParameter
+                i++;
+
+                continue;
+            }
+
+            if (soundWasNotPlayed) {
+                soundWasNotPlayed = false;
+
+                playOneObjectSound(tex);
+                overlay.showOverlay(Overlay.ITEM);
+            }
+
+            pickOneObject(tex);
+            container.removeAt(i);
         }
 
-        state.passableMap[cy][cx] |= Level.PASSABLE_IS_OBJECT_DONT_COUNT;
+        if (container.count == 0) {
+            state.passableMap[cy][cx] &= ~Level.PASSABLE_MASK_OBJECT;
+            levelRenderer.modLightMap(cx, cy, -LevelRenderer.LIGHT_OBJECT);
+        }
+    }
 
-        // decide shall we pick object or not
-
-        switch (state.objectsMap[cy][cx]) {
+    private boolean shouldPickOneObject(int tex) {
+        switch (tex) {
             case TextureLoader.OBJ_ARMOR_GREEN:
             case TextureLoader.OBJ_ARMOR_RED:
-                if (state.heroArmor >= maxArmor) {
-                    return;
-                }
-                break;
+                return (state.heroArmor < maxArmor);
 
             case TextureLoader.OBJ_STIM:
             case TextureLoader.OBJ_MEDI:
-                if (state.heroHealth >= maxHealth) {
-                    return;
-                }
-                break;
+                return (state.heroHealth < maxHealth);
 
             case TextureLoader.OBJ_CLIP:
             case TextureLoader.OBJ_CBOX:
-                if (state.heroAmmo[Weapons.AMMO_CLIP] >= maxAmmoClip) {
-                    return;
-                }
-                break;
+                return (state.heroAmmo[Weapons.AMMO_CLIP] < maxAmmoClip);
 
             case TextureLoader.OBJ_SHELL:
             case TextureLoader.OBJ_SBOX:
-                if (state.heroAmmo[Weapons.AMMO_SHELL] >= maxAmmoShell) {
-                    return;
-                }
-                break;
+                return (state.heroAmmo[Weapons.AMMO_SHELL] < maxAmmoShell);
 
             case TextureLoader.OBJ_GRENADE:
             case TextureLoader.OBJ_GBOX:
-                if (state.heroAmmo[Weapons.AMMO_GRENADE] >= maxAmmoGrenade) {
-                    return;
-                }
-                break;
+                return (state.heroAmmo[Weapons.AMMO_GRENADE] < maxAmmoGrenade);
 
             case TextureLoader.OBJ_BPACK:
-                if (state.heroHealth >= maxHealth
-                        && state.heroAmmo[Weapons.AMMO_CLIP] >= maxAmmoClip
-                        && state.heroAmmo[Weapons.AMMO_SHELL] >= maxAmmoShell) {
-
-                    return;
-                }
-                break;
+                return (state.heroHealth < maxHealth
+                        || state.heroAmmo[Weapons.AMMO_CLIP] < maxAmmoClip
+                        || state.heroAmmo[Weapons.AMMO_SHELL] < maxAmmoShell);
 
             case TextureLoader.OBJ_DBLPIST:
-                if (shouldNotPickWeapon(Weapons.WEAPON_DBLPISTOL)) {
-                    return;
-                }
-                break;
+                return (shouldPickWeapon(Weapons.WEAPON_DBLPISTOL));
 
             case TextureLoader.OBJ_AK47:
-                if (shouldNotPickWeapon(Weapons.WEAPON_AK47)) {
-                    return;
-                }
-                break;
+                return (shouldPickWeapon(Weapons.WEAPON_AK47));
 
             case TextureLoader.OBJ_TMP:
-                if (shouldNotPickWeapon(Weapons.WEAPON_TMP)) {
-                    return;
-                }
-                break;
+                return (shouldPickWeapon(Weapons.WEAPON_TMP));
 
             case TextureLoader.OBJ_WINCHESTER:
-                if (shouldNotPickWeapon(Weapons.WEAPON_WINCHESTER)) {
-                    return;
-                }
-                break;
+                return (shouldPickWeapon(Weapons.WEAPON_WINCHESTER));
         }
 
-        // play sounds
+        return true;
+    }
 
-        switch (state.objectsMap[cy][cx]) {
+    private void playOneObjectSound(int tex) {
+        switch (tex) {
             case TextureLoader.OBJ_CLIP:
             case TextureLoader.OBJ_CBOX:
             case TextureLoader.OBJ_SHELL:
@@ -934,30 +904,31 @@ public class Game implements EngineObject {
                 soundManager.playSound(SoundManager.SOUND_PICK_ITEM);
                 break;
         }
+    }
 
-        // add healh/armor/wepons/bullets
-
-        int bestWeapon = (state.autoSelectWeapon ? -1 : weapons.getBestWeapon());
-
-        switch (state.objectsMap[cy][cx]) {
+    private void pickOneObject(int tex) {
+        switch (tex) {
             case TextureLoader.OBJ_ARMOR_GREEN:
-                state.heroArmor = Math.min(state.heroArmor + GameParams.ARMOR_ADD_GREEN, maxArmor);
+                state.heroArmor = Math.min(state.heroArmor + GameConfig.ARMOR_ADD_GREEN, maxArmor);
                 break;
 
             case TextureLoader.OBJ_ARMOR_RED:
-                state.heroArmor = Math.min(state.heroArmor + GameParams.ARMOR_ADD_RED, maxArmor);
+                state.heroArmor = Math.min(state.heroArmor + GameConfig.ARMOR_ADD_RED, maxArmor);
                 break;
 
             case TextureLoader.OBJ_KEY_BLUE:
                 state.heroKeysMask |= 1;
+                level.requestBuildPathToWave();
                 break;
 
             case TextureLoader.OBJ_KEY_RED:
                 state.heroKeysMask |= 2;
+                level.requestBuildPathToWave();
                 break;
 
             case TextureLoader.OBJ_KEY_GREEN:
                 state.heroKeysMask |= 4;
+                level.requestBuildPathToWave();
                 break;
 
             case TextureLoader.OBJ_OPENMAP:
@@ -965,208 +936,171 @@ public class Game implements EngineObject {
                 break;
 
             case TextureLoader.OBJ_STIM:
-                state.heroHealth = Math.min(state.heroHealth + GameParams.HEALTH_ADD_STIM, maxHealth);
+                state.heroHealth = Math.min(state.heroHealth + GameConfig.HEALTH_ADD_STIM, maxHealth);
                 break;
 
             case TextureLoader.OBJ_MEDI:
-                state.heroHealth = Math.min(state.heroHealth + GameParams.HEALTH_ADD_MEDI, maxHealth);
+                state.heroHealth = Math.min(state.heroHealth + GameConfig.HEALTH_ADD_MEDI, maxHealth);
                 break;
 
             case TextureLoader.OBJ_CLIP:
-                pickAmmo(Weapons.AMMO_CLIP, GameParams.AMMO_ADD_CLIP, bestWeapon);
+                pickAmmo(Weapons.AMMO_CLIP, GameConfig.AMMO_ADD_CLIP);
                 break;
 
             case TextureLoader.OBJ_CBOX:
-                pickAmmo(Weapons.AMMO_CLIP, GameParams.AMMO_ADD_CBOX, bestWeapon);
+                pickAmmo(Weapons.AMMO_CLIP, GameConfig.AMMO_ADD_CBOX);
                 break;
 
             case TextureLoader.OBJ_SHELL:
-                pickAmmo(Weapons.AMMO_SHELL, GameParams.AMMO_ADD_SHELL, bestWeapon);
+                pickAmmo(Weapons.AMMO_SHELL, GameConfig.AMMO_ADD_SHELL);
                 break;
 
             case TextureLoader.OBJ_SBOX:
-                pickAmmo(Weapons.AMMO_SHELL, GameParams.AMMO_ADD_SBOX, bestWeapon);
+                pickAmmo(Weapons.AMMO_SHELL, GameConfig.AMMO_ADD_SBOX);
                 break;
 
             case TextureLoader.OBJ_GRENADE:
-                pickAmmo(Weapons.AMMO_GRENADE, GameParams.AMMO_ADD_GRENADE, bestWeapon);
+                pickAmmo(Weapons.AMMO_GRENADE, GameConfig.AMMO_ADD_GRENADE);
                 break;
 
             case TextureLoader.OBJ_GBOX:
-                pickAmmo(Weapons.AMMO_GRENADE, GameParams.AMMO_ADD_GBOX, bestWeapon);
+                pickAmmo(Weapons.AMMO_GRENADE, GameConfig.AMMO_ADD_GBOX);
                 break;
 
             case TextureLoader.OBJ_BPACK:
-                state.heroHealth = Math.min(state.heroHealth + GameParams.HEALTH_ADD_STIM, maxHealth);
+                state.heroHealth = Math.min(state.heroHealth + GameConfig.HEALTH_ADD_STIM, maxHealth);
 
-                state.heroAmmo[Weapons.AMMO_CLIP] = Math.min(state.heroAmmo[Weapons.AMMO_CLIP]
-                        + GameParams.AMMO_ADD_CLIP, maxAmmoClip);
+                state.heroAmmo[Weapons.AMMO_CLIP] = Math.min(
+                        state.heroAmmo[Weapons.AMMO_CLIP] + GameConfig.AMMO_ADD_CLIP,
+                        maxAmmoClip);
 
-                state.heroAmmo[Weapons.AMMO_SHELL] = Math.min(state.heroAmmo[Weapons.AMMO_SHELL]
-                        + GameParams.AMMO_ADD_SHELL, maxAmmoShell);
+                state.heroAmmo[Weapons.AMMO_SHELL] = Math.min(
+                        state.heroAmmo[Weapons.AMMO_SHELL] + GameConfig.AMMO_ADD_SHELL,
+                        maxAmmoShell);
 
-                // do not check if AK47 existing (than, if it didn't exists, pistol or double pistol will be selected)
-                // why AK47? because it is the first weapon which use AMMO_SHELL
-                if (bestWeapon < Weapons.WEAPON_AK47) {
-                    weapons.selectBestWeapon();
-                    state.autoSelectWeapon = true;
-                }
+                weapons.selectBestWeapon(-1);
                 break;
 
             case TextureLoader.OBJ_DBLPIST:
-                pickWeapon(Weapons.WEAPON_DBLPISTOL, GameParams.AMMO_ADD_DBLPIST, bestWeapon);
+                pickWeapon(Weapons.WEAPON_DBLPISTOL, GameConfig.AMMO_ADD_DBLPIST);
                 break;
 
             case TextureLoader.OBJ_AK47:
-                pickWeapon(Weapons.WEAPON_AK47, GameParams.AMMO_ADD_AK47, bestWeapon);
+                pickWeapon(Weapons.WEAPON_AK47, GameConfig.AMMO_ADD_AK47);
                 break;
 
             case TextureLoader.OBJ_TMP:
-                pickWeapon(Weapons.WEAPON_TMP, GameParams.AMMO_ADD_TMP, bestWeapon);
+                pickWeapon(Weapons.WEAPON_TMP, GameConfig.AMMO_ADD_TMP);
                 break;
 
             case TextureLoader.OBJ_WINCHESTER:
-                pickWeapon(Weapons.WEAPON_WINCHESTER, GameParams.AMMO_ADD_WINCHESTER, bestWeapon);
+                pickWeapon(Weapons.WEAPON_WINCHESTER, GameConfig.AMMO_ADD_WINCHESTER);
                 break;
         }
 
-        state.levelExp += GameParams.EXP_PICK_OBJECT;
-
-        // remove picked objects from map
-        state.objectsMap[cy][cx] = 0;
-        state.passableMap[cy][cx] &= ~Level.PASSABLE_MASK_OBJECT;
-        levelRenderer.modLightMap(cx, cy, -LevelRenderer.LIGHT_OBJECT);
-
-        overlay.showOverlay(Overlay.ITEM);
+        state.levelExp += GameConfig.EXP_PICK_OBJECT;
     }
 
-    private boolean shouldNotPickWeapon(int weapon) {
+    private boolean shouldPickWeapon(int weapon) {
         int ammoIdx = Weapons.WEAPONS[weapon].ammoIdx;
 
         int maxAmmo = (ammoIdx == Weapons.AMMO_CLIP
                 ? maxAmmoClip
                 : (ammoIdx == Weapons.AMMO_SHELL ? maxAmmoShell : maxAmmoGrenade));
 
-        return (state.heroHasWeapon[weapon] && state.heroAmmo[ammoIdx] >= maxAmmo);
+        return (!state.heroHasWeapon[weapon] || state.heroAmmo[ammoIdx] < maxAmmo);
     }
 
-    private void pickAmmo(int ammoIdx, int ammoAdd, int bestWeapon) {
+    private void pickAmmo(int ammoIdx, int ammoAdd) {
         int maxAmmo = (ammoIdx == Weapons.AMMO_CLIP
                 ? maxAmmoClip
                 : (ammoIdx == Weapons.AMMO_SHELL ? maxAmmoShell : maxAmmoGrenade));
-
-        int weapon = (ammoIdx == Weapons.AMMO_CLIP
-                ? Weapons.WEAPON_PISTOL
-                : (ammoIdx == Weapons.AMMO_SHELL ? Weapons.WEAPON_TMP : Weapons.WEAPON_GRENADE));
 
         if (ammoIdx == Weapons.AMMO_GRENADE) {
             state.heroHasWeapon[Weapons.WEAPON_GRENADE] = true;
         }
 
         state.heroAmmo[ammoIdx] = Math.min(state.heroAmmo[ammoIdx] + ammoAdd, maxAmmo);
-
-        if (state.heroHasWeapon[weapon] && bestWeapon < weapon) {
-            weapons.selectBestWeapon();
-            state.autoSelectWeapon = true;
-        }
+        weapons.selectBestWeapon(ammoIdx);
     }
 
-    private void pickWeapon(int weapon, int ammoAdd, int bestWeapon) {
-        int ammoIdx = Weapons.WEAPONS[weapon].ammoIdx;
+    private void pickWeapon(int weaponIdx, int ammoAdd) {
+        int ammoIdx = Weapons.WEAPONS[weaponIdx].ammoIdx;
 
         int maxAmmo = (ammoIdx == Weapons.AMMO_CLIP
                 ? maxAmmoClip
                 : (ammoIdx == Weapons.AMMO_SHELL ? maxAmmoShell : maxAmmoGrenade));
 
-        state.heroHasWeapon[weapon] = true;
+        state.heroHasWeapon[weaponIdx] = true;
         state.heroAmmo[ammoIdx] = Math.min(state.heroAmmo[ammoIdx] + ammoAdd, maxAmmo);
 
-        if (bestWeapon < weapon) {
-            weapons.selectBestWeapon();
-            state.autoSelectWeapon = true;
+        if (state.heroWeapon < weaponIdx) {
+            weapons.switchWeapon(weaponIdx);
         }
     }
 
     @SuppressWarnings("MagicNumber")
-    private void drawCrosshair(GL10 gl) {
-        renderer.initOrtho(gl, true, false, -engine.ratio, engine.ratio, -1.0f, 1.0f, 0.0f, 1.0f);
-        renderer.init();
+    private void renderCrosshair() {
+        renderer.startBatch();
+        renderer.setColorQuadRGBA(1.0f, 1.0f, 1.0f, 0.5f);
 
-        renderer.setQuadRGBA(1.0f, 1.0f, 1.0f, 0.5f);
+        renderer.setCoordsQuadRectFlat(-CROSSHAIR_SIZE, 0.03f, CROSSHAIR_SIZE, 0.08f); // up
+        renderer.batchQuad();
 
-        renderer.setQuadOrthoCoords(-CROSSHAIR_SIZE, 0.03f, CROSSHAIR_SIZE, 0.08f); // up
-        renderer.drawQuad();
+        renderer.setCoordsQuadRectFlat(CROSSHAIR_SIZE, -0.03f, -CROSSHAIR_SIZE, -0.08f); // down
+        renderer.batchQuad();
 
-        renderer.setQuadOrthoCoords(CROSSHAIR_SIZE, -0.03f, -CROSSHAIR_SIZE, -0.08f); // down
-        renderer.drawQuad();
+        renderer.setCoordsQuadRectFlat(0.03f, -CROSSHAIR_SIZE, 0.08f, CROSSHAIR_SIZE); // right
+        renderer.batchQuad();
 
-        renderer.setQuadOrthoCoords(0.03f, -CROSSHAIR_SIZE, 0.08f, CROSSHAIR_SIZE); // right
-        renderer.drawQuad();
+        renderer.setCoordsQuadRectFlat(-0.03f, CROSSHAIR_SIZE, -0.08f, -CROSSHAIR_SIZE); // left
+        renderer.batchQuad();
 
-        renderer.setQuadOrthoCoords(-0.03f, CROSSHAIR_SIZE, -0.08f, -CROSSHAIR_SIZE); // left
-        renderer.drawQuad();
-
-        gl.glDisable(GL10.GL_DEPTH_TEST);
-        gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        renderer.flush(gl, false);
-
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glPopMatrix();
+        renderer.useOrtho(-engine.ratio, engine.ratio, -1.0f, 1.0f, 0.0f, 1.0f);
+        renderer.renderBatch(Renderer.FLAG_BLEND);
     }
 
     @SuppressWarnings("MagicNumber")
-    private void drawSky(GL10 gl) {
-        gl.glDisable(GL10.GL_DEPTH_TEST);
-        gl.glDisable(GL10.GL_BLEND);
-        gl.glDisable(GL10.GL_ALPHA_TEST);
-        gl.glDisable(GL10.GL_CULL_FACE);
-        gl.glShadeModel(GL10.GL_FLAT);
+    private void renderSky() {
+        renderer.useOrtho(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
 
-        renderer.initOrtho(gl, true, false, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+        if (GameConfig.COLOR_SKY > 0) {
+            float r = (float)((GameConfig.COLOR_SKY >> 16) & 0xff) / 255.0f;
+            float g = (float)((GameConfig.COLOR_SKY >> 8) & 0xff) / 255.0f;
+            float b = (float)(GameConfig.COLOR_SKY & 0xff) / 255.0f;
 
-        if (GameParams.COLOR_SKY > 0) {
-            float r = (float)((GameParams.COLOR_SKY >> 16) & 0xff) / 255.0f;
-            float g = (float)((GameParams.COLOR_SKY >> 8) & 0xff) / 255.0f;
-            float b = (float)(GameParams.COLOR_SKY & 0xff) / 255.0f;
-
-            renderer.init();
-            renderer.setQuadRGBA(r, g, b, 1.0f);
-            renderer.setQuadOrthoCoords(0.0f, 1.0f, 1.0f, 0.0f);
-            renderer.drawQuad();
-            renderer.flush(gl, false);
+            renderer.startBatch();
+            renderer.setColorQuadRGBA(r, g, b, 1.0f);
+            renderer.setCoordsQuadRectFlat(0.0f, 1.0f, 1.0f, 0.0f);
+            renderer.batchQuad();
+            renderer.renderBatch(0);
         }
 
         float ox = (float)Math.sin((state.heroA % 30.0f) * GameMath.G2RAD_F);
         float oy = (float)Math.sin(state.heroVertA * GameMath.G2RAD_F);
 
-        renderer.init();
-        renderer.setQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-        renderer.setQuadTexCoords(0, 0, 4 << 16, 1 << 16);
-        renderer.setQuadOrthoCoords(ox - 1.0f, 1.1f - oy, ox + 1.0f, 0.15f - oy);
-        renderer.drawQuad();
-        renderer.bindTextureRep(gl, engine.textureLoader.textures[TextureLoader.TEXTURE_SKY]);
-        renderer.flush(gl);
+        renderer.startBatch();
+        renderer.setColorQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
+        renderer.setTexRect(0, 0, 4 << 16, 1 << 16);
+        renderer.setCoordsQuadRectFlat(ox - 1.0f, 1.1f - oy, ox + 1.0f, 0.15f - oy);
+        renderer.batchQuad();
+        renderer.renderBatch(Renderer.FLAG_TEX_REPEAT, Renderer.TEXTURE_SKY);
 
-        if (GameParams.COLOR_SKY > 0) {
-            float r = (float)((GameParams.COLOR_SKY >> 16) & 0xff) / 255.0f;
-            float g = (float)((GameParams.COLOR_SKY >> 8) & 0xff) / 255.0f;
-            float b = (float)(GameParams.COLOR_SKY & 0xff) / 255.0f;
+        if (GameConfig.COLOR_SKY > 0) {
+            float r = (float)((GameConfig.COLOR_SKY >> 16) & 0xff) / 255.0f;
+            float g = (float)((GameConfig.COLOR_SKY >> 8) & 0xff) / 255.0f;
+            float b = (float)(GameConfig.COLOR_SKY & 0xff) / 255.0f;
 
-            renderer.init();
-            renderer.setQuadRGBA(r, g, b, 1.0f);
-            renderer.setQuadOrthoCoords(ox - 1.0f, 1.09f - oy, ox + 1.0f, 1.11f - oy);
-            renderer.drawQuad();
-            renderer.flush(gl, false);
+            renderer.startBatch();
+            renderer.setColorQuadRGBA(r, g, b, 1.0f);
+            renderer.setCoordsQuadRectFlat(ox - 1.0f, 1.09f - oy, ox + 1.0f, 1.11f - oy);
+            renderer.batchQuad();
+            renderer.renderBatch(0);
         }
-
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glPopMatrix();
-        gl.glEnable(GL10.GL_CULL_FACE);
     }
 
     @SuppressWarnings("MagicNumber")
-    protected void render(GL10 gl) {
+    protected void render() {
         long walkTime = 0;
 
         if (hasMoved) {
@@ -1179,62 +1113,62 @@ public class Game implements EngineObject {
             prevMovedTime = 0;
         }
 
-        float yoff = LevelRenderer.HALF_WALL / 8.0f
+        float offY = LevelRenderer.HALF_WALL / 8.0f
                 + (float)Math.sin((float)walkTime / 100.0f) * LevelRenderer.HALF_WALL / 16.0f;
 
-        float xrot = state.heroVertA;
+        float rotX = state.heroVertA;
 
         if (killedTime > 0) {
             float killedRatio = Math.min(1.0f, (float)(engine.elapsedTime - killedTime) / 1000.0f);
 
-            yoff += killedRatio * (LevelRenderer.HALF_WALL * 0.5f - yoff);
-            xrot += killedRatio * (-45.0f - xrot);
+            offY += killedRatio * (LevelRenderer.HALF_WALL * 0.5f - offY);
+            rotX += killedRatio * (-45.0f - rotX);
             state.setHeroA(killedHeroAngle + (killedAngle - killedHeroAngle) * killedRatio);
         }
 
-        drawSky(gl);
-        levelRenderer.render(gl, engine.elapsedTime, -yoff, -90.0f - xrot);
+        renderSky();
+        levelRenderer.render(engine.elapsedTime, -offY, -90.0f - rotX);
 
         if (config.showCrosshair && !engine.inWallpaperMode) {
-            drawCrosshair(gl);
+            renderCrosshair();
         }
 
-        weapons.render(gl, walkTime);
-        autoMap.render(gl);
-
-        overlay.renderOverlay(gl);
-        overlay.renderHitSide(gl);
+        weapons.render(walkTime);
+        autoMap.render();
+        overlay.renderOverlay();
 
         if (!engine.inWallpaperMode) {
-            engine.stats.render(gl);
+            overlay.renderHitSide();
+            engine.stats.render();
 
             if (renderMode == RENDER_MODE_GAME) {
-                heroController.renderControls(gl,
-                        true,
+                heroController.render(true,
                         (firstTouchTime >= 0 ? firstTouchTime : engine.elapsedTime));
             }
         }
 
         if (nextLevelTime > 0) {
-            overlay.renderEndLevelLayer(gl, (float)(engine.elapsedTime - nextLevelTime) / 500.0f);
+            overlay.renderEndLevelLayer((float)(engine.elapsedTime - nextLevelTime) / 500.0f);
         }
 
         if (renderMode == RENDER_MODE_END_LEVEL) {
-            endLevel.render(gl);
-            heroController.renderControls(gl, false, 0L);
+            endLevel.render();
+            heroController.render(false, 0L);
         } else if (renderMode == RENDER_MODE_GAME_OVER) {
-            gameOver.render(gl);
-            heroController.renderControls(gl, false, 0L);
+            gameOver.render();
+            heroController.render(false, 0L);
         }
 
-        overlay.renderLabels(gl);
+        if (!engine.inWallpaperMode) {
+            overlay.renderLabels();
+        }
 
         if (config.gamma > 0.01f) {
-            overlay.renderGammaLayer(gl);
+            overlay.renderGammaLayer();
         }
 
         if (engine.showFps) {
-            engine.drawFps(gl);
+            engine.renderFps();
         }
 
         if (renderMode == RENDER_MODE_GAME) {

@@ -1,101 +1,102 @@
 package zame.game.engine;
 
-import android.content.Intent;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import java.io.File;
 import java.util.Random;
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11ExtensionPack;
 import zame.game.App;
-import zame.game.MainActivity;
-import zame.game.engine.hud.AutoMap;
-import zame.game.engine.hud.Stats;
-import zame.game.fragments.GameFragment;
-import zame.game.managers.SoundManager;
-import zame.game.misc.DummyRewardedVideoActivity;
-import zame.game.store.Profile;
-
-// According to qualcomm docs, you need to glclear after every glbindframebuffer,
-// this is a problem related to tiled architecture, if you are switching framebuffers,
-// data need to get copied from fastmem to normal memory to save current framebuffer
-// and from slowmem to fast mem to get contents of newly binded frame, in case you are
-// clearing just after glbind no data is copied from slowmem to fastmem and you are saving time,
-// but you need to redesign your render pipeline often, so it will avoid reading data back
-// and forth between slow and fast memory, so try to do glclear after each bind
+import zame.game.core.util.Common;
+import zame.game.engine.controller.HeroController;
+import zame.game.engine.graphics.Labels;
+import zame.game.engine.graphics.Renderer;
+import zame.game.engine.graphics.TextureLoader;
+import zame.game.engine.level.Level;
+import zame.game.engine.level.LevelRenderer;
+import zame.game.engine.state.Profile;
+import zame.game.engine.state.ProfileLevel;
+import zame.game.engine.state.State;
+import zame.game.engine.visual.AutoMap;
+import zame.game.engine.visual.EndLevel;
+import zame.game.engine.visual.GameOver;
+import zame.game.engine.visual.Overlay;
+import zame.game.engine.visual.Stats;
+import zame.game.engine.visual.Weapons;
+import zame.game.feature.main.MainActivity;
+import zame.game.feature.sound.SoundManager;
+import zame.game.flavour.config.AppConfig;
 
 public class Engine {
-    static final int FRAMES_PER_SECOND = 40;
-    static final int FRAMES_PER_SECOND_D10 = FRAMES_PER_SECOND / 10; // must be >= 1
+    private static final long INTERSTITIAL_MIN_INTERVAL_MS = 3L * 60L * 1000L;
 
+    static final int FRAMES_PER_SECOND = 40;
+    public static final int FRAMES_PER_SECOND_D10 = FRAMES_PER_SECOND / 10; // must be >= 1
     private static final int UPDATE_INTERVAL = 1000 / FRAMES_PER_SECOND;
     private static final int FPS_AVG_LEN = 2;
 
-    static final int VIEW_TYPE_SELECT_EPISODE = 1;
-    static final int VIEW_TYPE_GAME_MENU = 2;
-    static final int VIEW_TYPE_REWARDED_VIDEO = 3;
+    static final int VIEW_TYPE_GAME_MENU = 1;
+    static final int VIEW_TYPE_SELECT_EPISODE = 2;
+    public static final int VIEW_TYPE_REWARDED_VIDEO = 3;
 
     static final String DGB_SAVE_PREFIX = "debug_";
 
-    protected MainActivity activity;
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") private long startTime;
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") private long lastTime;
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") private boolean isPaused;
-    private int createdTexturesCount;
-    private int totalTexturesCount;
-    private int frames;
-    private long prevRenderTime;
-    private int[] fpsList = new int[FPS_AVG_LEN];
-    private int currFpsPtr;
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") private boolean callResumeAfterSurfaceCreated;
-
+    public final Random random = new Random();
+    public MainActivity activity;
     public boolean inWallpaperMode;
-    public boolean renderBlackScreen;
-    public boolean gameViewActive = true;
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") public long elapsedTime;
-    public int width = 1;
-    public int height = 1;
-    public float ratio = 1.0f;
-    public float heroCs; // cos of angle
-    public float heroSn; // sin of angle
-    public boolean interacted;
+
     public String instantName;
-
-    boolean fboSupported;
-    Random random = new Random();
-    float heroAr; // angle in radians
-    boolean showFps;
     String autosaveName;
-    float healthHitMonsterMult;
-    float healthHitHeroMult;
-
-    private int screenWidth = 1;
-    private int screenHeight = 1;
-    private boolean renderToTexture;
-    private int[] framebuffers = new int[1];
-    private int[] depthbuffers = new int[1];
-    private boolean fboComplete;
-
     public Profile profile;
+    public SoundManager soundManager;
+    public HeroController heroController;
     public Config config = new Config();
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") public Game game = new Game();
-    @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized") public State state = new State();
+    public Game game = new Game();
+    public State state = new State();
     public Labels labels = new Labels();
     public Overlay overlay = new Overlay();
-    public TextureLoader textureLoader = new TextureLoader();
+    private TextureLoader textureLoader = new TextureLoader();
     public Level level = new Level();
     public Weapons weapons = new Weapons();
     public Renderer renderer = new Renderer();
     public LevelRenderer levelRenderer = new LevelRenderer();
     public Stats stats = new Stats();
     public AutoMap autoMap = new AutoMap();
-
     EndLevel endLevel = new EndLevel();
     GameOver gameOver = new GameOver();
 
-    public HeroController heroController;
-    public SoundManager soundManager;
-    // public Tracker tracker;
+    private boolean renderToTexture;
+    private int screenWidth = 1;
+    private int screenHeight = 1;
+    public int width = 1;
+    public int height = 1;
+    public float ratio = 1.0f;
+
+    public boolean interacted;
+    public boolean gameViewActive = true;
+    public boolean renderBlackScreen;
+    private boolean callResumeAfterSurfaceCreated;
+    private volatile boolean isPaused;
+    private volatile long pausedTime;
+    private long startTime;
+    private long lastTime;
+    public long elapsedTime;
+
+    private int createdTexturesCount;
+    private int totalTexturesCount;
+
+    private int fpsFrames;
+    private long fpsPrevRenderTime;
+    private int[] fpsList = new int[FPS_AVG_LEN];
+    private int fpsCurrentIndex;
+
+    private boolean isInterstitialPending;
+    private long lastInterstitialShownAt;
+    public boolean canShowRewardedVideo;
+
+    public float heroAr; // angle in radians
+    public float heroCs; // cos of angle
+    public float heroSn; // sin of angle
+    boolean showFps;
 
     public Engine(MainActivity activity) {
         this.activity = activity;
@@ -106,34 +107,29 @@ public class Engine {
 
         profile = App.self.profile;
         soundManager = SoundManager.getInstance(inWallpaperMode);
-        // tracker = Tracker.getInstance(inWallpaperMode);
         heroController = HeroController.newInstance(inWallpaperMode);
 
-        config.setEngine(this);
-        game.setEngine(this);
-        state.setEngine(this);
-        labels.setEngine(this);
-        overlay.setEngine(this);
-        textureLoader.setEngine(this);
-        level.setEngine(this);
-        levelRenderer.setEngine(this);
-        weapons.setEngine(this);
-        renderer.setEngine(this);
-        stats.setEngine(this);
-        autoMap.setEngine(this);
-        heroController.setEngine(this);
-        endLevel.setEngine(this);
-        gameOver.setEngine(this);
+        config.onCreate(this);
+        game.onCreate(this);
+        state.onCreate(this);
+        labels.onCreate(this);
+        overlay.onCreate(this);
+        textureLoader.onCreate(this);
+        level.onCreate(this);
+        levelRenderer.onCreate(this);
+        weapons.onCreate(this);
+        renderer.onCreate(this);
+        stats.onCreate(this);
+        autoMap.onCreate(this);
+        heroController.onCreate(this);
+        endLevel.onCreate(this);
+        gameOver.onCreate(this);
     }
 
-    public void init() {
-        healthHitMonsterMult = 1.0f;
-        healthHitHeroMult = 1.0f;
-
+    public void onActivated() {
         config.reload();
-        renderer.init();
-        game.init();
         heroController.reload();
+        game.onActivated();
 
         interacted = false;
         gameViewActive = true;
@@ -142,11 +138,12 @@ public class Engine {
         startTime = SystemClock.elapsedRealtime();
     }
 
-    void updateAfterLevelLoadedOrCreated() {
-        level.updateMaps();
-        levelRenderer.updateAfterLoadOrCreate();
-        heroController.updateAfterLoadOrCreate();
-        weapons.updateWeapon();
+    public void updateAfterLevelLoadedOrCreated() {
+        canShowRewardedVideo = (profile.getLevel(state.levelName).adLevel >= ProfileLevel.AD_REWARDED);
+        level.updateAfterLevelLoadedOrCreated();
+        levelRenderer.updateAfterLevelLoadedOrCreated();
+        heroController.updateAfterLevelLoadedOrCreated();
+        weapons.setHeroWeaponImmediate(state.heroWeapon);
     }
 
     void createAutosave() {
@@ -155,7 +152,7 @@ public class Engine {
         }
     }
 
-    String getSavePathBySaveName(String name) {
+    public String getSavePathBySaveName(String name) {
         return App.self.internalRoot + name + ".save";
     }
 
@@ -176,7 +173,6 @@ public class Engine {
         }
 
         // also delete wallpaper instant save
-
         instant = new File(App.self.internalRoot + "winstant.save");
 
         if (instant.exists()) {
@@ -185,7 +181,7 @@ public class Engine {
         }
     }
 
-    void changeView(int viewType) {
+    public void changeView(int viewType) {
         switch (viewType) {
             case VIEW_TYPE_GAME_MENU:
                 if (activity != null) {
@@ -197,132 +193,87 @@ public class Engine {
                 if (activity != null) {
                     gameViewActive = false;
                     renderBlackScreen = true;
+
+                    String prevLevelName = profile.getLevel(state.levelName).getPrevLevelName();
+                    ProfileLevel prevProfileLevel = profile.getLevel(prevLevelName);
+
+                    boolean shouldShowInterstitial = (isInterstitialPending
+                            || prevProfileLevel.adLevel >= ProfileLevel.AD_INTERSTITIAL);
+
+                    long lastShowInterval = SystemClock.elapsedRealtime() - lastInterstitialShownAt;
+
+                    if (shouldShowInterstitial && (!App.self.mediadtor.isInterstitialLoaded()
+                            || lastShowInterval < INTERSTITIAL_MIN_INTERVAL_MS)) {
+
+                        shouldShowInterstitial = false;
+                        isInterstitialPending = true;
+                    }
+
+                    if (AppConfig.DEBUG) {
+                        Common.log("Interstitial: prevLevelName = "
+                                + prevLevelName
+                                + ", adLevel = "
+                                + prevProfileLevel.adLevel
+                                + ", isInterstitialPending = "
+                                + isInterstitialPending
+                                + ", isInterstitialLoaded = "
+                                + App.self.mediadtor.isInterstitialLoaded()
+                                + ", lastShowInterval = "
+                                + lastShowInterval
+                                + " (INTERSTITIAL_MIN_INTERVAL_MS = "
+                                + INTERSTITIAL_MIN_INTERVAL_MS
+                                + "), shouldShowInterstitial = "
+                                + shouldShowInterstitial);
+                    }
+
+                    if (shouldShowInterstitial) {
+                        forceStateSave();
+                    }
+
                     activity.showFragment(activity.selectEpisodeFragment);
+
+                    if (shouldShowInterstitial) {
+                        isInterstitialPending = false;
+                        lastInterstitialShownAt = SystemClock.elapsedRealtime();
+                        App.self.mediadtor.showInterstitial(activity);
+                    }
                 } else {
-                    createdTexturesCount = 0;
+                    createdTexturesCount = 0; // WHY?
                 }
                 break;
 
             case VIEW_TYPE_REWARDED_VIDEO:
-                if (activity != null) {
-                    onPause(); // to ensure that state is saved
-
-                    activity.gameFragment.startActivityForResult(new Intent(activity, DummyRewardedVideoActivity.class),
-                            GameFragment.REQ_DUMMY_REWARDED_VIDEO_ACTIVITY);
+                if (activity != null && App.self.mediadtor.isRewardedVideoLoaded()) {
+                    forceStateSave();
+                    lastInterstitialShownAt = SystemClock.elapsedRealtime();
+                    App.self.mediadtor.showRewardedVideo(activity);
+                } else {
+                    game.loadLevel(Game.LOAD_LEVEL_NORMAL);
                 }
                 break;
         }
     }
 
-    void heroAngleUpdated() {
-        //noinspection MagicNumber
-        state.heroA = (360.0f + (state.heroA % 360.0f)) % 360.0f;
-
-        heroAr = state.heroA * GameMath.G2RAD_F;
-        heroCs = (float)Math.cos(heroAr);
-        heroSn = (float)Math.sin(heroAr);
+    public void onRewardedVideoClosed(boolean shouldGiveReward) {
+        game.isRewardedVideoWatched = shouldGiveReward;
+        gameViewActive = false;
+        renderBlackScreen = true;
     }
 
-    int getRealHits(int maxHits, float dist) {
+    public int getRealHits(int maxHits, float dist) {
         //noinspection MagicNumber
         float div = Math.max(1.0f, dist * 0.35f);
 
         int minHits = Math.max(1, (int)((float)maxHits / div));
-
         return (random.nextInt(maxHits - minHits + 1) + minHits);
     }
 
-    // modified Level_CheckLine from wolf3d for iphone by Carmack
-    boolean traceLine(float x1, float y1, float x2, float y2, int mask) {
-        int cx1 = (int)x1;
-        int cy1 = (int)y1;
-        int cx2 = (int)x2;
-        int cy2 = (int)y2;
-        int maxX = state.levelWidth - 1;
-        int maxY = state.levelHeight - 1;
-
-        // level has one-cell border
-        if (cx1 <= 0 || cx1 >= maxX || cy1 <= 0 || cy1 >= maxY || cx2 <= 0 || cx2 >= maxX || cy2 <= 0 || cy2 >= maxY) {
-            return false;
-        }
-
-        int[][] localPassableMap = state.passableMap;
-
-        if (cx1 != cx2) {
-            int stepX;
-            float partial;
-
-            if (cx2 > cx1) {
-                partial = 1.0f - (x1 - (float)((int)x1));
-                stepX = 1;
-            } else {
-                partial = x1 - (float)((int)x1);
-                stepX = -1;
-            }
-
-            float dx = ((x2 >= x1) ? (x2 - x1) : (x1 - x2));
-            float stepY = (y2 - y1) / dx;
-            float y = y1 + (stepY * partial);
-
-            cx1 += stepX;
-            cx2 += stepX;
-
-            do {
-                if ((localPassableMap[(int)y][cx1] & mask) != 0) {
-                    return false;
-                }
-
-                y += stepY;
-                cx1 += stepX;
-            } while (cx1 != cx2);
-        }
-
-        if (cy1 != cy2) {
-            int stepY;
-            float partial;
-
-            if (cy2 > cy1) {
-                partial = 1.0f - (y1 - (float)((int)y1));
-                stepY = 1;
-            } else {
-                partial = y1 - (float)((int)y1);
-                stepY = -1;
-            }
-
-            float dy = ((y2 >= y1) ? (y2 - y1) : (y1 - y2));
-            float stepX = (x2 - x1) / dy;
-            float x = x1 + (stepX * partial);
-
-            cy1 += stepY;
-            cy2 += stepY;
-
-            do {
-                if ((localPassableMap[cy1][(int)x] & mask) != 0) {
-                    return false;
-                }
-
-                x += stepX;
-                cy1 += stepY;
-            } while (cy1 != cy2);
-        }
-
-        return true;
-    }
-
     public void onSurfaceCreated(GL10 gl) {
-        fboSupported = ((" " + gl.glGetString(GL10.GL_EXTENSIONS) + " ").contains(" GL_OES_framebuffer_object "));
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        gl.glEnable(GL10.GL_CULL_FACE);
-        gl.glFrontFace(GL10.GL_CCW);
-        gl.glCullFace(GL10.GL_BACK);
-        gl.glDisable(GL10.GL_DITHER);
-        gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
-        gl.glDepthFunc(GL10.GL_LESS); // GL10.GL_LEQUAL
+        renderer.onSurfaceCreated(gl);
 
         createdTexturesCount = 0;
         totalTexturesCount = TextureLoader.TEXTURES_TO_LOAD.length + 1;
-        textureLoader.onSurfaceCreated(gl);
+        textureLoader.onSurfaceCreated();
 
         if (callResumeAfterSurfaceCreated) {
             callResumeAfterSurfaceCreated = false;
@@ -333,70 +284,29 @@ public class Engine {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         this.screenWidth = (width < 1 ? 1 : width); // just for case
         this.screenHeight = (height < 1 ? 1 : height); // just for case
+
+        renderer.onSurfaceChanged(gl);
         renderToTexture = (inWallpaperMode && width < height);
-        fboComplete = false;
-
-        if (renderToTexture && fboSupported) {
-            GL11ExtensionPack gl11ep = (GL11ExtensionPack)gl;
-            gl11ep.glGenFramebuffersOES(1, framebuffers, 0);
-            gl11ep.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, framebuffers[0]);
-            gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
-
-            gl11ep.glGenRenderbuffersOES(1, depthbuffers, 0);
-            gl11ep.glBindRenderbufferOES(GL11ExtensionPack.GL_RENDERBUFFER_OES, depthbuffers[0]);
-
-            gl11ep.glRenderbufferStorageOES(GL11ExtensionPack.GL_RENDERBUFFER_OES,
-                    GL11ExtensionPack.GL_DEPTH_COMPONENT16,
-                    TextureLoader.RENDER_TO_FBO_SIZE,
-                    TextureLoader.RENDER_TO_FBO_SIZE);
-
-            gl11ep.glFramebufferRenderbufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,
-                    GL11ExtensionPack.GL_DEPTH_ATTACHMENT_OES,
-                    GL11ExtensionPack.GL_RENDERBUFFER_OES,
-                    depthbuffers[0]);
-
-            gl11ep.glFramebufferTexture2DOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES,
-                    GL11ExtensionPack.GL_COLOR_ATTACHMENT0_OES,
-                    GL10.GL_TEXTURE_2D,
-                    textureLoader.textures[TextureLoader.TEXTURE_RENDER_TO_FBO],
-                    0);
-
-            int status = gl11ep.glCheckFramebufferStatusOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES);
-
-            if (status == GL11ExtensionPack.GL_FRAMEBUFFER_COMPLETE_OES) {
-                fboComplete = true;
-            }
-
-            gl11ep.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
-            gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
-        }
 
         if (renderToTexture) {
-            this.width = (fboComplete ? TextureLoader.RENDER_TO_FBO_SIZE : TextureLoader.RENDER_TO_SIZE);
-            this.height = (fboComplete ? TextureLoader.RENDER_TO_FBO_SIZE : TextureLoader.RENDER_TO_SIZE);
+            renderer.prepareFramebuffer();
+            this.width = renderer.getRenderToTextureSize();
+
+            //noinspection SuspiciousNameCombination
+            this.height = this.width;
         } else {
             this.width = screenWidth;
             this.height = screenHeight;
         }
 
-        gl.glViewport(0, 0, this.width, this.height);
+        renderer.useViewport(this.width, this.height);
         ratio = (float)(this.width < 1 ? 1 : this.width) / (float)(this.height < 1 ? 1 : this.height);
 
-        levelRenderer.surfaceSizeChanged(gl);
         heroController.surfaceSizeChanged();
         stats.surfaceSizeChanged();
     }
 
-    public void onPause() {
-        if (!isPaused) {
-            isPaused = true;
-            state.tempElapsedTime = elapsedTime;
-            state.tempLastTime = lastTime;
-            state.save(instantName);
-        }
-    }
-
-    public synchronized void onResume() {
+    public void onResume() {
         if (callResumeAfterSurfaceCreated) {
             // wait for created surface
             return;
@@ -408,15 +318,31 @@ public class Engine {
             lastTime = state.tempLastTime;
             startTime = SystemClock.elapsedRealtime() - elapsedTime;
         }
-
-        game.resume();
     }
 
-    private boolean texturesLoaded() {
-        return (createdTexturesCount >= totalTexturesCount);
+    public void onPause() {
+        if (!isPaused) {
+            pausedTime = SystemClock.elapsedRealtime();
+            isPaused = true;
+            forceStateSave();
+        }
+    }
+
+    private void forceStateSave() {
+        state.tempElapsedTime = elapsedTime;
+        state.tempLastTime = lastTime;
+        state.save(instantName);
     }
 
     public void onDrawFrame(GL10 gl) {
+        //noinspection MagicNumber
+        if (isPaused && (SystemClock.elapsedRealtime() - pausedTime) < 1000L) {
+            // Fix visual glitch when game menu appears
+            return;
+        }
+
+        renderer.onDrawFrame(gl);
+
         if (isPaused) {
             render(gl);
             return;
@@ -439,7 +365,7 @@ public class Engine {
                 lastTime += UPDATE_INTERVAL * count;
             }
 
-            if (texturesLoaded()) {
+            if (createdTexturesCount >= totalTexturesCount) {
                 while (count > 0 && !renderBlackScreen) {
                     game.update();
                     count--;
@@ -451,70 +377,46 @@ public class Engine {
     }
 
     @SuppressWarnings("MagicNumber")
-    private void drawPreloader(GL10 gl) {
-        renderer.initOrtho(gl, true, false, -ratio, ratio, 1.0f, -1.0f, 0.0f, 1.0f);
-        renderer.init();
-
-        gl.glShadeModel(GL10.GL_FLAT);
-        gl.glDisable(GL10.GL_DEPTH_TEST);
-        gl.glDisable(GL10.GL_BLEND);
-        gl.glDisable(GL10.GL_CULL_FACE);
-
-        renderer.setQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-        renderer.setQuadOrthoCoords(-0.5f, -0.5f, 0.5f, 0.5f);
-        renderer.setQuadTexCoords(0, 0, 1 << 16, 1 << 16);
-        renderer.drawQuad();
-
-        renderer.bindTextureBlur(gl, textureLoader.textures[TextureLoader.TEXTURE_LOADING]);
-        renderer.flush(gl);
-
-        gl.glEnable(GL10.GL_CULL_FACE);
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glPopMatrix();
+    private void renderPreloader() {
+        renderer.useOrtho(-ratio, ratio, 1.0f, -1.0f, 0.0f, 1.0f);
+        renderer.startBatch();
+        renderer.setColorQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
+        renderer.setCoordsQuadRectFlat(-0.5f, -0.5f, 0.5f, 0.5f);
+        renderer.setTexRect(0, 0, 1 << 16, 1 << 16);
+        renderer.batchQuad();
+        renderer.renderBatch(0, Renderer.TEXTURE_LOADING);
     }
 
-    private void renderDimLayer(GL10 gl) {
-        renderer.initOrtho(gl, true, false, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-        renderer.init();
-
-        renderer.setQuadRGBA(0.0f, 0.0f, 0.0f, config.wpDim);
-        renderer.setQuadOrthoCoords(0.0f, 0.0f, 1.0f, 1.0f);
-        renderer.drawQuad();
-
-        gl.glShadeModel(GL10.GL_FLAT);
-        gl.glDisable(GL10.GL_DEPTH_TEST);
-        gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        renderer.flush(gl, false);
-
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glPopMatrix();
+    private void renderDimLayer() {
+        renderer.useOrtho(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+        renderer.startBatch();
+        renderer.setColorQuadRGBA(0.0f, 0.0f, 0.0f, config.wpDim);
+        renderer.setCoordsQuadRectFlat(0.0f, 0.0f, 1.0f, 1.0f);
+        renderer.batchQuad();
+        renderer.renderBatch(Renderer.FLAG_BLEND);
     }
 
     @SuppressWarnings("MagicNumber")
     protected void render(GL10 gl) {
-        GL11ExtensionPack gl11ep = null;
-
         if (renderBlackScreen) {
-            gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
+            renderer.clear();
             return;
         }
 
-        if (renderToTexture && fboComplete) {
-            gl11ep = (GL11ExtensionPack)gl;
-            gl11ep.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, framebuffers[0]);
+        if (renderToTexture) {
+            renderer.startRenderToTexture();
+        } else {
+            renderer.clear();
         }
 
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
-
         if (createdTexturesCount < totalTexturesCount) {
-            drawPreloader(gl);
+            renderPreloader();
 
             if (createdTexturesCount == 0) {
-                labels.createLabels(gl);
+                labels.createLabels();
                 createdTexturesCount++;
             } else if (App.self.cachedTexturesReady) {
-                textureLoader.loadTexture(gl, createdTexturesCount - 1);
+                textureLoader.loadTexture(createdTexturesCount - 1);
                 createdTexturesCount++;
             }
 
@@ -522,7 +424,7 @@ public class Engine {
                 System.gc();
             }
         } else {
-            game.render(gl);
+            game.render();
         }
 
         if (inWallpaperMode || isPaused) {
@@ -535,7 +437,7 @@ public class Engine {
         }
 
         if (inWallpaperMode) {
-            renderDimLayer(gl);
+            renderDimLayer();
         }
 
         // http://stackoverflow.com/questions/10729352/framebuffer-fbo-render-to-texture-is-very-slow-using-opengl-es-2-0-on-android
@@ -543,60 +445,55 @@ public class Engine {
         // http://www.gamedev.net/topic/590324-fbo-set-up-on-android/
 
         if (renderToTexture) {
-            if (gl11ep != null) {
-                gl11ep.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, 0);
-                gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
-                renderer.bindTextureBlur(gl, textureLoader.textures[TextureLoader.TEXTURE_RENDER_TO_FBO]);
-            } else {
-                renderer.bindTextureBlur(gl, textureLoader.textures[TextureLoader.TEXTURE_RENDER_TO]);
-                gl.glCopyTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGB, 0, 0, width, height, 0);
-            }
+            renderer.finishRenderToTexture(width, height);
+
+            float halfScreenWidth = (float)screenWidth * 0.5f;
+            float halfScreenHeight = (float)screenHeight * 0.5f;
+
+            renderer.startBatch();
+            renderer.setColorQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
+            renderer.setTexRect(0, 0, 1 << 16, 1 << 16);
+            renderer.setCoordsQuadRectFlat(-halfScreenHeight, -halfScreenHeight, halfScreenHeight, halfScreenHeight);
+            renderer.batchQuad();
 
             gl.glViewport(0, 0, screenWidth, screenHeight);
-            gl.glShadeModel(GL10.GL_FLAT);
-            gl.glDisable(GL10.GL_DEPTH_TEST);
-            gl.glDisable(GL10.GL_BLEND);
-
-            float widthD2 = (float)screenWidth * 0.5f;
-            float heightD2 = (float)screenHeight * 0.5f;
-
-            gl.glMatrixMode(GL10.GL_PROJECTION);
-            gl.glPushMatrix();
-            gl.glLoadIdentity();
-            gl.glOrthof(-widthD2, widthD2, -heightD2, heightD2, 0.0f, 1.0f);
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-
-            renderer.init();
-            renderer.setQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-            renderer.setQuadTexCoords(0, 0, 1 << 16, 1 << 16);
-            renderer.setQuadOrthoCoords(-heightD2, -heightD2, heightD2, heightD2);
-            renderer.drawQuad();
-            renderer.flush(gl);
-
-            gl.glMatrixMode(GL10.GL_PROJECTION);
-            gl.glPopMatrix();
-
-            //noinspection SuspiciousNameCombination
-            gl.glViewport(0, 0, height, width);
+            renderer.useOrtho(-halfScreenWidth, halfScreenWidth, -halfScreenHeight, halfScreenHeight, 0.0f, 1.0f);
+            renderer.renderBatch(0, Renderer.TEXTURE_RTT);
+            gl.glViewport(0, 0, width, height);
         }
+    }
+
+    void renderFps() {
+        labels.startBatch();
+        renderer.setColorQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
+
+        //noinspection MagicNumber
+        labels.batch(-ratio + 0.01f,
+                -1.0f + 0.01f,
+                ratio,
+                1.0f,
+                String.format(labels.map[Labels.LABEL_FPS], getAvgFps()),
+                0.125f,
+                Labels.ALIGN_BL);
+
+        labels.renderBatch();
     }
 
     @SuppressWarnings("MagicNumber")
     private int getAvgFps() {
-        frames++;
+        fpsFrames++;
 
         long time = SystemClock.elapsedRealtime();
-        long diff = time - prevRenderTime;
+        long diff = time - fpsPrevRenderTime;
 
         if (diff > 1000) {
             int seconds = (int)(diff / 1000L);
-            prevRenderTime += (long)seconds * 1000L;
+            fpsPrevRenderTime += (long)seconds * 1000L;
 
-            fpsList[currFpsPtr] = frames / seconds;
-            currFpsPtr = (currFpsPtr + 1) % FPS_AVG_LEN;
+            fpsList[fpsCurrentIndex] = fpsFrames / seconds;
+            fpsCurrentIndex = (fpsCurrentIndex + 1) % FPS_AVG_LEN;
 
-            frames = 0;
+            fpsFrames = 0;
         }
 
         int sum = 0;
@@ -606,24 +503,5 @@ public class Engine {
         }
 
         return (sum / FPS_AVG_LEN);
-    }
-
-    void drawFps(GL10 gl) {
-        int fps = getAvgFps();
-        renderer.setQuadRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-
-        labels.beginDrawing(gl);
-
-        //noinspection MagicNumber
-        labels.draw(gl,
-                -ratio + 0.01f,
-                -1.0f + 0.01f,
-                ratio,
-                1.0f,
-                String.format(labels.map[Labels.LABEL_FPS], fps),
-                0.125f,
-                Labels.ALIGN_BL);
-
-        labels.endDrawing(gl);
     }
 }

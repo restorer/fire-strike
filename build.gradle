@@ -1,18 +1,21 @@
 buildscript {
-    ext.ver_crashlytics = '2.9.5' // https://docs.fabric.io/android/changelog.html#crashlytics
-    ext.ver_fabric = '1.26.1' // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+    // Play Services version MUST be <= 16 (see chat with appodeal)
+    // Other libraries also set to the older versions
+
+    ext.ver_multidex='1.0.3' // managed by studio
     ext.ver_support = '27.1.1' // managed by studio
-    ext.ver_takisoftPreferences = '27.1.0.0' // https://github.com/Gericop/Android-Support-Preference-V7-Fix
+    ext.ver_takisoftPreferences = '27.1.1.1' // https://github.com/Gericop/Android-Support-Preference-V7-Fix
+    ext.ver_playServices = '16.0.0' // managed by studio
+    ext.ver_appCenter = '1.10.0' // https://docs.microsoft.com/en-us/appcenter/sdk/getting-started/android
+    ext.ver_processPhoenix = '2.0.0' // https://github.com/JakeWharton/ProcessPhoenix
 
     repositories {
         google()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath "io.fabric.tools:gradle:${ver_fabric}"
     }
 }
 
@@ -21,7 +24,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
+        flatDir { dirs 'src/main/libs-aar/appodeal' }
     }
 
     tasks.withType(JavaCompile) {
@@ -36,20 +39,27 @@ allprojects {
 // }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 16
+
+        //noinspection OldTargetApi
         targetSdkVersion 27
+
+        multiDexEnabled true
 
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
 
-        applicationId 'com.eightsines.gdcartoon'
+        applicationId 'com.eightsines.firestrike'
+
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+        }
     }
 
     lintOptions {
@@ -92,13 +102,51 @@ android {
 }
 
 dependencies {
-    // implementation "com.android.support:preference-v7:${ver_support}"
+    //
+    // Game
+    //
 
+    implementation "com.android.support:multidex:${ver_multidex}"
     implementation "com.android.support:appcompat-v7:${ver_support}"
     implementation "com.android.support:support-v4:${ver_support}"
+    implementation "com.jakewharton:process-phoenix:${ver_processPhoenix}"
+
+    //noinspection GradleDependency
     implementation "com.takisoft.fix:preference-v7:${ver_takisoftPreferences}"
 
-    implementation("com.crashlytics.sdk.android:crashlytics:${ver_crashlytics}@aar") {
-        transitive = true
+    //
+    // Analytics and crash-reporting
+    //
+
+    implementation "com.microsoft.appcenter:appcenter-analytics:${ver_appCenter}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${ver_appCenter}"
+
+    //
+    // Appodeal
+    //
+
+    //noinspection GradleDependency
+    implementation("com.google.android.gms:play-services-ads:${ver_playServices}") {
+        exclude group: 'com.android.support', module: 'animated-vector-drawable'
+        exclude group: 'com.android.support', module: 'customtabs'
     }
+
+    implementation "com.google.android.gms:play-services-location:${ver_playServices}"
+
+    implementation fileTree(dir: 'src/main/libs/appodeal', include: [ '*.jar' ])
+    implementation name: 'adcolony-3.3.4', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-alphab', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-common', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-interstitial', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-interstitialvideo', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-mvdownloads', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-mvjscommon', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-mvnative', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-nativeex', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-playercommon', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-reward', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-videocommon', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-videofeeds', ext: 'aar'
+    implementation name: 'mobvista-8.11.3-videojs', ext: 'aar'
+    implementation name: 'ogury-3.0.13', ext: 'aar'
 }

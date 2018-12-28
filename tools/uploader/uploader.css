@@ -1,0 +1,331 @@
+*,
+*:before,
+*:after {
+    box-sizing: inherit;;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: sans-serif;
+}
+
+/* Controls */
+
+.controls {
+    background-color: #222222;
+    /* height: 96px; */
+    height: 48px;
+}
+
+/*
+@media screen and (min-width: 450px) {
+    .controls {
+        height: 48px;
+    }
+}
+*/
+
+.controls__content {
+    background-color: #222222;
+    color: #ffffff;
+    font-size: 14px;
+    left: 0;
+    line-height: 48px;
+    padding: 0 8px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.controls__bg {
+    border: 1px solid #222222;
+    cursor: pointer;
+    display: inline-block;
+    height: 24px;
+    margin-left: 8px;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 24px;
+}
+
+.controls__bg--white {
+    background-color: #ffffff;
+}
+
+.controls__bg--black {
+    background-color: #000000;
+}
+
+.controls__bg--darkgray {
+    background-color: #444444;
+}
+
+.controls__bg--gray {
+    background-color: #888888;
+}
+
+.controls__bg--lightgray {
+    background-color: #cccccc;
+}
+
+.controls__bg--red {
+    background-color: #ff0000;
+}
+
+/* Group */
+
+.group {
+    position: relative;
+}
+
+.group__name {
+    background-color: #444444;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+    padding: 8px;
+}
+
+.group__name:before {
+    background-color: #000000;
+    color: #ffffff;
+    content: "-";
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    height: 22px;
+    line-height: 22px;
+    margin-right: 8px;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 22px;
+}
+
+.group--collapsed > .group__name:before {
+    content: "+";
+}
+
+.group:first-child,
+.group--collapsed + .group {
+    border-top: 1px solid #ffffff;
+}
+
+.group__content {
+    font-size: 1px;
+    letter-spacing: 8px;
+    padding: 8px 16px 16px 16px;
+}
+
+.group__content + .group__content {
+    border-top: 1px dashed #444444;
+}
+
+.group--collapsed > .group__content {
+    display: none;
+}
+
+.group__content-list {
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 22px;
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+
+.group__content-list > li {
+    margin: 0 0 0 1em;
+    padding: 0;
+}
+
+.group__item {
+    background-color: #888888;
+    display: inline-block;
+    letter-spacing: 0;
+    margin-top: 8px;
+    padding: 8px;
+    vertical-align: top;
+}
+
+.group__item--light {
+    border: 2px dashed #ff0000;
+    padding: 6px;
+}
+
+.group__upload {
+    background-color: #222222;
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+.group__upload-input {
+    bottom: 0;
+    cursor: pointer;
+    font-size: 64px;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.group__tex {
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 0 1px #000000;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.group__tex-image {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.group__tex--1x1 {
+    height: 64px;
+    width: 64px;
+}
+
+.group__tex--2x1 {
+    height: 64px;
+    width: 128px;
+}
+
+.group__tex--4x1 {
+    height: 64px;
+    width: 256px;
+}
+
+.group__tex--2x2 {
+    height: 128px;
+    width: 128px;
+}
+
+.group__tex--5x3 {
+    height: 75px;
+    width: 125px;
+}
+
+.group__tex--13x7 {
+    height: 84px;
+    width: 156px;
+}
+
+.group__tex--327x314 {
+    height: 314px;
+    width: 327px;
+}
+
+.group__tex--4x3 {
+    height: 48px;
+    width: 64px;
+}
+
+.group__tex--8x3 {
+    height: 30px;
+    width: 80px;
+}
+
+.group__tex--2x3 {
+    height: 60px;
+    width: 40px;
+}
+
+.group__tex--40x30 {
+    height: 30px;
+    width: 40px;
+}
+
+/* Theme */
+
+.theme--white .controls__bg--white {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--white .group__tex {
+    background-color: #ffffff;
+}
+
+.theme--black .controls__bg--black {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--black .group__tex {
+    background-color: #000000;
+}
+
+.theme--darkgray .controls__bg--darkgray {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--darkgray .group__tex {
+    background-color: #444444;
+}
+
+.theme--gray .controls__bg--gray {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--gray .group__tex {
+    background-color: #888888;
+}
+
+.theme--lightgray .controls__bg--lightgray {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--lightgray .group__tex {
+    background-color: #cccccc;
+}
+
+.theme--red .controls__bg--red {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--red .group__tex {
+    background-color: #ff0000;
+}
+
+.theme--darkred .controls__bg--darkred {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--darkred .group__tex {
+    background-color: #880000;
+}
+
+.theme--darkgreen .controls__bg--darkgreen {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--darkgreen .group__tex {
+    background-color: #008800;
+}
+
+.theme--blue .controls__bg--blue {
+    box-shadow: 0 0 0 1px #ffffff;
+}
+
+.theme--blue .group__tex {
+    background-color: #0000ff;
+}
