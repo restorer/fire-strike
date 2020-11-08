@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gloomy_core_background">#000000</color>
+
+    <color name="gloomy_alt_text">#f3f3f3</color>
+    <color name="gloomy_alt_imp">#ffd700</color>
+
+    <color name="gloomy_achievements_altbg">#222222</color>
+    <color name="gloomy_achievements_divider">#33b5e5</color>
+    <color name="gloomy_achievements_locked">#696969</color>
+    <color name="gloomy_achievements_achieved">#adff2f</color>
+
+    <color name="gloomy_admarker_bg">#33b5e5</color>
+    <color name="gloomy_admarker_text">#ffffff</color>
+</resources>

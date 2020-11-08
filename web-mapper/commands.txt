@@ -1,0 +1,99 @@
+[[ Commands ]]
+
+NoUnmark @ThisMark -> don't put ACTION_UNMARK
+Exit <Mark> -> ACTION_NEXT_LEVEL
+BKey <Mark> -> ACTION_REQ_KEY
+RKey <Mark> -> ACTION_REQ_KEY
+GKey <Mark> -> ACTION_REQ_KEY
+Close <Mark> -> ACTION_CLOSE
+Open <Mark> -> ACTION_OPEN
+Bury <Mark> -> ACTION_WALL
+BuryThis @ThisMark -> ACTION_WALL
+ACTION_SWITCH
+Wall <target:Mark> <source:Mark> -> ACTION_WALL
+Floor <target:Mark> <source:Mark> -> ACTION_FLOOR
+Ceil <target:Mark> <source:Mark> -> ACTION_CEIL
+Secret <Secret> -> ACTION_SECRET
+Timeout <Mark> <Integer> -> ACTION_TIMEOUT
+EnsureWeapon <Weapon> -> ACTION_ENSURE_WEAPON
+ShowMessage <Message> -> ACTION_MSG_ON
+FlashMessage <Message> -> ACTION_MSG_FLASH
+HideMessage -> ACTION_MSG_OFF
+ShowHelp <Control> -> ACTION_HELP_ON
+HideHelp <Control> -> ACTION_HELP_OFF
+EnableControl <Control> -> ACTION_CTRL_ON
+DisableControl <Control> -> ACTION_CTRL_OFF
+OnLook <Mark> -> ACTION_ON_LOOK
+OnKill <monster:Mark> -> ACTION_ON_KILL
+DisableMark <Mark>
+EnableMark <Mark>
+OnChangeWeapon <Mark>
+Teleport <Mark>
+
+[[ Mark ]]
+
+Alphanumeric mark name
+
+[[ @ThisMark ]]
+
+Current mark
+
+[[ Secret ]]
+
+Secret number (however, alphanumeric is also possible)
+
+[[ Weapon ]]
+
+Pistol
+DblPistol
+AK47
+TMP
+Winchester
+Grenade
+
+[[ Message ]]
+
+UseMovePadToFollowArrows - Use movement pad to follow arrows
+DoingWell - Doing well!
+SlideToRotateToLeft - Slide finger on the screen and rotate to the left
+ThanRotateToRight - Than rotate to the right
+MoveAndRotateToFollowArrows - Move and rotate to follow the arrows
+Fine - Fine!
+UseMinimapToReturnToStart - Use the minimap to return to the starting point
+WellDone - Well done!
+ToOpenDoorGoThroughIt - To open the door, just go through it
+NextDoorIsClosedUseSwitch - Next door is closed, you should use switch to open it
+ToActivateSwitchGoUpToHim - To activate the switch, go up to him as close as possible
+ThisIsWindow - This is the window. You shouldn’t go through it
+ToOpenDoorPickupKey - To open next door you should pick up the key first
+UseFireAndKillEnemy - Use fire button and deactivate next enemy
+PickupMedi - If you get hurt in a battle, pick up a first aid kit
+OpenWeaponMenuAndSelectPistol - Open weapon menu and select a pistol
+3 - 3
+2 - 2
+1 - 1
+PickupAmmo - Pick up ammo to replenish them
+QuickChangeWeapon - Tap on the weapon icon above to change it
+AfterQuickChangeWeapon - This is faster than selecting through the menu
+PickupArmor - Pick up the armor
+AfterPickupArmor - When you wear an armor, you save more health in a battle
+PressEndLevel - Press end level switch and prepare for a real battle
+
+[[ Control ]]
+
+Move - Move
+    MoveUp
+    MoveDown
+    MoveLeft
+    MoveRight
+Rotate - Rotate
+    RotateLeft
+    RotateRight
+Fire - Fire
+Weapons - Change weapon / Menu
+QuickWeapons - Last weapons / Quick change
+Minimap - Minimap
+StatsHealth - Your health
+StatsAmmo - Your ammo
+StatsArmor - Your armor
+StatsKeys - Your keys

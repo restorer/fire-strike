@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:paddingBottom="@dimen/gloomy_achievements_item_padding_vert"
+    android:paddingLeft="@dimen/gloomy_achievements_item_padding_hor"
+    android:paddingRight="@dimen/gloomy_achievements_item_padding_hor"
+    android:paddingTop="@dimen/gloomy_achievements_item_padding_vert">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/status"
+        android:layout_width="match_parent"
+        tools:ignore="RtlHardcoded"
+        tools:text="It's my job"
+        style="@style/Gloomy.Alt.Text.Title" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_below="@+id/title"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/status"
+        android:layout_width="match_parent"
+        tools:ignore="RtlHardcoded"
+        tools:text="Defuse 500 enemies"
+        style="@style/Gloomy.Alt.Text" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingLeft="@dimen/gloomy_achievements_item_padding_hor"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        tools:text="25/50"
+        style="@style/Gloomy.Alt.Text.Subtitle" />
+
+</RelativeLayout>

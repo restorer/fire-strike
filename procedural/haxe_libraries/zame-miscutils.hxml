@@ -1,0 +1,3 @@
+-D zame-miscutils=0.0.0
+# @install: lix --silent download "gh://github.com/restorer/zame-haxe-miscutils#de7d440f8eb08eb105a68ceecba8e7f323bd5ecc" into zame-haxe-miscutils/0.0.0/github/de7d440f8eb08eb105a68ceecba8e7f323bd5ecc
+-cp ${HAXE_LIBCACHE}/zame-haxe-miscutils/0.0.0/github/de7d440f8eb08eb105a68ceecba8e7f323bd5ecc/

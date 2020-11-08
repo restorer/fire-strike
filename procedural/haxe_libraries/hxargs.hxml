@@ -1,0 +1,3 @@
+-D hxargs=3.0.2
+# @install: lix --silent download "gh://github.com/restorer/hxargs#f9ad589a05307130a6efe92ff2de62f15861ab43" into hxargs/3.0.2/github/f9ad589a05307130a6efe92ff2de62f15861ab43
+-cp ${HAXE_LIBCACHE}/hxargs/3.0.2/github/f9ad589a05307130a6efe92ff2de62f15861ab43/

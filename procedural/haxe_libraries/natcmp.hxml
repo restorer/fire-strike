@@ -1,0 +1,3 @@
+-D natcmp=1.0.0
+# @install: lix --silent download "gh://github.com/restorer/haxe-natcmp#3e14368fdfee43d74f923ee60727c19121db668d" into natcmp/1.0.0/github/3e14368fdfee43d74f923ee60727c19121db668d
+-cp ${HAXE_LIBCACHE}/natcmp/1.0.0/github/3e14368fdfee43d74f923ee60727c19121db668d/

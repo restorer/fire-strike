@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zame.game.core.widget.AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_common"
+    tools:ignore="NestedWeights,Overdraw">
+
+    <FrameLayout
+        android:id="@+id/banner_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_heightWeight="0.25"
+        app:layout_x="0dp"
+        app:layout_y="0dp"
+        tools:background="#fd0" />
+
+    <!--
+    <include
+        layout="@layout/admarker_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_heightWeight="0.25"
+        app:layout_x="0dp"
+        app:layout_y="0dp" />
+    -->
+
+    <ImageView
+        android:id="@+id/character"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        app:layout_heightWeight="0.6125"
+        app:layout_widthWeight="0.3"
+        app:layout_xWeight="0.675"
+        app:layout_yWeight="0.25"
+        tools:background="#008"
+        tools:ignore="ContentDescription"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/episode"
+        style="@style/Gloomy.SelectEpisode.EpisodeText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_heightWeight="0.1125"
+        app:layout_widthWeight="0.95"
+        app:layout_xWeight="0.025"
+        app:layout_yWeight="0.25"
+        tools:targetApi="jelly_bean"
+        tools:text="@string/game_pt_episode_1" />
+
+    <!-- layout_widthWeight was 0.3 -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_heightWeight="0.3875"
+        app:layout_widthWeight="0.625"
+        app:layout_xWeight="0.025"
+        app:layout_yWeight="0.3625">
+
+        <ImageView
+            android:id="@+id/image_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <ImageView
+            android:id="@+id/image_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            tools:ignore="ContentDescription" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/info"
+        style="@style/Gloomy.SelectEpisode.Text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_byWeight="0.8"
+        app:layout_widthWeight="0.95"
+        app:layout_xWeight="0.025"
+        tools:targetApi="jelly_bean"
+        tools:text="Enemies: 5000 / Secrets: 30 / Time: 1:23:45\nFailures: 10 / Resurrects: 20" />
+
+    <Button
+        android:id="@+id/back"
+        style="@style/Gloomy.Core.Button.Negative"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/game_se_back"
+        app:layout_byWeight="0.975"
+        app:layout_widthWeight="0.35"
+        app:layout_xWeight="0.025"
+        tools:targetApi="jelly_bean" />
+
+    <Button
+        android:id="@+id/kontinue"
+        style="@style/Gloomy.Core.Button.Positive"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/game_se_continue"
+        app:layout_byWeight="0.975"
+        app:layout_rxWeight="0.975"
+        app:layout_widthWeight="0.35"
+        tools:targetApi="jelly_bean" />
+
+</zame.game.core.widget.AbsoluteLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="zame.game"
+    android:installLocation="auto">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <queries>
+        <package android:name="com.android.chrome" />
+        <package android:name="com.android.browser" />
+
+        <!--
+        <package android:name="com.twitter.android" />
+        <package android:name="com.twidroid" />
+        <package android:name="com.handmark.tweetcaster" />
+        <package android:name="com.thedeck.android" />
+        <package android:name="com.facebook.katana" />
+        -->
+    </queries>
+
+    <application
+        android:name=".App"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/core_app_name"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:targetApi="n">
+
+        <!--
+          ~ Game
+          -->
+
+        <activity
+            android:name=".feature.launcher.LauncherActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:label="@string/core_app_name"
+            android:screenOrientation="landscape"
+            android:theme="@style/Gloomy.Theme.LauncherActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".feature.main.MainActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:label="@string/core_app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@style/Gloomy.Theme.MainActivity" />
+
+        <activity
+            android:name=".feature.web.GeneralWebActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:label="@string/core_app_name"
+            android:launchMode="standard"
+            android:screenOrientation="landscape"
+            android:theme="@style/Gloomy.Theme.WebActivity" />
+
+    </application>
+</manifest>

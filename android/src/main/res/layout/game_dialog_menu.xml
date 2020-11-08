@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <Gallery
+        android:id="@+id/gallery"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minWidth="420dp"
+        android:spacing="10dp" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        tools:targetApi="jelly_bean"
+        tools:text="DOUBLE PISTOL / DPS 42 / STUN 12 / AMMO 2"
+        style="@style/Gloomy.Menu.Text" />
+
+</LinearLayout>

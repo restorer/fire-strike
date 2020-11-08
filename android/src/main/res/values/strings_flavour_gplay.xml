@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flavour_rate_game_bar">Rate this game!</string>
+    <string name="flavour_rate_game_title">Rate this game</string>
+    <string name="flavour_rate_game_quit">Just quit the game</string>
+    <string name="flavour_rate_game_dislike">Dislike</string>
+    <string name="flavour_rate_game_like">Like!</string>
+    <string name="flavour_key_quit_without_rate" translatable="false">QuitWithoutRate</string>
+    <string name="flavour_key_rate_at_least_once" translatable="false">RateAtLeastOnce</string>
+</resources>

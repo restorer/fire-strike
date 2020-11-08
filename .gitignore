@@ -1,15 +1,2 @@
-!/temp/.keep
-.DS_Store
-/*.iml
-/.externalNativeBuild
-/.gradle
-/.idea
-/build
-/infer-out
-/libraries/*.iml
-/libraries/*/*.iml
-/libraries/*/build
-/local.properties
-/temp/*
-/tools/signing.keystore
-/tools/signing.properties
+/_dist
+/_miscellaneous

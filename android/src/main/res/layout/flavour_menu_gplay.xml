@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#008800"
+    android:id="@+id/rate_game_wrap"
+    android:layout_height="0dp"
+    android:layout_width="match_parent"
+    android:visibility="gone"
+    app:layout_byWeight="1"
+    app:layout_heightWeight="0.075"
+    app:layout_x="0dp"
+    tools:layout_height="32dp"
+    tools:visibility="visible">
+
+    <TextView
+        android:fontFamily="@font/ui"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:text="@string/flavour_rate_game_bar"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/gloomy_menu_textsize"
+        tools:ignore="SpUsage"
+        tools:targetApi="jelly_bean"
+        tools:text="Rate this game!" />
+
+</FrameLayout>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="core_app_name"
-        translatable="false">Fire Strike</string>
-
-    <string name="flavour_share_message">Fire Strike: a true old school 3D shooter for you</string>
-</resources>

@@ -1,0 +1,8 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+
+/* TEAM */
+  Lead programmer: Viachaslau Tratsiak
+  Site: https://eightsines.com/fire-strike
+  Graphics artist: Gulamov Otabek

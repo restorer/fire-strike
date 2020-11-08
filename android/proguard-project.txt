@@ -1,0 +1,21 @@
+###
+### Game
+###
+
+-keepattributes EnclosingMethod
+-dontnote **SuppressLint
+-dontnote **TargetApi
+
+###
+### Eightsines
+###
+
+-keepclassmembers class com.eightsines.espromo.PromoView$JsApi { public *; }
+
+###
+### Countly
+###
+
+-dontnote ly.count.android.sdk.**
+-keep class org.openudid.** { *; }
+-keep class ly.count.android.sdk.** { *; }

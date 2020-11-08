@@ -1,0 +1,185 @@
+{
+    "defaultSeverity": "INFO",
+    "extendsConfigPath": "",
+    "numberOfCheckerThreads": 4,
+    "baseDefines": [],
+    "defineCombinations": [],
+    "checks": [
+        {
+            "type": "AvoidTernaryOperator",
+            "props": {}
+        },
+        {
+            "type": "BlockBreakingConditional",
+            "props": {}
+        },
+        {
+            "type": "CodeSimilarity",
+            "props": {
+                "severityIdentical": "WARNING",
+                "thresholdIdentical": 60,
+                "thresholdSimilar": 120
+            }
+        },
+        {
+            "type": "CyclomaticComplexity",
+            "props": {
+                "thresholds": [
+                    {
+                        "severity": "WARNING",
+                        "complexity": 20
+                    },
+                    {
+                        "severity": "ERROR",
+                        "complexity": 25
+                    }
+                ]
+            }
+        },
+        // { // crashed
+        //     "type": "EmptyLines",
+        //     "props": {
+        //         "max": 1,
+        //         "allowEmptyLineAfterSingleLineComment": true,
+        //         "allowEmptyLineAfterMultiLineComment": true,
+        //         "requireEmptyLineAfterPackage": true,
+        //         "requireEmptyLineAfterClass": true,
+        //         "requireEmptyLineAfterInterface": true,
+        //         "requireEmptyLineAfterAbstract": true
+        //     }
+        // },
+        {
+            "type": "FieldDocComment",
+            "props": {
+                "tokens": [
+                    "ABSTRACT_DEF",
+                    "CLASS_DEF",
+                    "ENUM_DEF",
+                    "INTERFACE_DEF",
+                    "TYPEDEF_DEF"
+                ],
+                "fieldType": "BOTH",
+                "modifier": "PUBLIC",
+                "requireParams": true,
+                "requireReturn": true,
+                "ignoreOverride": true,
+                "excludeNames": [
+                    "new",
+                    "toString"
+                ]
+            }
+        },
+        {
+            "type": "FileLength",
+            "props": {
+                "max": 2000,
+                "ignoreEmptyLines": true
+            }
+        },
+        {
+            "type": "Indentation",
+            "props": {
+                "character": "    ",
+                "ignoreConditionals": true,
+                "conditionalPolicy": "aligned_increase",
+                "ignoreComments": true,
+                "wrapPolicy": "larger"
+            }
+        },
+        {
+            "type": "LineLength",
+            "props": {
+                "max": 160,
+                "ignorePattern": "^$"
+            }
+        },
+        {
+            "type": "MethodCount",
+            "props": {
+                "maxTotal": 100,
+                "maxPrivate": 100,
+                "maxPublic": 100
+            }
+        },
+        {
+            "type": "MethodLength",
+            "props": {
+                "max": 50,
+                "ignoreEmptyLines": true
+            }
+        },
+        {
+            "type": "NestedControlFlow",
+            "props": {
+                "max": 3
+            }
+        },
+        {
+            "type": "PublicAccessor",
+            "props": {}
+        },
+        {
+            "type": "RightCurly",
+            "props": {
+                "tokens": [
+                    "CLASS_DEF"
+                    "ENUM_DEF",
+                    "ABSTRACT_DEF",
+                    "TYPEDEF_DEF",
+                    "INTERFACE_DEF",
+                    "FUNCTION"
+                ],
+                "option": "aloneorsingle"
+            }
+        },
+        {
+            "type": "RightCurly",
+            "props": {
+                "tokens": [
+                    "FOR",
+                    "IF",
+                    "WHILE",
+                    "SWITCH",
+                    "TRY",
+                    "CATCH"
+                ],
+                "option": "same"
+            }
+        },
+        {
+            "type": "RightCurly",
+            "props": {
+                "tokens": [
+                    "OBJECT_DECL"
+                ],
+                "option": "aloneorsingle"
+            }
+        },
+        {
+            "type": "TabForAligning",
+            "props": {
+                "ignorePattern": "^$"
+            }
+        },
+        {
+            "type": "TypeDocComment",
+            "props": {
+                "tokens": [
+                    "ABSTRACT_DEF",
+                    "CLASS_DEF",
+                    "ENUM_DEF",
+                    "INTERFACE_DEF",
+                    "TYPEDEF_DEF"
+                ]
+            }
+        },
+        {
+            "type": "VariableInitialisation",
+            "props": {
+                "allowFinal": false
+            }
+        },
+    ],
+    "exclude": {},
+    "version": 1
+}

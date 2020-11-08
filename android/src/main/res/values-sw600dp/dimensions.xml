@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="gloomy_core_actionbar_tab_padding">16dp</dimen>
+    <dimen name="gloomy_core_actionbar_tab_textsize">16dp</dimen>
+
+    <dimen name="gloomy_core_button_textsize">20dp</dimen>
+    <dimen name="gloomy_core_button_padding_vert">20dp</dimen>
+    <dimen name="gloomy_core_button_padding_hor">48dp</dimen>
+
+    <dimen name="gloomy_prepare_title_textsize">64dp</dimen>
+    <dimen name="gloomy_prepare_action_textsize">32dp</dimen>
+
+    <dimen name="gloomy_menu_textsize">18dp</dimen>
+
+    <dimen name="gloomy_selectepisode_textsize">24dp</dimen>
+    <dimen name="gloomy_selectepisode_episode_textsize">42dp</dimen>
+
+    <dimen name="gloomy_achievements_item_padding_vert">20dp</dimen>
+    <dimen name="gloomy_achievements_item_padding_hor">24dp</dimen>
+    <dimen name="gloomy_achievements_footer_padding_vert">12dp</dimen>
+
+    <dimen name="gloomy_alt_textsize">18dp</dimen>
+    <dimen name="gloomy_alt_title_textsize">24dp</dimen>
+    <dimen name="gloomy_alt_subtitle_textsize">20dp</dimen>
+</resources>

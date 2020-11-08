@@ -1,0 +1,13 @@
+# remove "-dce no" after upgrading Haxe
+
+-lib safety
+-lib polygonal-printf
+-lib zame-miscutils
+-lib hxargs
+-lib natcmp
+--macro Safety.enable('com.eightsines.firestrike.procedural', false)
+--macro Safety.safeNavigation('com.eightsines.firestrike.procedural', true)
+--macro Safety.safeArray('com.eightsines.firestrike.procedural', true)
+-main com.eightsines.firestrike.procedural.Main
+-dce no
+-cpp build/cpp
