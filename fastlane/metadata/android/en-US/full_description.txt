@@ -1,0 +1,21 @@
+<p>Fire Strike Retro is an old–school 3d–shooter with cartoon graphics from creators of Gloomy Dungeons.</p>
+<p>Initially, we had an idea to take the Gloomy Dungeons 2 engine, use cool cartoon graphics (instead of 8-bit), change levels a little, and go on. But in the middle of the process it became clear that it would take much more time :)</p>
+<ul>
+<li>We completely redesigned the tutorial. We hope that it will be not too complicated for beginners, and, on the other hand, it will not be too dull for experienced players in 3d–action games.</li>
+<li>The minimap has completely changed. Instead of turning it on and off (as in the original Gloomy), it is now always visible. In addition, it always shows where to go (instead of arrows on the floor, as it was before), so you won’t get lost in endless labyrinths.</li>
+<li>The game was carefully rebalanced (it is a shame, but earlier we did it almost randomly). It’s up to you to decide whether we’ve done it well or not, but to our taste it became much more fun to play.</li>
+<li>We’ve added the ability to quickly change weapons (instead of constantly entering the menu). It seems to us that this is a handy feature, especially at the final levels, in order to quickly switch between grenades and winchester.</li>
+<li>And finally, the main feature that distinguishes this game from our previous ones is the use of procedural generation as a base for creating levels. Of course, we did not put the generated levels as is - each of them was corrected by hands with love. Nevertheless, it was procedural generation that set the basic structure and "rhythm" of the level. Perhaps, because of it, on some levels you will have to run back and forth, but, in our opinion, this adds something special to the game.</li>
+</ul>
+<p>Compared to Gloomy, this game is much more dynamic. No more boring monsters - only hardcore! If you loved 3D first person shooters (FPS), give this game a chance :)</p>
+<p>And briefly for the rest of the features:</p>
+<ul>
+<li>35 levels.</li>
+<li>7 different weapons.</li>
+<li>More than 5000 enemies.</li>
+<li>About 5 hours of gameplay.</li>
+<li>24 achievements.</li>
+<li>Each level have one or more secrets.</li>
+</ul>
+<p>Have fun!</p>
+<p>In version for F-Droid analytics and crash reporting were removed. The game may display non-personalized advertising from EightSines Studio.</p>

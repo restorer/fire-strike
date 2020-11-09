@@ -39,7 +39,7 @@ public class PromoView extends FrameLayout {
         void onActivePromoDismissed();
     }
 
-    private static final String PROMO_URL = "https://mobile.zame-dev.org/promo/index.php?package=";
+    private static final String PROMO_URL = "https://eightsines.com/promo/?package=";
 
     private static final long RELOAD_INTERVAL = 10L * 1000L;
     private static final long ROTATE_INTERVAL = 15L * 1000L;

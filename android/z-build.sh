@@ -29,7 +29,7 @@ cd "$(dirname "$0")"
 ./gradlew "${PREFIX}${SUFFIX}"
 
 if [[ "$1" = "release" && -e "../_dist" ]] ; then
-	VERSION_NAME=`cat gradle.properties | grep VERSION_NAME | sed -e 's/^[ ]*VERSION_NAME[ ]*=//' | sed -e 's/[ ]*$//'`
+	VERSION_NAME="$(cat build.gradle | grep ' versionName ' | sed -e "s/^[ ]*versionName[ ]*'//" | sed -e "s/'[ ]*$//")"
 
 	SRC_APK="build/outputs/apk/release/android-release.apk"
 	SRC_MAPPING="build/outputs/mapping/release/mapping.txt"

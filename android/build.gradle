@@ -43,8 +43,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
 
-        versionName project.VERSION_NAME
-        versionCode Integer.parseInt(project.VERSION_CODE)
+        versionName '2.0'
+        versionCode 2000
 
         applicationId 'com.eightsines.firestrike.opensource'
 
