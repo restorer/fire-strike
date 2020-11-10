@@ -29,20 +29,20 @@ using org.zamedev.lib.LambdaExt;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class TexturePainter extends AbstractPainter implements Painter {
-    private static var AVAIL_BOXES : SafeArray<CellWall> = [
+    private static var AVAIL_BOXES : Array<CellWall> = [
         Box1,
         Box2,
         Box3,
         Box4,
     ];
 
-    private static var AVAIL_SECRET_WALLS : SafeArray<CellWall> = [
+    private static var AVAIL_SECRET_WALLS : Array<CellWall> = [
         Bricks1,
         Bricks2,
         Mold,
     ];
 
-    public function new(settings : Settings, random : Random, layer : IntLayer, board : Board, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(settings : Settings, random : Random, layer : IntLayer, board : Board, viewer : Viewer, sections : Array<Section>) {
         super(settings, random, layer, board, viewer, sections);
     }
 
@@ -93,12 +93,12 @@ class TexturePainter extends AbstractPainter implements Painter {
             }
 
             if (appearance.wallLampOn != null || appearance.wallLampOff != null) {
-                var wallLights : SafeArray<CellWall> = if (appearance.wallLampOn != null && appearance.wallLampOff != null) {
+                var wallLights : Array<CellWall> = if (appearance.wallLampOn != null && appearance.wallLampOff != null) {
                     [appearance.wallLampOff, appearance.wallLampOn];
                 } else if (appearance.wallLampOn != null) {
                     [appearance.wallLampOn, appearance.wallLampOn];
                 } else {
-                    [appearance.wallLampOff, appearance.wallLampOff];
+                    @:nullSafety(Off) [appearance.wallLampOff, appearance.wallLampOff];
                 }
 
                 for (wallLamp in section.wallLamps) {
@@ -117,7 +117,7 @@ class TexturePainter extends AbstractPainter implements Painter {
                 } else if (divider.gates.length == 0) {
                     throw new GeneratorException("TexturePainter failed: non-passable divider with no gates");
                 } else {
-                    var connection : Null<SectionConnection> = Tools.instanceExt(divider, SectionConnection);
+                    var connection : Null<SectionConnection> = Std.downcast(cast divider, SectionConnection);
 
                     for (gate in divider.gates) {
                         switch (gate.type) {
@@ -397,7 +397,7 @@ class TexturePainter extends AbstractPainter implements Painter {
         }
     }
 
-    private function paintLattice(points : SafeArray<Point>, size : Int, appearance : SectionAppearance) : Void {
+    private function paintLattice(points : Array<Point>, size : Int, appearance : SectionAppearance) : Void {
         if (appearance.lattices.length == 1) {
             board.plot(points, Entry.createCell(TWall(appearance.lattices[0])));
             return;
@@ -429,7 +429,7 @@ class TexturePainter extends AbstractPainter implements Painter {
         }
     }
 
-    private function getFenceType(startPoint : Point, endPoint : Point, lattices : SafeArray<CellTWall>) : CellTWall {
+    private function getFenceType(startPoint : Point, endPoint : Point, lattices : Array<CellTWall>) : CellTWall {
         return (startPoint.row < endPoint.row || startPoint.col < endPoint.col) ? lattices[0] : lattices[2];
     }
 }

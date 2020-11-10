@@ -20,7 +20,7 @@ class EdgePoint {
         this.__id = (__id == null ? Sequence.nextId() : __id);
     }
 
-    public static function copyAll(source : SafeArray<EdgePoint>) : SafeArray<EdgePoint> {
+    public static function copyAll(source : Array<EdgePoint>) : Array<EdgePoint> {
         for (edgePoint in source) {
             edgePoint.__copyPrevConnectedId = edgePoint.prevConnected!.__id.or(0);
             edgePoint.__copyNextConnectedId = edgePoint.nextConnected!.__id.or(0);

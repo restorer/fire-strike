@@ -19,7 +19,7 @@ class Tools {
         return block(object);
     }
 
-    public static inline function pushAll<T>(a : SafeArray<T>, b : SafeArray<T>) : SafeArray<T> {
+    public static inline function pushAll<T>(a : Array<T>, b : Array<T>) : Array<T> {
         for (v in b) {
             a.push(v);
         }
@@ -27,32 +27,24 @@ class Tools {
         return a;
     }
 
-    public static inline function isEmpty<T>(a : SafeArray<T>) : Bool {
+    public static inline function isEmpty<T>(a : Array<T>) : Bool {
         return (a.length == 0);
     }
 
-    public static inline function first<T>(a : SafeArray<T>) : T {
+    public static inline function first<T>(a : Array<T>) : T {
         return a[0];
     }
 
-    public static inline function last<T>(a : SafeArray<T>) : T {
+    public static inline function last<T>(a : Array<T>) : T {
         return a[a.length - 1];
     }
 
-    public static inline function contains<T>(a : SafeArray<T>, v : T) : Bool {
+    public static inline function contains<T>(a : Array<T>, v : T) : Bool {
         return (a.indexOf(v) >= 0);
     }
 
-    public static inline function safeConcat<T>(a : SafeArray<T>, b : SafeArray<T>) : SafeArray<T> {
-        return cast a.concat(b.stdArray());
-    }
-
-    public static inline function safeMap<T, S>(a : SafeArray<T>, f : (T) -> S) : SafeArray<S> {
-        return cast a.map(f);
-    }
-
-    public static inline function stableSort<T>(a : SafeArray<T>, cmp : (T, T) -> Int) : Void {
-        ArraySort.sort(a.stdArray(), cmp);
+    public static inline function stableSort<T>(a : Array<T>, cmp : (T, T) -> Int) : Void {
+        ArraySort.sort(a, cmp);
     }
 
     public static inline function toInt32(v : Int) : Int32 {
@@ -64,11 +56,6 @@ class Tools {
         return (v == null ? None : Some(v));
     }
 
-    @:safety(unsafe)
-    public static function instanceExt<T : {}, S : T>(value : T, c : Class<S>) : Null<S> {
-        return Std.instance(value, c);
-    }
-
     public static inline function runOr<T>(value : Null<T>, onNonNullCallback : (T) -> Void, onNullCallback : () -> Void) : Void {
         if (value != null) {
             onNonNullCallback(value);
@@ -77,8 +64,8 @@ class Tools {
         }
     }
 
-    public static macro function arrayOfAny(value : Expr, extra : Array<Expr>) : Expr {
-        var extraExprs = new Array<Expr>();
+    macro public static function arrayOfAny(value : Expr, extra : Array<Expr>) : Expr {
+        var extraExprs: Array<Expr> = [];
 
         for (expr in extra) {
             extraExprs.push(macro @:pos(Context.currentPos()) {

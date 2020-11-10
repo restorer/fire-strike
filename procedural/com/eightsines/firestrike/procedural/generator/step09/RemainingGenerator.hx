@@ -16,26 +16,26 @@ import com.eightsines.firestrike.procedural.view.Viewer;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class RemainingGenerator extends AbstractSectionGenerator implements Generator {
-    private static inline var MAX_SECRET_ITEMS : Int = 4;
-    private static inline var LAMPS_SUBDIVISION : Int = 6;
-    private static inline var GRASS_MIN_FACTOR : Float = 0.2;
-    private static inline var GRASS_MAX_FACTOR : Float = 0.6;
+    private static inline final MAX_SECRET_ITEMS : Int = 4;
+    private static inline final LAMPS_SUBDIVISION : Int = 6;
+    private static inline final GRASS_MIN_FACTOR : Float = 0.2;
+    private static inline final GRASS_MAX_FACTOR : Float = 0.6;
 
     private var settings : Settings;
-    private var availSecretItems : SafeArray<SectionItemType> = [];
+    private var availSecretItems : Array<SectionItemType> = [];
 
     public function new(
         settings : Settings,
         random : Random,
         layer : IntLayer,
         viewer : Viewer,
-        sections : SafeArray<Section>
+        sections : Array<Section>
     ) {
         super(random, layer, viewer, sections);
         this.settings = settings;
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         prepareAvailSecretItems();
         placeSecretItems();
         placeLampsAndGrass();
@@ -86,7 +86,7 @@ class RemainingGenerator extends AbstractSectionGenerator implements Generator {
                 viewer.dumpIntLayer(layer);
             }
 
-            var points : SafeArray<Point> = random.shuffleArray(layer.collect([Section.VAL_INNER_AVAIL], section.getBbox()));
+            var points : Array<Point> = random.shuffleArray(layer.collect([Section.VAL_INNER_AVAIL], section.getBbox()));
 
             if (points.length != 0) {
                 var totalSecretItems = IntMath.min(MAX_SECRET_ITEMS, random.nextIntRangeInPow(1, points.length, 2.0));
@@ -138,7 +138,7 @@ class RemainingGenerator extends AbstractSectionGenerator implements Generator {
                             innerBbox.col + Math.floor(horSize * (j + 0.5))
                         );
 
-                        var availPoints : SafeArray<Point> = [];
+                        var availPoints : Array<Point> = [];
 
                         for (point in rect.points()) {
                             if ([Section.VAL_INNER_AVAIL,
@@ -188,7 +188,7 @@ class RemainingGenerator extends AbstractSectionGenerator implements Generator {
             }
 
             if (section.appearanceKind == Outdoor) {
-                var points : SafeArray<Point> = random.shuffleArray(layer.collect([Section.VAL_INNER_AVAIL], section.getBbox()));
+                var points : Array<Point> = random.shuffleArray(layer.collect([Section.VAL_INNER_AVAIL], section.getBbox()));
                 var totalGrassCount = random.nextIntRangeIn(Std.int(points.length * GRASS_MIN_FACTOR), Std.int(points.length * GRASS_MAX_FACTOR));
 
                 for (i in 0 ... totalGrassCount) {

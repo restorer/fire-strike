@@ -52,3 +52,4 @@ Look for the .apk files in `build/outputs/apk/`
 - To update the levels you need `ruby` and `natcmp` gem.
 - To update the textures you need `imagemagick` 6.x (with 7.x you may get weird results), `ruby`, `rmagick` gem and `optipng` utility.
 - To convert sounds and music you need the `sox` utility.
+- To procedurally generate levels you need the [lix package manager](https://github.com/lix-pm/lix.client), than use it to install `Haxe` 4.1.4 and dependencies.

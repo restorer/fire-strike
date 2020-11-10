@@ -16,8 +16,8 @@ using Safety;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class BspGeneratorNode {
-    private static inline var MIN_NODE_SIZE : Int = 6;
-    private static inline var MIN_ROOM_SIZE : Int = 5;
+    private static inline final MIN_NODE_SIZE : Int = 6;
+    private static inline final MIN_ROOM_SIZE : Int = 5;
 
     public var bbox : Rect;
     public var entryValue : Int;
@@ -106,13 +106,13 @@ class BspGeneratorNode {
 }
 
 class BspGenerator extends AbstractGeometryGenerator implements Generator {
-    private var nodes : SafeArray<BspGeneratorNode> = [];
+    private var nodes : Array<BspGeneratorNode> = [];
 
     public function new(random : Random, layer : IntLayer, viewer : Viewer) {
         super(random, layer, viewer);
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         createNodes();
         createRooms();
         drawHalls();
@@ -130,7 +130,7 @@ class BspGenerator extends AbstractGeometryGenerator implements Generator {
 
         while (true) {
             dumpNodes();
-            var nextNodes : SafeArray<BspGeneratorNode> = [];
+            var nextNodes : Array<BspGeneratorNode> = [];
 
             for (node in currentNodes) {
                 if (node.isLeaf()

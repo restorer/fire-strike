@@ -18,18 +18,18 @@ using Safety;
 using org.zamedev.lib.DynamicTools;
 
 class Exporter {
-    private static inline var T_HERO = 1;
-    private static inline var T_WALL = 2;
-    private static inline var T_TWALL = 3;
-    // private static inline var T_TPASS = 4;
-    private static inline var T_TWIND = 5;
-    private static inline var T_DOOR = 6;
-    private static inline var T_DITEM = 7;
-    private static inline var T_DLAMP = 8;
-    private static inline var T_OBJ = 9;
-    private static inline var T_MON = 10;
+    private static inline final T_HERO = 1;
+    private static inline final T_WALL = 2;
+    private static inline final T_TWALL = 3;
+    // private static inline final T_TPASS = 4;
+    private static inline final T_TWIND = 5;
+    private static inline final T_DOOR = 6;
+    private static inline final T_DITEM = 7;
+    private static inline final T_DLAMP = 8;
+    private static inline final T_OBJ = 9;
+    private static inline final T_MON = 10;
 
-    public static var REDUCE_ALL_EMPTY = new LayerReducer<Entry, Bool>(true, (_, _, entry, carry) -> (carry && BoardUtils.isEmptyEntry(entry)));
+    public static final REDUCE_ALL_EMPTY = new LayerReducer<Entry, Bool>(true, (_, _, entry, carry) -> (carry && BoardUtils.isEmptyEntry(entry)));
 
     private var settings : Settings;
     private var board : Board;
@@ -43,6 +43,7 @@ class Exporter {
         this.board = board;
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     public function export() : String {
         var bounds = computeBounds();
 
@@ -89,11 +90,10 @@ class Exporter {
         return Rect.fromCoords(minRow, minCol, maxRow, maxCol);
     }
 
-    private function exportMap(bounds : Rect) : SafeArray<SafeArray<DynamicExt>> {
+    @SuppressWarnings("checkstyle:NeedBraces")
+    private function exportMap(bounds : Rect) : Array<Array<DynamicExt>> {
         return [ for (row in 0 ... bounds.height)
-            [ for (col in 0 ... bounds.width)
-                exportEntry(board.get(bounds.row + row, bounds.col + col))
-            ]
+            [ for (col in 0 ... bounds.width) exportEntry(board.get(bounds.row + row, bounds.col + col)) ]
         ];
     }
 
@@ -164,7 +164,7 @@ class Exporter {
         };
     }
 
-    private function exportSplitted<T : Int>(splitted : Splitted<Option<T>>) : SafeArray<Int> {
+    private function exportSplitted<T : Int>(splitted : Splitted<Option<T>>) : Array<Int> {
         return [
             switch (splitted.tl.sure()) {
                 case None: 0;

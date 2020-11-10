@@ -13,7 +13,7 @@ class SectionFence implements SectionDivider {
     public var rect : Rect;
     public var size : Int;
     public var otherFence : Null<SectionFence> = null;
-    public var gates : SafeArray<SectionGate> = [];
+    public var gates : Array<SectionGate> = [];
     public var __passable : Bool = false;
     public var __id : Int;
     public var __copyOtherFenceId : Int = 0;

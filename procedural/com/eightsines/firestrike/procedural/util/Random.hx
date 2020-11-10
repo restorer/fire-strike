@@ -146,12 +146,12 @@ class Random {
     /**
         Return a random item from an array. Will return null if the array is null or empty.
     **/
-    public function nextFromArray<T>(list : SafeArray<T>) : Null<T> { // "inline" removed due to bug in Haxe 4 preview
+    public function nextFromArray<T>(list : Array<T>) : Null<T> { // "inline" removed due to bug in Haxe 4 preview
         // Can't inline this function due to but in haxe and / or hashlink
         return ((list == null || list.length == 0) ? null : list[nextIntEx(list.length)]);
     }
 
-    public function nextFromArrayPow<T>(list : SafeArray<T>, pow : Float) : Null<T> { // "inline" removed due to bug in Haxe 4 preview
+    public function nextFromArrayPow<T>(list : Array<T>, pow : Float) : Null<T> { // "inline" removed due to bug in Haxe 4 preview
         // Can't inline this function due to but in haxe and / or hashlink
         return ((list == null || list.length == 0) ? null : list[nextIntExPow(list.length, pow)]);
     }
@@ -159,7 +159,7 @@ class Random {
     /**
         Shuffle an Array. This operation affects the array in place, and returns that array.
     **/
-    public function shuffleArray<T>(list : SafeArray<T>) : SafeArray<T> {
+    public function shuffleArray<T>(list : Array<T>) : Array<T> {
         if (list != null && list.length != 0) {
             for (i in 0 ... list.length - 1) {
                 var j = nextIntRangeEx(i, list.length);

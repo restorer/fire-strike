@@ -26,15 +26,16 @@ import js.html.URL;
 using Safety;
 using StringTools;
 
+@SuppressWarnings("checkstyle:MultipleStringLiterals")
 class BrowserViewer extends Viewer {
-    private static inline var ENTRY_SIZE : Int = 64;
-    private static inline var ENTRY_HALF_SIZE : Int = Std.int(ENTRY_SIZE / 2);
-    private static inline var GIF_FRAME_SIZE : Int = 512;
+    private static inline final ENTRY_SIZE : Int = 64;
+    private static inline final ENTRY_HALF_SIZE : Int = Std.int(ENTRY_SIZE / 2);
+    private static inline final GIF_FRAME_SIZE : Int = 512;
 
-    private static inline var LOCAL_STORAGE_PREFIX : String = "com.eightsines.firestrike.procedural:";
-    private static inline var LOCAL_STORAGE_ARGS : String = LOCAL_STORAGE_PREFIX + "args";
+    private static inline final LOCAL_STORAGE_PREFIX : String = "com.eightsines.firestrike.procedural:";
+    private static inline final LOCAL_STORAGE_ARGS : String = LOCAL_STORAGE_PREFIX + "args";
 
-    private static var INT_CELL_PALETTE : SafeArray<Int> = [0, 255, 192, 128];
+    private static var INT_CELL_PALETTE : Array<Int> = [0, 255, 192, 128];
 
     private var graphicsUrl : String;
     private var argsElement : InputElement;
@@ -47,7 +48,7 @@ class BrowserViewer extends Viewer {
     private var preloadedImages = new Map<String, PreloadedImage>();
     private var requestRenderTimeoutId : Null<Int> = null;
 
-    private var entries : SafeArray<BrowserViewerEntry> = [];
+    private var entries : Array<BrowserViewerEntry> = [];
     private var entryIndex : Int = 0;
 
     public function new(processorCb : () -> Processor) {
@@ -131,16 +132,17 @@ class BrowserViewer extends Viewer {
         fullLogElement.value += message + "\n";
     }
 
+    @SuppressWarnings("checkstyle:Dynamic")
     private function makeGif(onlyBoardEntries : Bool = false) : Void {
-        trace("Adding frames...");
+        log("Adding frames...");
 
-        var gif : Dynamic = untyped __js__(
+        var gif : Dynamic = js.Syntax.code(
             'new GIF({ background: "#000000", width: {0}, height: {1}, workerScript: "lib/gif.worker.js" })',
             GIF_FRAME_SIZE,
             GIF_FRAME_SIZE
         );
 
-        var canvas : CanvasElement = cast Browser.document.createElement('canvas');
+        var canvas : CanvasElement = cast Browser.document.createElement("canvas");
         var context = canvas.getContext2d();
 
         canvas.width = GIF_FRAME_SIZE;
@@ -167,11 +169,11 @@ class BrowserViewer extends Viewer {
         }
 
         gif.on("finished", (blob : Any) -> {
-            trace("Finished");
+            log("Finished");
             Browser.window.open(URL.createObjectURL(blob));
         });
 
-        trace("Encoding...");
+        log("Encoding...");
         gif.render();
     }
 
@@ -222,9 +224,9 @@ class BrowserViewer extends Viewer {
         viewportElement.height = size * ENTRY_SIZE;
         viewportElement.width = size * ENTRY_SIZE;
 
-        viewportContext.font = 'bold 24px Tahoma, Arial';
-        viewportContext.textAlign = 'center';
-        viewportContext.textBaseline = 'middle';
+        viewportContext.font = "bold 24px Tahoma, Arial";
+        viewportContext.textAlign = "center";
+        viewportContext.textBaseline = "middle";
 
         for (row in 0 ... layer.height) {
             for (col in 0 ... layer.width) {
@@ -297,8 +299,8 @@ class BrowserViewer extends Viewer {
     }
 
     private function renderBoardCell(px : Int, py : Int, entry : Entry, renderMode : Int) : Void {
-        var drawList : SafeArray<BrowserViewerTile> = [];
-        var preloadList : SafeArray<String> = [];
+        var drawList : Array<BrowserViewerTile> = [];
+        var preloadList : Array<String> = [];
 
         if (renderMode > 0) {
             switch (entry.ceiling.sure().tl.sure()) {
@@ -455,12 +457,12 @@ class BrowserViewer extends Viewer {
     private function renderMark(px : Int, py : Int, entry : Entry) : Void {
         switch (entry.mark.sure()) {
             case Some(value):
-                viewportContext.strokeStyle = '#000000';
+                viewportContext.strokeStyle = "#000000";
                 viewportContext.lineWidth = 4;
                 viewportContext.strokeText(value, px + 32, py + 32, 64);
                 viewportContext.lineWidth = 1;
 
-                viewportContext.fillStyle = '#ff0000';
+                viewportContext.fillStyle = "#ff0000";
                 viewportContext.fillText(value, px + 32, py + 32, 64);
 
             case None:
@@ -478,31 +480,31 @@ class BrowserViewer extends Viewer {
     private function getCellSrc(cell : Cell) : String {
         return '${graphicsUrl}/' + switch (cell) {
             case Wall(value):
-                Printf.format("set-1/walls/wall_%02d.png", [value].stdArray());
+                Printf.format("set-1/walls/wall_%02d.png", [value]);
 
             case TWall(value):
-                Printf.format("set-1/twall/twall_%02d.png", [value].stdArray());
+                Printf.format("set-1/twall/twall_%02d.png", [value]);
 
             case Window(value):
-                Printf.format("set-1/twind/twind_%02d.png", [value].stdArray());
+                Printf.format("set-1/twind/twind_%02d.png", [value]);
 
             case Door(value):
-                Printf.format("set-1/doors/door_%02d_f.png", [value].stdArray());
+                Printf.format("set-1/doors/door_%02d_f.png", [value]);
 
             case Decor(value):
-                Printf.format("set-1/ditem/ditem_%02d.png", [value].stdArray());
+                Printf.format("set-1/ditem/ditem_%02d.png", [value]);
 
             case Pass(value):
-                Printf.format("set-1/dlamp/dlamp_%02d.png", [value].stdArray());
+                Printf.format("set-1/dlamp/dlamp_%02d.png", [value]);
 
             case Item(value):
-                Printf.format("common/objects/obj_%02d.png", [value].stdArray());
+                Printf.format("common/objects/obj_%02d.png", [value]);
 
             case Enemy(value):
-                Printf.format("common/monsters/mon_%02d_a3.png", [value].stdArray());
+                Printf.format("common/monsters/mon_%02d_a3.png", [value]);
 
             case Player(direction):
-                Printf.format("common/misc/hero_%02d.png", [direction].stdArray());
+                Printf.format("common/misc/hero_%02d.png", [direction]);
         }
     }
 
@@ -517,8 +519,8 @@ class BrowserViewer extends Viewer {
     private function fillPreloadedImage(
         src : String,
         tile : BrowserViewerTile,
-        drawList : SafeArray<BrowserViewerTile>,
-        preloadList : SafeArray<String>
+        drawList : Array<BrowserViewerTile>,
+        preloadList : Array<String>
     ) : Void {
         var preloadedImage = preloadedImages[src];
 
@@ -536,8 +538,8 @@ class BrowserViewer extends Viewer {
         drawList.push(tile);
     }
 
-    @:safety(unsafe)
-    private function preloadImages(sources : SafeArray<String>, callback : () -> Void) : Void {
+    @:nullSafety(Off)
+    private function preloadImages(sources : Array<String>, callback : () -> Void) : Void {
         for (src in sources) {
             var preloadedImage = preloadedImages[src];
 
@@ -558,7 +560,7 @@ class BrowserViewer extends Viewer {
 
                         if (ensurePreloadedImage == null) {
                             hasNoErrors = false;
-                            trace("Preload error");
+                            log("Preload error");
                         } else if (!ensurePreloadedImage.isLoaded) {
                             ensurePreloadedImage.addCompleter(completer);
                         }

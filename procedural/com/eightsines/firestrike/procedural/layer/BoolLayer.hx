@@ -4,15 +4,15 @@ import com.eightsines.firestrike.procedural.geom.Rect;
 import com.eightsines.firestrike.procedural.layer.Layer; // {LayerReducer}
 
 class BoolLayer extends Layer<Bool> {
-    private static var EMPTY_CREATOR = () -> false;
-    public static var REDUCE_ALL_FALSE = new LayerReducer<Bool, Bool>(true, (_, _, entry, carry) -> (carry && !entry));
+    private static final EMPTY_CREATOR = () -> false;
+    public static final REDUCE_ALL_FALSE = new LayerReducer<Bool, Bool>(true, (_, _, entry, carry) -> (carry && !entry));
 
     public function new(width : Int, height : Int) {
         super(width, height, EMPTY_CREATOR);
     }
 
     public function toString() : String {
-        return __toString("BoolLayer");
+        return dumpToString("BoolLayer");
     }
 
     public function copy() : BoolLayer {
@@ -29,7 +29,7 @@ class BoolLayer extends Layer<Bool> {
     }
 
     // Override to force use inline
-    override public function clear(bbox : Null<Rect> = null) : Void {
+    override public function clear(?bbox : Null<Rect>) : Void {
         if (bbox == null) {
             for (row in 0 ... height) {
                 for (col in 0 ... width) {

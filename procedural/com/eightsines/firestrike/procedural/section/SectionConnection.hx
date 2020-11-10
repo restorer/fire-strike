@@ -15,7 +15,7 @@ class SectionConnection implements SectionDivider {
     public var size : Int;
     public var otherConnection : Null<SectionConnection> = null;
     public var scenarioGate : Int = 0;
-    public var gates : SafeArray<SectionGate> = [];
+    public var gates : Array<SectionGate> = [];
     public var __removed : Bool = false;
     public var __passable : Bool = false;
     public var __id : Int;
@@ -53,11 +53,13 @@ class SectionConnection implements SectionDivider {
         return otherConnection.sure();
     }
 
+    @SuppressWarnings("checkstyle:MethodName")
     public function __setBothPassable(value : Bool) : Void {
         __passable = value;
         otherConnection.sure().__passable = value;
     }
 
+    @SuppressWarnings("checkstyle:MethodName")
     public function __setBothRemoved(value : Bool) : Void {
         __removed = value;
         otherConnection.sure().__removed = value;

@@ -21,7 +21,7 @@ class IntMath {
         return (v * v);
     }
 
-    public static function select(probability : Float, probabilities : SafeArray<Float>) : Int {
+    public static function select(probability : Float, probabilities : Array<Float>) : Int {
         for (i in 0 ... probabilities.length) {
             if (probability < probabilities[i]) {
                 return i;

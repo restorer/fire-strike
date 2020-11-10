@@ -13,12 +13,12 @@ using Safety;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class IntLayer extends Layer<Int> {
-    private static var EMPTY_CREATOR = () -> 0;
+    private static final EMPTY_CREATOR = () -> 0;
 
-    public static var COND_IS_EMPTY = (entry) -> (entry == 0);
-    public static var REDUCE_ALL_EMPTY = new LayerReducer<Int, Bool>(true, (_, _, entry, carry) -> (carry && entry == 0));
+    public static final COND_IS_EMPTY = (entry) -> (entry == 0);
+    public static final REDUCE_ALL_EMPTY = new LayerReducer<Int, Bool>(true, (_, _, entry, carry) -> (carry && entry == 0));
 
-    public static inline var CARRY_ALL_EMPTY : Bool = true;
+    public static inline final CARRY_ALL_EMPTY : Bool = true;
 
     public var currentEntry : Int = 0;
     private var visited : BoolLayer;
@@ -29,7 +29,7 @@ class IntLayer extends Layer<Int> {
     }
 
     public function toString() : String {
-        return __toString("IntLayer");
+        return dumpToString("IntLayer");
     }
 
     // Override to force use inline
@@ -42,7 +42,7 @@ class IntLayer extends Layer<Int> {
     }
 
     // Override to force use inline
-    override public function clear(bbox : Null<Rect> = null) : Void {
+    override public function clear(?bbox : Null<Rect>) : Void {
         if (bbox == null) {
             for (row in 0 ... height) {
                 for (col in 0 ... width) {
@@ -128,7 +128,7 @@ class IntLayer extends Layer<Int> {
         return partitions;
     }
 
-    public function isSinglePartition(entry : Int, bbox : Null<Rect> = null) : Bool {
+    public function isSinglePartition(entry : Int, ?bbox : Null<Rect>) : Bool {
         var isFound : Bool = false;
         visited.clear(bbox);
 
@@ -221,7 +221,7 @@ class IntLayer extends Layer<Int> {
                         }
                     }
 
-                    if (mergedEntry != 0) {
+                    if (mergedEntry != 0 && mergedPoint != null) {
                         for (r in 0 ... kernRows) {
                             for (c in 0 ... kernColumns) {
                                 set(mergedPoint.row + r, mergedPoint.col + c, mergedEntry);
@@ -255,8 +255,8 @@ class IntLayer extends Layer<Int> {
         return hasChanges;
     }
 
-    public function tracePolyboxes() : SafeArray<Pair<Polybox, Int>> {
-        var result : SafeArray<Pair<Polybox, Int>> = [];
+    public function tracePolyboxes() : Array<Pair<Polybox, Int>> {
+        var result : Array<Pair<Polybox, Int>> = [];
         visited.clear();
 
         for (row in 0 ... height) {
@@ -277,7 +277,7 @@ class IntLayer extends Layer<Int> {
         return result;
     }
 
-    public function traceEdgePoints(innerEntries : SafeArray<Int>, ?bbox : Rect, outsideEntry : Int = 0) : SafeArray<EdgePoint> {
+    public function traceEdgePoints(innerEntries : Array<Int>, ?bbox : Rect, outsideEntry : Int = 0) : Array<EdgePoint> {
         for (row in (bbox == null ? 0 ... height : bbox.rows())) {
             for (col in (bbox == null ? 0 ... width : bbox.columns())) {
                 var entry = get(row, col);
@@ -287,7 +287,7 @@ class IntLayer extends Layer<Int> {
                 }
 
                 var points = traceBorderPoints(new Point(row, col), innerEntries);
-                var edgePoints = points.safeMap((point) -> new EdgePoint(point));
+                var edgePoints = points.map((point) -> new EdgePoint(point));
 
                 for (i in 0 ... edgePoints.length) {
                     edgePoints[i].setConnections(
@@ -315,8 +315,8 @@ class IntLayer extends Layer<Int> {
         return true;
     }
 
-    public function collect(entries : SafeArray<Int>, ?rect : Rect) : SafeArray<Point> {
-        var result : SafeArray<Point> = [];
+    public function collect(entries : Array<Int>, ?rect : Rect) : Array<Point> {
+        var result : Array<Point> = [];
 
         if (rect == null) {
             rect = new Rect(0, 0, height, width);
@@ -333,8 +333,8 @@ class IntLayer extends Layer<Int> {
         return result;
     }
 
-    private function traceBorderPoints(startPoint : Point, entries : SafeArray<Int>) : SafeArray<Point> {
-        var points : SafeArray<Point> = [];
+    private function traceBorderPoints(startPoint : Point, entries : Array<Int>) : Array<Point> {
+        var points : Array<Point> = [];
         var point = startPoint;
         var directionIndex : Int = 0;
 
@@ -447,11 +447,11 @@ class IntLayer extends Layer<Int> {
             return;
         }
 
-        var points : SafeArray<Point> = [new Point(row, col)];
+        var points : Array<Point> = [new Point(row, col)];
         visited.set(row, col, true);
 
         while (true) {
-            var newPoints : SafeArray<Point> = [];
+            var newPoints : Array<Point> = [];
 
             for (point in points) {
                 if (src != dst) {
@@ -483,14 +483,14 @@ class IntLayer extends Layer<Int> {
         }
     }
 
-    private function floodFillCheckAndVisit(row : Int, col : Int, src : Int, newPoints : SafeArray<Point>) : Void {
+    private function floodFillCheckAndVisit(row : Int, col : Int, src : Int, newPoints : Array<Point>) : Void {
         if (!visited.get(row, col) && get(row, col) == src) {
             newPoints.push(new Point(row, col));
             visited.set(row, col, true);
         }
     }
 
-    public static function createAllowReducer(allow : SafeArray<Int>) : LayerReducer<Int, Bool> {
+    public static function createAllowReducer(allow : Array<Int>) : LayerReducer<Int, Bool> {
         return new LayerReducer<Int, Bool>(true, (_, _, entry, carry) -> (carry && allow.contains(entry)));
     }
 }

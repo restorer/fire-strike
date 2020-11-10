@@ -24,16 +24,16 @@ using org.zamedev.lib.LambdaExt;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class DecorationsGenerator extends AbstractSectionGenerator implements Generator {
-    private static inline var MIN_ROCKS : Int = 3;
+    private static inline final MIN_ROCKS : Int = 3;
 
     private var settings : Settings;
 
-    public function new(settings : Settings, random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(settings : Settings, random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         super(random, layer, viewer, sections);
         this.settings = settings;
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         assignAppearanceKind();
         placeSwitches();
         placeBlockyDecorations();
@@ -70,7 +70,7 @@ class DecorationsGenerator extends AbstractSectionGenerator implements Generator
             viewer.dumpIntLayer(layer);
         }
 
-        var availMidPoints : SafeArray<Point> = [];
+        var availMidPoints : Array<Point> = [];
 
         for (polybox in section.geometry) {
             for (edge in polybox.getEdges()) {
@@ -110,7 +110,7 @@ class DecorationsGenerator extends AbstractSectionGenerator implements Generator
                 }
 
                 var bbox = section.getBbox();
-                var availExtends : SafeArray<Pair<Point, Extend>> = [];
+                var availExtends : Array<Pair<Point, Extend>> = [];
                 var maxArea : Int = -1;
 
                 var extMap = GeneratorUtils.computeExtends(
@@ -291,8 +291,8 @@ class DecorationsGenerator extends AbstractSectionGenerator implements Generator
 
     private function placeDecorationsNearBorderInternal(
         section : Section,
-        edgePoints : SafeArray<EdgePoint>,
-        cornerTypes : SafeArray<CornerType>,
+        edgePoints : Array<EdgePoint>,
+        cornerTypes : Array<CornerType>,
         decorationType : SectionDecorationType,
         maxCount : Int
     ) : Int {
@@ -378,7 +378,7 @@ class DecorationsGenerator extends AbstractSectionGenerator implements Generator
     }
 
     private function generateRock(section : Section, point : Point) : Int {
-        var availPoints : SafeArray<Point> = [];
+        var availPoints : Array<Point> = [];
 
         for (i in -1 ... 2) {
             for (j in -1 ... 2) {

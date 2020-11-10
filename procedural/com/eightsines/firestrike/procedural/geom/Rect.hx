@@ -77,8 +77,8 @@ class Rect {
         return new IntIterator(col, col + width);
     }
 
-    public function points() : SafeArray<Point> {
-        var points : SafeArray<Point> = [];
+    public function points() : Array<Point> {
+        var points : Array<Point> = [];
 
         for (r in 0 ... height) {
             for (c in 0 ... width) {
@@ -89,8 +89,8 @@ class Rect {
         return points;
     }
 
-    public function borderPoints() : SafeArray<Point> {
-        var points : SafeArray<Point> = [];
+    public function borderPoints() : Array<Point> {
+        var points : Array<Point> = [];
 
         for (c in 0 ... width) {
             points.push(new Point(row, col + c));

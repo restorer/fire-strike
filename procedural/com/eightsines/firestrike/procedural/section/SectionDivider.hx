@@ -7,7 +7,7 @@ interface SectionDivider {
     var normal : Point;
     var rect : Rect;
     var size : Int;
-    var gates : SafeArray<SectionGate>;
+    var gates : Array<SectionGate>;
     var __passable : Bool;
 
     function getOtherDivider() : SectionDivider;

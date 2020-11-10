@@ -20,12 +20,12 @@ using com.eightsines.firestrike.procedural.util.Tools;
 class ScenarioGenerator extends AbstractSectionGenerator implements Generator {
     private var settings : Settings;
 
-    public function new(settings : Settings, random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(settings : Settings, random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         super(random, layer, viewer, sections);
         this.settings = settings;
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         chooseSecrets();
         createScenarios();
 
@@ -33,7 +33,7 @@ class ScenarioGenerator extends AbstractSectionGenerator implements Generator {
     }
 
     private function chooseSecrets() : Void {
-        var candidates : SafeArray<Section> = [];
+        var candidates : Array<Section> = [];
 
         for (section in sections) {
             if (section.connections.length == 1) {
@@ -83,7 +83,7 @@ class ScenarioGenerator extends AbstractSectionGenerator implements Generator {
                 throw new GeneratorException("createScenarios failed: no available sections");
             }
 
-            var candidates : SafeArray<Section> = [];
+            var candidates : Array<Section> = [];
 
             for (section in availableSections) {
                 if (canUseSection(section)) {
@@ -104,7 +104,7 @@ class ScenarioGenerator extends AbstractSectionGenerator implements Generator {
             candidates.sort((a, b) -> (getOuterFreeSections(a).length - getOuterFreeSections(b).length));
 
             var originalSection = candidates[Std.int(candidates.length * Math.pow(random.nextFloatEx(), 4))];
-            var scenarioSections : SafeArray<Section> = [originalSection];
+            var scenarioSections : Array<Section> = [originalSection];
             var probability = 0.2;
 
             originalSection.scenario = ++currentScenario;
@@ -175,7 +175,7 @@ class ScenarioGenerator extends AbstractSectionGenerator implements Generator {
         );
     }
 
-    private function getOuterFreeSections(section : Section) : SafeArray<Section> {
+    private function getOuterFreeSections(section : Section) : Array<Section> {
         // Can't use LinkedSet, because LinkedObjectSet is not currently implemented
         var sectionSet = new HashSet<Section>();
 

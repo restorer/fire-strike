@@ -1,7 +1,6 @@
 package com.eightsines.firestrike.procedural.board;
 
-@:enum
-abstract CellDecor(Int) to Int {
+enum abstract CellDecor(Int) to Int {
     var Barrel = 4;
 
     var Tree = 7;

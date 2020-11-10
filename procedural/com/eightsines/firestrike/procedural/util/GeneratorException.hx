@@ -1,9 +1,5 @@
 package com.eightsines.firestrike.procedural.util;
 
-class GeneratorException {
-    public var message(default, null) : String;
+import haxe.Exception;
 
-    public function new(message : String) {
-        this.message = message;
-    }
-}
+class GeneratorException extends Exception {}

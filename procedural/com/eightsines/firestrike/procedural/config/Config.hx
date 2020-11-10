@@ -2,8 +2,6 @@ package com.eightsines.firestrike.procedural.config;
 
 using Safety;
 
-// https://docs.google.com/spreadsheets/d/15izdKA7LTdjlPkl0vUdULk-veMZcvTS2KFFdGkdZ2E8/edit#gid=0
-
 @SuppressWarnings("checkstyle:MagicNumber")
 class Config {
     public static var healthMax(get, never) : Int;
@@ -16,13 +14,13 @@ class Config {
     public static var armorHitTaker(get, never) : Float;
     public static var armorHealthSaver(get, never) : Float;
 
-    public static var ammo(get, never) : SafeArray<AmmoConfig>;
-    public static var enemies(get, never) : SafeArray<EnemyConfig>;
-    public static var weapons(get, never) : SafeArray<WeaponConfig>;
+    public static var ammo(get, never) : Array<AmmoConfig>;
+    public static var enemies(get, never) : Array<EnemyConfig>;
+    public static var weapons(get, never) : Array<WeaponConfig>;
 
-    private static var __ammo : Null<SafeArray<AmmoConfig>> = null;
-    private static var __enemies : Null<SafeArray<EnemyConfig>> = null;
-    private static var __weapons : Null<SafeArray<WeaponConfig>> = null;
+    private static var __ammo : Null<Array<AmmoConfig>> = null;
+    private static var __enemies : Null<Array<EnemyConfig>> = null;
+    private static var __weapons : Null<Array<WeaponConfig>> = null;
 
     private static function get_healthMax() : Int {
         return 100;
@@ -56,7 +54,7 @@ class Config {
         return 0.25;
     }
 
-    private static function get_ammo() : SafeArray<AmmoConfig> {
+    private static function get_ammo() : Array<AmmoConfig> {
         if (__ammo == null) {
             __ammo = [
                 new AmmoConfig(0, 0, 0, 0, false, true), // Knife
@@ -69,7 +67,7 @@ class Config {
         return __ammo.unsafe();
     }
 
-    private static function get_enemies() : SafeArray<EnemyConfig> {
+    private static function get_enemies() : Array<EnemyConfig> {
         if (__enemies == null) {
             __enemies = [
                 new EnemyConfig(0, 8, 5, 1), // Soldier with pistol (1)
@@ -83,7 +81,7 @@ class Config {
         return __enemies.unsafe();
     }
 
-    private static function get_weapons() : SafeArray<WeaponConfig> {
+    private static function get_weapons() : Array<WeaponConfig> {
         if (__weapons == null) {
             // NB. в игре dps у ножа = 6, но тут только 2, чтоб не давать генератору шанса сгенерировать сверх-сложные уровни
             // (вообще, нож мало должен влиять, но на всякий случай...)

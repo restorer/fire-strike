@@ -3,7 +3,7 @@ package com.eightsines.firestrike.procedural.geom;
 import com.eightsines.firestrike.procedural.util.IntMath;
 
 class Extend {
-    private static inline var CALC_AREA_CENTER : Int = 256; // Can be any pretty big number
+    private static inline final CALC_AREA_CENTER : Int = 256; // Can be any pretty big number
 
     public var tl : Int = 0;
     public var tr : Int = 0;

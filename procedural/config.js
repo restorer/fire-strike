@@ -1,1 +1,1 @@
-var GRAPHICS_URL = '../procedural-graphics';
+var GRAPHICS_URL = '../materials/graphics';

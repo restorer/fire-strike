@@ -39,7 +39,7 @@ class ScriptPainter extends AbstractPainter implements Painter {
     private var secretInsideScriptAddedSet = new HashSet<Int>();
     private var actionsMap = new Map<Int, ScriptPainterAction>();
 
-    public function new(settings : Settings, random : Random, layer : IntLayer, board : Board, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(settings : Settings, random : Random, layer : IntLayer, board : Board, viewer : Viewer, sections : Array<Section>) {
         super(settings, random, layer, board, viewer, sections);
     }
 
@@ -235,7 +235,7 @@ class ScriptPainter extends AbstractPainter implements Painter {
                 maxIterations--;
 
                 if (maxIterations <= 0) {
-                    throw new GeneratorException('generatePathTo failed: too much iterations while walking back');
+                    throw new GeneratorException("generatePathTo failed: too much iterations while walking back");
                 }
             }
         }
@@ -243,7 +243,7 @@ class ScriptPainter extends AbstractPainter implements Painter {
 
     private function generateActions() : Void {
         for (scenario => action in actionsMap) {
-            var actionScripts : SafeArray<String> = [];
+            var actionScripts : Array<String> = [];
 
             if (action.openDoor) {
                 actionScripts.push('Open D${scenario}');

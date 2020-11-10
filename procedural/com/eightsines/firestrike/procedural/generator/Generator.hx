@@ -3,5 +3,5 @@ package com.eightsines.firestrike.procedural.generator;
 import com.eightsines.firestrike.procedural.section.Section;
 
 interface Generator {
-    function generate() : SafeArray<Section>;
+    function generate() : Array<Section>;
 }

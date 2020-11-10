@@ -1,7 +1,6 @@
 package com.eightsines.firestrike.procedural.board;
 
-@:enum
-abstract CellWall(Int) to Int {
+enum abstract CellWall(Int) to Int {
     var A_Regular = 6;
     var A_LampOff = 40;
     var A_LampOn = 7;

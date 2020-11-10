@@ -153,10 +153,10 @@ class Orchestrator {
         }
 
         if (#if js true #else settings.argVerboseLevel >= 1 #end) {
-            viewer.log(board.script.join("\n"));
+            viewer.log(board.unsafe().script.join("\n"));
         }
 
-        return board;
+        return board.unsafe();
     }
 
     private function getGeometryGenerator(layer : IntLayer) : Generator {

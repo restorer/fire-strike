@@ -14,8 +14,7 @@ using Safety;
 using org.zamedev.lib.LambdaExt;
 using com.eightsines.firestrike.procedural.util.Tools;
 
-@:enum
-abstract AbstractSectionGeneratorDumpKind(Int) {
+enum abstract AbstractSectionGeneratorDumpKind(Int) {
     var Regular = 0;
     var Scenario = 1;
     var Gates = 2;
@@ -24,9 +23,9 @@ abstract AbstractSectionGeneratorDumpKind(Int) {
 
 class AbstractSectionGeneratorDumpOptions {
     public var kind : AbstractSectionGeneratorDumpKind = Regular;
-    public var selected : SafeArray<Section> = [];
+    public var selected : Array<Section> = [];
     public var connectorsFor : Null<Section> = null;
-    public var only : SafeArray<Section> = [];
+    public var only : Array<Section> = [];
 
     public function new() {}
 }
@@ -45,9 +44,9 @@ class AbstractSectionGenerator {
     private var random : Random;
     private var layer : IntLayer;
     private var viewer : Viewer;
-    private var sections : SafeArray<Section>;
+    private var sections : Array<Section>;
 
-    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         this.random = random;
         this.layer = layer;
         this.viewer = viewer;
@@ -56,9 +55,9 @@ class AbstractSectionGenerator {
 
     private function dump(
         ?kind : AbstractSectionGeneratorDumpKind,
-        ?selected : SafeArray<Section>,
+        ?selected : Array<Section>,
         ?connectorsFor : Section,
-        ?only : SafeArray<Section>,
+        ?only : Array<Section>,
         ?data : String
     ) : Void {
         var options = new AbstractSectionGeneratorDumpOptions();

@@ -18,40 +18,40 @@ typedef SectionItem = SectionObject<SectionItemType>;
 typedef SectionWallLamp = SectionObject<Bool>;
 
 class Section {
-    public static inline var MIN_SIZE : Int = 3;
+    public static inline final MIN_SIZE : Int = 3;
 
-    public static inline var VAL_OUTER_AVAIL = 1;
-    public static inline var VAL_OUTER_INNERSPACE = 2;
-    public static inline var VAL_OUTER_UNAVAIL = 3;
-    public static inline var VAL_OUTER_USED = 4;
+    public static inline final VAL_OUTER_AVAIL = 1;
+    public static inline final VAL_OUTER_INNERSPACE = 2;
+    public static inline final VAL_OUTER_UNAVAIL = 3;
+    public static inline final VAL_OUTER_USED = 4;
 
-    public static inline var VAL_INNER_AVAIL = 1;
-    public static inline var VAL_INNER_INNERSPACE = 2;
-    public static inline var VAL_INNER_BORDER = 3;
-    public static inline var VAL_INNER_DECORATION = 4;
-    public static inline var VAL_INNER_KEYPOINT = 5;
-    public static inline var VAL_INNER_PASSABLE = 6;
-    public static inline var VAL_INNER_BOX = 7;
+    public static inline final VAL_INNER_AVAIL = 1;
+    public static inline final VAL_INNER_INNERSPACE = 2;
+    public static inline final VAL_INNER_BORDER = 3;
+    public static inline final VAL_INNER_DECORATION = 4;
+    public static inline final VAL_INNER_KEYPOINT = 5;
+    public static inline final VAL_INNER_PASSABLE = 6;
+    public static inline final VAL_INNER_BOX = 7;
 
-    public var geometry : SafeArray<Polybox>;
+    public var geometry : Array<Polybox>;
     public var entryValue : Int;
-    public var connections : SafeArray<SectionConnection> = [];
-    public var fences : SafeArray<SectionFence> = [];
+    public var connections : Array<SectionConnection> = [];
+    public var fences : Array<SectionFence> = [];
     public var scenario : Int = 0;
     public var scenarioOpener : Int = 0;
     public var scenarioAction : Null<SectionScenarioAction> = null;
-    public var scenarioObjects : SafeArray<SectionScenarioObject> = [];
-    public var decorations : SafeArray<SectionDecoration> = [];
-    public var grass : SafeArray<Point> = [];
-    public var lamps : SafeArray<Point> = [];
-    public var ceilingLamps : SafeArray<Point> = [];
-    public var wallLamps : SafeArray<SectionWallLamp> = [];
+    public var scenarioObjects : Array<SectionScenarioObject> = [];
+    public var decorations : Array<SectionDecoration> = [];
+    public var grass : Array<Point> = [];
+    public var lamps : Array<Point> = [];
+    public var ceilingLamps : Array<Point> = [];
+    public var wallLamps : Array<SectionWallLamp> = [];
     public var player : Null<Point> = null;
-    public var enemies : SafeArray<SectionEnemy> = [];
-    public var items : SafeArray<SectionItem> = [];
+    public var enemies : Array<SectionEnemy> = [];
+    public var items : Array<SectionItem> = [];
     public var appearanceKind : Null<SectionAppearanceKind> = null;
     public var appearance : Null<SectionAppearance> = null;
-    public var noTransPoints : SafeArray<Point> = [];
+    public var noTransPoints : Array<Point> = [];
     public var __id : Int;
 
     private var __bbox : Null<Rect> = null;
@@ -62,7 +62,7 @@ class Section {
         this.__id = (__id == null ? Sequence.nextId() : __id);
     }
 
-    public static function copyAll(source : SafeArray<Section>) : SafeArray<Section> {
+    public static function copyAll(source : Array<Section>) : Array<Section> {
         for (section in source) {
             for (connection in section.connections) {
                 connection.__copySectionId = connection.ensureSection().__id;
@@ -161,7 +161,7 @@ class Section {
         return geometry.fold((polybox, carry) -> (carry + polybox.getBbox().sure().getArea()), 0);
     }
 
-    public function getDividers() : SafeArray<SectionDivider> {
+    public function getDividers() : Array<SectionDivider> {
         return fences
             .map((fence : SectionFence) -> (cast fence : SectionDivider))
             .pushAll(

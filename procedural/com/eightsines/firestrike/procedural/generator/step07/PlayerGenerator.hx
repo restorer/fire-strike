@@ -21,7 +21,7 @@ class PlayerGenerator extends AbstractSectionGenerator implements Generator {
     private var sectionsMapLayer : IntLayer;
     private var pathWaveLayer : IntLayer;
 
-    public function new(settings : Settings, random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(settings : Settings, random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         super(random, layer, viewer, sections);
         this.settings = settings;
 
@@ -29,7 +29,7 @@ class PlayerGenerator extends AbstractSectionGenerator implements Generator {
         pathWaveLayer = new IntLayer(layer.width, layer.height);
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         placePlayer();
         return sections;
     }

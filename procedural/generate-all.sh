@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo "Levels already generated and remastered, exiting"
+echo "The levels have already been generated and reworked,"
+exit "so let's get out of this script to avoid messing up the final levels."
 exit
 
 function generate () {
@@ -52,14 +53,15 @@ echo "Done"
 if [ "$1" = "--upload" ] ; then
     echo "Copying locally ..." \
     && chmod a+rw build/generated/*.gd2l \
-    && cp build/generated/*.gd2l ../mapper/levels/ \
+    && cp build/generated/*.gd2l ../materials/levels/ \
     && echo "Done" \
     && echo "Compiling ..." \
-    && pushd ../ \
+    && pushd ../materials/ \
     && ruby make-levels.rb \
     && popd \
-    && echo "Done" \
-    && echo "Uploading to server ..." \
-    && scp -r -P 40122 build/generated/*.gd2l admin@zame-dev.org:/var/www/zame-dev.org/projects/fsr-mapper/levels/ \
     && echo "Done"
+
+    # && echo "Uploading to the server ..." \
+    # && scp -r -P <PORT> build/generated/*.gd2l <USER>@<SERVER>:<PROJECTS DIR>/fsr-mapper/levels/ \
+    # && echo "Done"
 fi

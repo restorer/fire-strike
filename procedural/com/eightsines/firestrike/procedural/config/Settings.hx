@@ -5,8 +5,8 @@ import haxe.Int64;
 
 @SuppressWarnings("checkstyle:MagicNumber")
 class Settings {
-    public static inline var ARG_SIZE_MAX : Int = 5;
-    public static inline var ARG_DIFFICULTY_MAX : Int = 5;
+    public static inline final ARG_SIZE_MAX : Int = 5;
+    public static inline final ARG_DIFFICULTY_MAX : Int = 5;
 
     // Can be specified:
 
@@ -20,11 +20,11 @@ class Settings {
 
     // Call prepare() to fill following:
 
-    @:safety(unsafe) public var argumentsLine(default, null) : String;
-    @:safety(unsafe) public var desiredSizes(default, null) : SafeArray<Pair<Int, Int>>;
-    @:safety(unsafe) public var availWeapons(default, null) : SafeArray<Int>;
-    @:safety(unsafe) public var availEnemies(default, null) : SafeArray<Int>;
-    @:safety(unsafe) public var difficulty(default, null) : Float;
+    @:nullSafety(Off) public var argumentsLine(default, null) : String;
+    @:nullSafety(Off) public var desiredSizes(default, null) : Array<Pair<Int, Int>>;
+    @:nullSafety(Off) public var availWeapons(default, null) : Array<Int>;
+    @:nullSafety(Off) public var availEnemies(default, null) : Array<Int>;
+    @:nullSafety(Off) public var difficulty(default, null) : Float;
 
     public function new() {}
 

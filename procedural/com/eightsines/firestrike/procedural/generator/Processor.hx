@@ -28,12 +28,12 @@ class Processor {
         return settings!.argVerboseLevel.or(0);
     }
 
-    public function process(args : SafeArray<String>) : Bool {
+    public function process(args : Array<String>) : Bool {
         var argHandler = createArgHandler(() -> settings.sure());
 
         try {
             settings = new Settings();
-            argHandler.parse(args.stdArray());
+            argHandler.parse(args);
         } catch (e : Any) {
             if (Std.is(e, GeneratorException)) {
                 viewer.log((cast e : GeneratorException).message);
@@ -91,22 +91,22 @@ class Processor {
                 },
             #end
 
-            @doc('Desired size, 1 by default')
+            @doc("Desired size, 1 by default")
             ["-s", "--size"] => (size : String) -> {
                 settingsCb().argSize = parseIntArg(size, "size", 1, Settings.ARG_SIZE_MAX);
             },
 
-            @doc('Weapon level, 1 by default')
+            @doc("Weapon level, 1 by default")
             ["-w", "--weapon"] => (weapon : String) -> {
                 settingsCb().argWeaponLevel = parseIntArg(weapon, "weapon level", 1, Config.weapons.length);
             },
 
-            @doc('Enemy level, 1 by default')
+            @doc("Enemy level, 1 by default")
             ["-e", "--enemy"] => (enemy : String) -> {
                 settingsCb().argEnemyLevel = parseIntArg(enemy, "enemy level", 1, Config.enemies.length);
             },
 
-            @doc('Difficulty level, 3 by default')
+            @doc("Difficulty level, 3 by default")
             ["-d", "--difficulty"] => (difficulty : String) -> {
                 settingsCb().argDifficulty = parseIntArg(
                     difficulty,

@@ -1,7 +1,6 @@
 package com.eightsines.firestrike.procedural.board;
 
-@:enum
-abstract Floor(Int) to Int {
+enum abstract Floor(Int) to Int {
     var Sand1 = 1;
     var Sand2 = 2;
     var Sand3 = 3;

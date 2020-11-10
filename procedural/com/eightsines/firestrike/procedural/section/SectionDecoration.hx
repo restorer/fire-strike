@@ -4,10 +4,10 @@ import com.eightsines.firestrike.procedural.geom.Point;
 
 class SectionDecoration {
     public var type : SectionDecorationType;
-    public var points : SafeArray<Point>;
+    public var points : Array<Point>;
     public var size : Int;
 
-    public function new(type : SectionDecorationType, points : SafeArray<Point>) {
+    public function new(type : SectionDecorationType, points : Array<Point>) {
         this.type = type;
         this.points = points;
 

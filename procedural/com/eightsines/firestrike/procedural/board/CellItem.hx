@@ -1,7 +1,6 @@
 package com.eightsines.firestrike.procedural.board;
 
-@:enum
-abstract CellItem(Int) to Int {
+enum abstract CellItem(Int) to Int {
     var Stim = 5;
     var Medi = 6;
 

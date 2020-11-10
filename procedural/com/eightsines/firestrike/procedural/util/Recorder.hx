@@ -9,19 +9,19 @@ import org.zamedev.lib.ds.HashSet;
 
 class Recorder {
     private static var viewer : Viewer;
-    private static var recordsMap = new Map<String, SafeArray<SafeArray<Int>>>();
+    private static var recordsMap = new Map<String, Array<Array<Int>>>();
 
     @SuppressWarnings("checkstyle:MagicNumber")
     public static function initialize(_viewer : Viewer) : Void {
         viewer = _viewer;
-        recordsMap = new Map<String, SafeArray<SafeArray<Int>>>();
+        recordsMap = new Map<String, Array<Array<Int>>>();
 
         for (line in RECORDED.split("\n")) {
             if (line.indexOf("[rec] ") != 0) {
                 continue;
             }
 
-            var parsed : { key : String, sections : SafeArray<Int> } = cast Json.parse(line.substr(6));
+            var parsed : { key : String, sections : Array<Int> } = cast Json.parse(line.substr(6));
 
             if (!recordsMap.exists(parsed.key)) {
                 recordsMap[parsed.key] = [];
@@ -31,7 +31,7 @@ class Recorder {
         }
     }
 
-    public static function replay(key : String, sections : SafeArray<Section>) : Void {
+    public static function replay(key : String, sections : Array<Section>) : Void {
         var records = recordsMap[key];
 
         if (records != null) {
@@ -67,7 +67,7 @@ class Recorder {
         record(key, sections);
     }
 
-    private static function record(key : String, sections : SafeArray<Section>) : Void {
+    private static function record(key : String, sections : Array<Section>) : Void {
         var existingValues = new HashSet<Int>();
 
         for (section in sections) {

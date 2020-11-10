@@ -18,11 +18,11 @@ using Safety;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class HumanizerGenerator extends AbstractSectionGenerator implements Generator {
-    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         super(random, layer, viewer, sections);
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         var sectionsBackup = Section.copyAll(sections);
 
         randomizeConnections();
@@ -76,7 +76,7 @@ class HumanizerGenerator extends AbstractSectionGenerator implements Generator {
                 continue;
             }
 
-            var mergeWithSections : SafeArray<Section> = [];
+            var mergeWithSections : Array<Section> = [];
 
             GeneratorUtils.walkNeighbors(
                 originalSection,
@@ -92,7 +92,7 @@ class HumanizerGenerator extends AbstractSectionGenerator implements Generator {
                 continue;
             }
 
-            dump(null, [originalSection].safeConcat(mergeWithSections));
+            dump(null, [originalSection].concat(mergeWithSections));
 
             for (connection in originalSection.connections.copy()) {
                 if (connection.__removed) {

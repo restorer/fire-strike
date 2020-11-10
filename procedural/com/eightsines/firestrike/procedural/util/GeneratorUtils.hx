@@ -29,7 +29,7 @@ class GeneratorUtils {
         }
     }
 
-    public static function traceSections(layer : IntLayer) : SafeArray<Section> {
+    public static function traceSections(layer : IntLayer) : Array<Section> {
         var existingEntries = new HashSet<Int>();
 
         return layer.tracePolyboxes().map((pair) -> {
@@ -48,7 +48,7 @@ class GeneratorUtils {
         sectionPredicate : (Section) -> Bool,
         ?visitedSet : HashSet<Section>
     ) : Void {
-        var neighbors : SafeArray<Section> = [originalSection];
+        var neighbors : Array<Section> = [originalSection];
 
         if (visitedSet == null) {
             visitedSet = new HashSet<Section>();
@@ -57,7 +57,7 @@ class GeneratorUtils {
         visitedSet.add(originalSection);
 
         while (true) {
-            var newNeighbors : SafeArray<Section> = [];
+            var newNeighbors : Array<Section> = [];
 
             for (section in neighbors) {
                 for (connection in section.connections) {
@@ -84,10 +84,10 @@ class GeneratorUtils {
     }
 
     public static function computeConnectedRoots(
-        inputSections : SafeArray<Section>,
-        outerSectionsCb : (Section) -> SafeArray<Section>
-    ) : SafeArray<SafeArray<Section>> {
-        var connectedRoots : SafeArray<SafeArray<Section>> = [];
+        inputSections : Array<Section>,
+        outerSectionsCb : (Section) -> Array<Section>
+    ) : Array<Array<Section>> {
+        var connectedRoots : Array<Array<Section>> = [];
 
         for (section in inputSections) {
             // Can't use LinkedSet, because LinkedObjectSet is not currently implemented
@@ -98,7 +98,7 @@ class GeneratorUtils {
                 connectedSet.add(outerSection);
             }
 
-            var newConnectedRoots : SafeArray<SafeArray<Section>> = [];
+            var newConnectedRoots : Array<Array<Section>> = [];
 
             for (connected in connectedRoots) {
                 var hasIntersection : Bool = false;
@@ -129,8 +129,8 @@ class GeneratorUtils {
         return connectedRoots;
     }
 
-    public static function computeExtends(layer : IntLayer, bbox : Rect, entries : SafeArray<Int>, viewer : Viewer) : SafeArray<SafeArray<Extend>> {
-        var result : SafeArray<SafeArray<Extend>> = [ for (row in 0 ... bbox.height) [ for (col in 0 ... bbox.width) new Extend() ] ];
+    public static function computeExtends(layer : IntLayer, bbox : Rect, entries : Array<Int>, viewer : Viewer) : Array<Array<Extend>> {
+        var result : Array<Array<Extend>> = [ for (row in 0 ... bbox.height) [ for (col in 0 ... bbox.width) new Extend() ] ];
 
         for (row in 0 ... bbox.height) {
             var irow = bbox.height - row - 1;
@@ -194,7 +194,7 @@ class GeneratorUtils {
     /**
         Выбирает случайную точку из массива, но отдаёт предпочтение тем, вокруг которых больше пустого места.
     **/
-    public static function selectRandomFreestPoint(random : Random, layer : IntLayer, points : SafeArray<Point>) : Null<Point> {
+    public static function selectRandomFreestPoint(random : Random, layer : IntLayer, points : Array<Point>) : Null<Point> {
         if (points.isEmpty()) {
             return null;
         }
@@ -229,8 +229,8 @@ class GeneratorUtils {
         return points[Std.int(points.length * Math.pow(random.nextFloatEx(), 5))];
     }
 
-    public static function computeScenarioSections(sections : SafeArray<Section>) : SafeArray<SafeArray<Section>> {
-        var result : SafeArray<SafeArray<Section>> = [];
+    public static function computeScenarioSections(sections : Array<Section>) : Array<Array<Section>> {
+        var result : Array<Array<Section>> = [];
         var maxIterations = 500;
         var currentSection = sections.find((section) -> (section.scenario == 0)).sure();
 
@@ -258,9 +258,9 @@ class GeneratorUtils {
     }
 
     public static function fillScenarioMaps(
-        sections : SafeArray<Section>,
-        scenarioMap : Null<Map<Int, SafeArray<Section>>>,
-        scenarioOpenerMap : Null<Map<Int, Section>> = null
+        sections : Array<Section>,
+        scenarioMap : Null<Map<Int, Array<Section>>>,
+        ?scenarioOpenerMap : Null<Map<Int, Section>>
     ) : Void {
         for (section in sections) {
             if (scenarioMap != null) {

@@ -5,9 +5,9 @@ import org.zamedev.lib.ds.HashSet;
 using Lambda;
 
 class Polybox {
-    public var points(default, null) : SafeArray<Point> = [];
+    public var points(default, null) : Array<Point> = [];
 
-    public function new(?points : SafeArray<Point>) {
+    public function new(?points : Array<Point>) {
         if (points != null) {
             this.points = points.copy();
         }
@@ -95,8 +95,8 @@ class Polybox {
         return result;
     }
 
-    public function getBorderPoints() : SafeArray<Point> {
-        var result : SafeArray<Point> = [];
+    public function getBorderPoints() : Array<Point> {
+        var result : Array<Point> = [];
 
         if (points.length != 0) {
             var point = points[0].copy();
@@ -115,8 +115,8 @@ class Polybox {
         return result;
     }
 
-    public function getEdges() : SafeArray<PolyboxEdge> {
-        var result : SafeArray<PolyboxEdge> = [];
+    public function getEdges() : Array<PolyboxEdge> {
+        var result : Array<PolyboxEdge> = [];
 
         for (i in 0 ... points.length) {
             var toIndex = (i + 1) % points.length;
@@ -131,7 +131,7 @@ class Polybox {
     }
 
     private function appendBorderPoints(
-        result : SafeArray<Point>,
+        result : Array<Point>,
         existingPoints : HashSet<String>,
         point : Point,
         nextPoint : Point
@@ -154,7 +154,7 @@ class Polybox {
         }
     }
 
-    public static function fromBorderPoints(points : SafeArray<Point>) : Null<Polybox> {
+    public static function fromBorderPoints(points : Array<Point>) : Null<Polybox> {
         points = optimizePoints(points);
 
         if (points.length == 0) {
@@ -184,8 +184,8 @@ class Polybox {
         return makeRect(rect.row, rect.col, rect.width, rect.height);
     }
 
-    public static function optimizePoints(points : SafeArray<Point>) : SafeArray<Point> {
-        var result : SafeArray<Point> = [];
+    public static function optimizePoints(points : Array<Point>) : Array<Point> {
+        var result : Array<Point> = [];
 
         for (i in 0 ... points.length) {
             var point = points[i];

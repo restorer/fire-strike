@@ -18,11 +18,11 @@ using org.zamedev.lib.LambdaExt;
 using com.eightsines.firestrike.procedural.util.Tools;
 
 class ConnectionGenerator extends AbstractSectionGenerator implements Generator {
-    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         super(random, layer, viewer, sections);
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         dump();
 
         removeInvalidSections();
@@ -131,7 +131,7 @@ class ConnectionGenerator extends AbstractSectionGenerator implements Generator 
     private function removeUnconnectedSections() : Void {
         var connectedRoots = GeneratorUtils.computeConnectedRoots(
             sections,
-            (section) -> section.connections.safeMap((connection) -> connection.ensureSection())
+            (section) -> section.connections.map((connection) -> connection.ensureSection())
         );
 
         if (connectedRoots.length == 0) {
@@ -158,7 +158,7 @@ class ConnectionGenerator extends AbstractSectionGenerator implements Generator 
         // 7. If there is some sections left in current sections list, go to 4
 
         while (true) {
-            var excessConnections : SafeArray<SectionConnection> = [];
+            var excessConnections : Array<SectionConnection> = [];
             var visitedSet = new HashSet<SectionConnection>();
 
             for (section in sections) {
@@ -193,12 +193,12 @@ class ConnectionGenerator extends AbstractSectionGenerator implements Generator 
         }
 
         var visitedSet = new HashSet<Section>();
-        var currentSections : SafeArray<Section> = [sections[0]];
+        var currentSections : Array<Section> = [sections[0]];
 
         visitedSet.add(sections[0]);
 
         while (true) {
-            var newSections : SafeArray<Section> = [];
+            var newSections : Array<Section> = [];
 
             for (section in currentSections) {
                 for (connection in section.connections) {

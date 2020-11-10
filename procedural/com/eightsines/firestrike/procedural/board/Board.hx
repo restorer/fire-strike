@@ -7,14 +7,14 @@ using Safety;
 class Board extends Layer<Entry> {
     private static var EMPTY_CREATOR = () -> Entry.createEmpty();
 
-    public var script : SafeArray<String> = [];
+    public var script : Array<String> = [];
 
     public function new(width : Int, height : Int) {
         super(width, height, EMPTY_CREATOR);
     }
 
     public function toString() : String {
-        return __toString("Board");
+        return dumpToString("Board");
     }
 
     override public function set(row : Int, col : Int, entry : Entry) : Void {

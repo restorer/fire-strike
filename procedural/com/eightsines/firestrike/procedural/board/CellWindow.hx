@@ -1,7 +1,6 @@
 package com.eightsines.firestrike.procedural.board;
 
-@:enum
-abstract CellWindow(Int) to Int {
+enum abstract CellWindow(Int) to Int {
     var B_Open1 = 1;
     var B_Open2 = 2;
     var B_Closed = 8;

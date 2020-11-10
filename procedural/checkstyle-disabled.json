@@ -36,18 +36,18 @@
                 ]
             }
         },
-        // { // crashed
-        //     "type": "EmptyLines",
-        //     "props": {
-        //         "max": 1,
-        //         "allowEmptyLineAfterSingleLineComment": true,
-        //         "allowEmptyLineAfterMultiLineComment": true,
-        //         "requireEmptyLineAfterPackage": true,
-        //         "requireEmptyLineAfterClass": true,
-        //         "requireEmptyLineAfterInterface": true,
-        //         "requireEmptyLineAfterAbstract": true
-        //     }
-        // },
+        {
+            "type": "EmptyLines",
+            "props": {
+                "max": 1,
+                "allowEmptyLineAfterSingleLineComment": true,
+                "allowEmptyLineAfterMultiLineComment": true,
+                "requireEmptyLineAfterPackage": true,
+                "requireEmptyLineAfterClass": true,
+                "requireEmptyLineAfterInterface": true,
+                "requireEmptyLineAfterAbstract": true
+            }
+        },
         {
             "type": "FieldDocComment",
             "props": {
@@ -77,6 +77,15 @@
             }
         },
         {
+            "type": "HiddenField",
+            "props": {
+                "ignoreConstructorParameter": true,
+                "ignoreSetter": false,
+                "ignoreFormat": "^(main|run)$",
+                "severity": "ERROR"
+            }
+        },
+        {
             "type": "Indentation",
             "props": {
                 "character": "    ",
@@ -91,6 +100,21 @@
             "props": {
                 "max": 160,
                 "ignorePattern": "^$"
+            }
+        },
+        {
+            "type": "MagicNumber",
+            "props": {
+                "ignoreNumbers": [
+                    -1,
+                    0,
+                    0.5,
+                    1,
+                    2,
+                    3,
+                    10
+                ],
+                "severity": "WARNING"
             }
         },
         {
@@ -162,6 +186,19 @@
             }
         },
         {
+            "type": "TODOComment",
+            "props": {
+                "format": "(TODO|FIXME|HACK|XXX|BUG)"
+            }
+        },
+        {
+            "type": "Type",
+            "props": {
+                "ignoreEnumAbstractValues": true,
+                "severity": "ERROR"
+            }
+        },
+        {
             "type": "TypeDocComment",
             "props": {
                 "tokens": [
@@ -171,6 +208,20 @@
                     "INTERFACE_DEF",
                     "TYPEDEF_DEF"
                 ]
+            }
+        },
+        {
+            "type": "UnusedImport",
+            "props": {
+                "ignoreModules": [
+                    "haxe.macro.Type"
+                ],
+                "moduleTypeMap": {
+                    "haxe.macro.Expr": [
+                        "ExprDef",
+                        "ComplexType"
+                    ]
+                }
             }
         },
         {

@@ -21,7 +21,7 @@ class LayerReducer<T, R> {
 }
 
 class Layer<T> {
-    private var entries : SafeArray<SafeArray<T>>;
+    private var entries : Array<Array<T>>;
     private var emptyValue : T;
 
     public var width(default, null) : Int;
@@ -77,7 +77,7 @@ class Layer<T> {
         set(row, col, emptyValue);
     }
 
-    public function clear(bbox : Null<Rect> = null) : Void {
+    public function clear(?bbox : Null<Rect>) : Void {
         if (bbox == null) {
             for (row in 0 ... height) {
                 for (col in 0 ... width) {
@@ -144,7 +144,7 @@ class Layer<T> {
         return carry;
     }
 
-    public function reducePoints<R>(points : SafeArray<Point>, reducer : LayerReducer<T, R>) : R {
+    public function reducePoints<R>(points : Array<Point>, reducer : LayerReducer<T, R>) : R {
         var carry = reducer.carry;
 
         for (point in points) {
@@ -234,7 +234,7 @@ class Layer<T> {
         return result;
     }
 
-    public function plot(points : SafeArray<Point>, entry : T, ?condition : LayerCondition<T>) : Void {
+    public function plot(points : Array<Point>, entry : T, ?condition : LayerCondition<T>) : Void {
         reducePoints(points, createConditionalSetReducer(entry, condition));
     }
 
@@ -285,7 +285,7 @@ class Layer<T> {
         }
     }
 
-    private function __toString(layerName : String) : String {
+    private function dumpToString(layerName : String) : String {
         var sb = new StringBuf();
         sb.add(layerName);
         sb.add('(width=${width}, height=${height}, entries=[\n');

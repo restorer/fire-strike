@@ -14,10 +14,10 @@ class AbstractPainter {
     private var layer : IntLayer;
     private var board : Board;
     private var viewer : Viewer;
-    private var sections : SafeArray<Section>;
+    private var sections : Array<Section>;
     private var scenarioOpenerMap : Map<Int, Section> = new Map<Int, Section>();
 
-    public function new(settings : Settings, random : Random, layer : IntLayer, board : Board, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(settings : Settings, random : Random, layer : IntLayer, board : Board, viewer : Viewer, sections : Array<Section>) {
         this.settings = settings;
         this.random = random;
         this.layer = layer;

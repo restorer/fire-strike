@@ -13,21 +13,20 @@ import com.eightsines.firestrike.procedural.util.Random;
 
 using Safety;
 
-@:enum
-abstract SectionAppearanceKind(Int) {
+enum abstract SectionAppearanceKind(Int) {
     var Outdoor = 0;
     var Indoor = 1;
     var Exit = 2;
 }
 
 class SectionAppearance {
-    private static var AVAIL_CEILING : SafeArray<SafeArray<Ceiling>> = [
+    private static var AVAIL_CEILING : Array<Array<Ceiling>> = [
         [ Ceiling.A_Regular, Ceiling.A_Lamp ],
         [ Ceiling.B_Regular, Ceiling.B_Lamp ],
         [ Ceiling.C_Regular, Ceiling.C_Lamp ],
     ];
 
-    private static var AVAIL_WALL : SafeArray<Pair<SafeArray<CellWall>, SafeArray<CellWindow>>> = [
+    private static var AVAIL_WALL : Array<Pair<Array<CellWall>, Array<CellWindow>>> = [
         new Pair(
             [ A_Regular, A_LampOff, A_LampOn, A_Switch ],
             [ A_Open ]
@@ -50,25 +49,25 @@ class SectionAppearance {
         ),
     ];
 
-    private static var AVAIL_LATTICES : SafeArray<SafeArray<CellTWall>> = [
+    private static var AVAIL_LATTICES : Array<Array<CellTWall>> = [
         [ Lattice1 ],
         [ Fence1, Fence2, Fence3 ],
     ];
 
-    private static var OUTDOOR_PILLARS : SafeArray<CellDecor> = [
+    private static var OUTDOOR_PILLARS : Array<CellDecor> = [
         Tree,
     ];
 
-    private static var OUTDOOR_ROCKS : SafeArray<CellDecor> = [
+    private static var OUTDOOR_ROCKS : Array<CellDecor> = [
         FloorLamp,
         Rock,
     ];
 
-    private static var OUTDOOR_PASSABLES : SafeArray<CellPass> = [
+    private static var OUTDOOR_PASSABLES : Array<CellPass> = [
         Grass,
     ];
 
-    private static var INDOOR_PILLARS : SafeArray<CellDecor> = [
+    private static var INDOOR_PILLARS : Array<CellDecor> = [
         Column1,
         Column2,
         Column3,
@@ -76,16 +75,16 @@ class SectionAppearance {
         Column5,
     ];
 
-    private static var INDOOR_PASSABLES : SafeArray<CellPass> = [
+    private static var INDOOR_PASSABLES : Array<CellPass> = [
         Lamp,
     ];
 
-    private static var REGULAR_DOORS : SafeArray<CellDoor> = [
+    private static var REGULAR_DOORS : Array<CellDoor> = [
         Regular1,
         Regular2,
     ];
 
-    private static var CODE_DOORS : SafeArray<CellDoor> = [
+    private static var CODE_DOORS : Array<CellDoor> = [
         Code1,
         Code2,
         Code3,
@@ -98,15 +97,15 @@ class SectionAppearance {
     public var wallLampOff : Null<CellWall>;
     public var wallLampOn : Null<CellWall>;
     public var wallSwitch : CellWall;
-    public var windows : SafeArray<CellWindow>;
+    public var windows : Array<CellWindow>;
     public var pillar : CellDecor;
-    public var rocks : SafeArray<CellDecor>;
-    public var passables : SafeArray<CellPass>;
+    public var rocks : Array<CellDecor>;
+    public var passables : Array<CellPass>;
     public var doorRegular : CellDoor;
     public var doorCode : CellDoor;
     public var canHasLamps : Bool;
     public var canHasGrass : Bool;
-    public var lattices : SafeArray<CellTWall>;
+    public var lattices : Array<CellTWall>;
 
     @SuppressWarnings("checkstyle:ParameterNumber")
     public function new(
@@ -117,15 +116,15 @@ class SectionAppearance {
         wallLampOff : Null<CellWall>,
         wallLampOn : Null<CellWall>,
         wallSwitch : CellWall,
-        windows : SafeArray<CellWindow>,
+        windows : Array<CellWindow>,
         pillar : CellDecor,
-        rocks : SafeArray<CellDecor>,
-        passables : SafeArray<CellPass>,
+        rocks : Array<CellDecor>,
+        passables : Array<CellPass>,
         doorRegular : CellDoor,
         doorCode : CellDoor,
         canHasLamps : Bool,
         canHasGrass : Bool,
-        lattices : SafeArray<CellTWall>
+        lattices : Array<CellTWall>
     ) {
         this.floor = floor;
         this.ceiling = ceiling;

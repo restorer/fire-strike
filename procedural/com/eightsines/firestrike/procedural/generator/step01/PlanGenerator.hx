@@ -51,9 +51,9 @@ class PlanGeneratorRoom {
 }
 
 class PlanGenerator extends AbstractGeometryGenerator implements Generator {
-    private static inline var SEED_ROOM_SIZE : Int = 5;
+    private static inline final SEED_ROOM_SIZE : Int = 5;
 
-    private static var GROW_SPECS : SafeArray<PlanGeneratorGrowSpec> = [
+    private static var GROW_SPECS : Array<PlanGeneratorGrowSpec> = [
         new PlanGeneratorGrowSpec(
             (rect, layer) -> ((rect.row > 0)
                 && layer.reduceBoxFilled(rect.row - 1, rect.col, 1, rect.width, IntLayer.REDUCE_ALL_EMPTY)
@@ -84,13 +84,13 @@ class PlanGenerator extends AbstractGeometryGenerator implements Generator {
         ),
     ];
 
-    private var rooms : SafeArray<PlanGeneratorRoom> = [];
+    private var rooms : Array<PlanGeneratorRoom> = [];
 
     public function new(random : Random, layer : IntLayer, viewer : Viewer) {
         super(random, layer, viewer);
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         drawOutline(false);
         seedRooms();
 
@@ -174,7 +174,7 @@ class PlanGenerator extends AbstractGeometryGenerator implements Generator {
 
             for (room in rooms) {
                 var maxSize : Int = 0;
-                var availGrowSpecs : SafeArray<PlanGeneratorGrowSpec> = [];
+                var availGrowSpecs : Array<PlanGeneratorGrowSpec> = [];
 
                 for (spec in GROW_SPECS) {
                     if (!spec.check(room.rect, layer)) {
@@ -227,7 +227,7 @@ class PlanGenerator extends AbstractGeometryGenerator implements Generator {
 
             for (room in rooms) {
                 var maxSize : Int = 0;
-                var splitSpecs : SafeArray<PlanGeneratorSplitSpec> = [];
+                var splitSpecs : Array<PlanGeneratorSplitSpec> = [];
 
                 for (edge in room.polybox.sure().getEdges()) {
                     if (!layer.pointInside(edge.from.addTo(edge.normal)) || !layer.pointInside(edge.to.addTo(edge.normal))) {

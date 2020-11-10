@@ -42,6 +42,5 @@ class Viewer {
         }
     }
 
-    public function log(message : String) : Void {
-    }
+    public function log(message : String) : Void {}
 }

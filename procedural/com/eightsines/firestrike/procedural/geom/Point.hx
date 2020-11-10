@@ -3,13 +3,13 @@ package com.eightsines.firestrike.procedural.geom;
 import com.eightsines.firestrike.procedural.util.IntMath;
 
 class Point {
-    public static var UP : Point = new Point(-1, 0);
-    public static var RIGHT : Point = new Point(0, 1);
-    public static var DOWN : Point = new Point(1, 0);
-    public static var LEFT : Point = new Point(0, -1);
+    public static final UP : Point = new Point(-1, 0);
+    public static final RIGHT : Point = new Point(0, 1);
+    public static final DOWN : Point = new Point(1, 0);
+    public static final LEFT : Point = new Point(0, -1);
 
     // Clockwise, starting from up
-    public static var DIRECTIONS : SafeArray<Point> = [
+    public static final DIRECTIONS : Array<Point> = [
         UP,
         RIGHT,
         DOWN,
@@ -17,7 +17,7 @@ class Point {
     ];
 
     // Clockwise, starting from upper-right
-    public static var CORNERS : SafeArray<Point> = [
+    public static final CORNERS : Array<Point> = [
         new Point(-1, 1),
         new Point(1, 1),
         new Point(1, -1),

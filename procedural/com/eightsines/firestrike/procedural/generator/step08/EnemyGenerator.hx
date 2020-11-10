@@ -42,21 +42,21 @@ class EnemyGeneratorFightResult {
 }
 
 class EnemyGenerator extends AbstractSectionGenerator implements Generator {
-    private static inline var DIFFICULTY_EPSILON : Float = 0.0001;
-    private static inline var NEED_MORE_ENEMIES_THRESHOLD : Int = 10;
-    private static inline var HEALTH_GRANULARITY : Float = 2.0;
+    private static inline final DIFFICULTY_EPSILON : Float = 0.0001;
+    private static inline final NEED_MORE_ENEMIES_THRESHOLD : Int = 10;
+    private static inline final HEALTH_GRANULARITY : Float = 2.0;
 
     private var settings : Settings;
-    private var scenarioSections : SafeArray<SafeArray<Section>> = [];
+    private var scenarioSections : Array<Array<Section>> = [];
     private var heroHealth : Int = 0;
     private var heroArmor : Int = 0;
-    private var heroAmmo : SafeArray<Option<Int>> = [];
-    private var heroWeapons : SafeArray<WeaponConfig> = []; // sorted from best to worst
-    private var availEnemies : SafeArray<EnemyConfig> = []; // sorted from easiest to hardest
+    private var heroAmmo : Array<Option<Int>> = [];
+    private var heroWeapons : Array<WeaponConfig> = []; // sorted from best to worst
+    private var availEnemies : Array<EnemyConfig> = []; // sorted from easiest to hardest
     private var sectionDifficulty : Float = 0.0;
     private var minHeroHealth : Int = 0;
     private var minHeroArmor : Int = 0;
-    private var minHeroAmmo : SafeArray<Int> = [];
+    private var minHeroAmmo : Array<Int> = [];
     private var generatedAmmoIndex : Int = 0;
 
     public function new(
@@ -64,13 +64,13 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         random : Random,
         layer : IntLayer,
         viewer : Viewer,
-        sections : SafeArray<Section>
+        sections : Array<Section>
     ) {
         super(random, layer, viewer, sections);
         this.settings = settings;
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         initialize();
         generateEverything();
 
@@ -117,7 +117,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
                 dump(Actions, scenarioSections[scenSectionIndex]);
             }
 
-            var placePoints : SafeArray<Pair<Point, Section>> = [];
+            var placePoints : Array<Pair<Point, Section>> = [];
 
             for (section in scenarioSections[scenSectionIndex]) {
                 section.renderAvailInnerCells(layer, true);
@@ -156,8 +156,8 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         }
     }
 
-    private function generateForSection(desiredCount : Int) : SafeArray<Either<Int, SectionItemType>> {
-        var result : SafeArray<Either<Int, SectionItemType>> = [];
+    private function generateForSection(desiredCount : Int) : Array<Either<Int, SectionItemType>> {
+        var result : Array<Either<Int, SectionItemType>> = [];
 
         minHeroHealth = getDifficultedValue(Math.ceil(Config.healthMax * 0.5), Config.healthMax);
         minHeroArmor = getDifficultedValue(Math.ceil(Config.armorPickOne * 0.25), Config.armorPickOne);
@@ -209,11 +209,11 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
                     case Left(v): 'enemy:${v + 1}';
 
                     case Right(v): switch (v) {
-                        case Health(box): 'health:' + (box ? 'box' : 'one');
-                        case Armor(box): 'armor:' + (box ? 'box' : 'one');
-                        case Ammo(ammo, box): 'ammo:${ammo}:' + (box ? 'box' : 'one');
-                        case Backpack: 'backpack';
-                        case OpenMap: 'openmap';
+                        case Health(box): "health:" + (box ? "box" : "one");
+                        case Armor(box): "armor:" + (box ? "box" : "one");
+                        case Ammo(ammo, box): 'ammo:${ammo}:' + (box ? "box" : "one");
+                        case Backpack: "backpack";
+                        case OpenMap: "openmap";
                         case Weapon(weapon): 'weapon:${weapon}';
                     }
                 };
@@ -228,7 +228,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return result;
     }
 
-    private function prettifyHealthBoxes(result : SafeArray<Either<Int, SectionItemType>>) : SafeArray<Either<Int, SectionItemType>> {
+    private function prettifyHealthBoxes(result : Array<Either<Int, SectionItemType>>) : Array<Either<Int, SectionItemType>> {
         var smallHealthBoxes : Int = result.fold((item, carry) -> switch (item) {
             case Right(Health(false)): carry + 1;
             default: carry;
@@ -258,7 +258,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return result;
     }
 
-    private function generateEnemyForSection(result : SafeArray<Either<Int, SectionItemType>>, enemiesLeft : Int) : Bool {
+    private function generateEnemyForSection(result : Array<Either<Int, SectionItemType>>, enemiesLeft : Int) : Bool {
         var applicableEnemies = availEnemies.map((enemyConfig) -> {
             return new Pair<EnemyConfig, Null<EnemyGeneratorFightResult>>(enemyConfig, computeFightResult(enemyConfig));
         }).filter((pair) -> {
@@ -312,7 +312,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return true;
     }
 
-    private function generateItemsForSection(result : SafeArray<Either<Int, SectionItemType>>) : Bool {
+    private function generateItemsForSection(result : Array<Either<Int, SectionItemType>>) : Bool {
         var hasChanges = false;
 
         // Сначала генерируется броник
@@ -333,7 +333,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return hasChanges;
     }
 
-    private function generateArmorForSection(result : SafeArray<Either<Int, SectionItemType>>) : Bool {
+    private function generateArmorForSection(result : Array<Either<Int, SectionItemType>>) : Bool {
         if (heroArmor >= minHeroArmor) {
             return false;
         }
@@ -363,7 +363,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return false;
     }
 
-    private function generateAmmoForSection(result : SafeArray<Either<Int, SectionItemType>>) : Bool {
+    private function generateAmmoForSection(result : Array<Either<Int, SectionItemType>>) : Bool {
         if (hasAnyAmmo()) {
             return false;
         }
@@ -442,7 +442,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return false;
     }
 
-    private function generateBackpackForSection(result : SafeArray<Either<Int, SectionItemType>>) : Bool {
+    private function generateBackpackForSection(result : Array<Either<Int, SectionItemType>>) : Bool {
         if (heroHealth >= minHeroHealth) {
             return false;
         }
@@ -506,7 +506,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return true;
     }
 
-    private function generateHealthForSection(result : SafeArray<Either<Int, SectionItemType>>) : Bool {
+    private function generateHealthForSection(result : Array<Either<Int, SectionItemType>>) : Bool {
         if (heroHealth >= minHeroHealth) {
             return false;
         }
@@ -536,7 +536,7 @@ class EnemyGenerator extends AbstractSectionGenerator implements Generator {
         return false;
     }
 
-    private function refillAmmo(index : Int, amount : Int, skipNonExisting : Bool = false, ?fightResult : EnemyGeneratorFightResult) {
+    private function refillAmmo(index : Int, amount : Int, skipNonExisting : Bool = false, ?fightResult : EnemyGeneratorFightResult): Void {
         switch (heroAmmo[index]) {
             case Some(v):
                 heroAmmo[index] = Some(IntMath.min(Config.ammo[index].max, v + amount));

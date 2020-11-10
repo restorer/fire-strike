@@ -22,8 +22,7 @@ using Safety;
 using org.zamedev.lib.LambdaExt;
 using com.eightsines.firestrike.procedural.util.Tools;
 
-@:enum
-abstract GatesGeneratorAppendGateKind(Int) from Int to Int {
+enum abstract GatesGeneratorAppendGateKind(Int) from Int to Int {
     var OnlySecretWall = -2;
     var OnlyWindow = -1;
     var Door = 0;
@@ -33,11 +32,11 @@ abstract GatesGeneratorAppendGateKind(Int) from Int to Int {
 }
 
 class GatesGenerator extends AbstractSectionGenerator implements Generator {
-    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : SafeArray<Section>) {
+    public function new(random : Random, layer : IntLayer, viewer : Viewer, sections : Array<Section>) {
         super(random, layer, viewer, sections);
     }
 
-    public function generate() : SafeArray<Section> {
+    public function generate() : Array<Section> {
         choosePassableSide();
         createGates();
         chooseScenarioType();
@@ -127,13 +126,13 @@ class GatesGenerator extends AbstractSectionGenerator implements Generator {
     private function chooseScenarioType() : Void {
         dump(Actions);
 
-        var scenarioMap = new Map<Int, SafeArray<Section>>();
+        var scenarioMap = new Map<Int, Array<Section>>();
         GeneratorUtils.fillScenarioMaps(sections, scenarioMap);
 
         var hasChanges : Bool = false;
-        var candidatesForKeys : SafeArray<Section> = [];
-        var candidatesForStart : SafeArray<Section> = [];
-        var candidatesForFinal : SafeArray<Section> = [];
+        var candidatesForKeys : Array<Section> = [];
+        var candidatesForStart : Array<Section> = [];
+        var candidatesForFinal : Array<Section> = [];
 
         for (section in sections) {
             if (section.scenario < 0) {
@@ -227,7 +226,7 @@ class GatesGenerator extends AbstractSectionGenerator implements Generator {
     }
 
     private function humanizePassableSide() : Void {
-        var candidates : SafeArray<SectionDivider> = [];
+        var candidates : Array<SectionDivider> = [];
 
         for (section in sections) {
             for (divider in section.getDividers()) {
@@ -260,7 +259,7 @@ class GatesGenerator extends AbstractSectionGenerator implements Generator {
     }
 
     private function appendGates(
-        gates : SafeArray<SectionGate>,
+        gates : Array<SectionGate>,
         start : Point,
         direction : Point,
         normal : Point,

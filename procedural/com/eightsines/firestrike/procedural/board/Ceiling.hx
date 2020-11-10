@@ -1,7 +1,6 @@
 package com.eightsines.firestrike.procedural.board;
 
-@:enum
-abstract Ceiling(Int) to Int {
+enum abstract Ceiling(Int) to Int {
     var A_Regular = 1;
     var A_Lamp = 2;
     var B_Regular = 3;

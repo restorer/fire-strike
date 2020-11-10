@@ -5,7 +5,7 @@ import js.html.Image;
 using Safety;
 
 class PreloadedImage {
-    private var completers : SafeArray<PreloadedImageCompleter> = [];
+    private var completers : Array<PreloadedImageCompleter> = [];
     private var onLoadCb : Null<() -> Void> = null;
     private var onErrorCb : Null<() -> Void> = null;
 
@@ -14,11 +14,11 @@ class PreloadedImage {
     public var width(default, null) : Int = 0;
     public var height(default, null) : Int = 0;
 
-    public function new(callback : () -> Void, ensureSources : SafeArray<String>) {
+    public function new(callback : () -> Void, ensureSources : Array<String>) {
         completers.push(new PreloadedImageCompleter(callback, ensureSources));
     }
 
-    public function getAndClearCompleters() : SafeArray<PreloadedImageCompleter> {
+    public function getAndClearCompleters() : Array<PreloadedImageCompleter> {
         var result = completers;
         completers = [];
         return result;
