@@ -1,8 +1,10 @@
+<a href="https://github.com/restorer/fire-strike/releases" target="_blank">![](https://img.shields.io/github/v/release/restorer/fire-strike.svg?logo=github)</a> <a href="https://f-droid.org/packages/com.eightsines.firestrike.opensource" target="_blank">![](https://img.shields.io/f-droid/v/com.eightsines.firestrike.opensource.sig)</a>
+
 # Fire Strike Retro
 
 An old–school 3d–shooter with cartoon graphics from creators of Gloomy Dungeons. [Web site](https://eightsines.com/fire-strike/).
 
-<a href="https://f-droid.org/packages/com.eightsines.firestrike.opensource" target="_blank"><img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100" /></a>
+<a href="https://f-droid.org/packages/com.eightsines.firestrike.opensource" target="_blank"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="100" /></a>
 
 Credits:
 
